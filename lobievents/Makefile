@@ -31,3 +31,21 @@ db-drop:
 
 db-create:
 	$(php_console) doctrine:database:create --if-not-exists
+
+db-schema:
+	$(php_console) doctrine:schema:create
+
+migrations-apply:
+	$(php_console) doctrine:migrations:migrate -n
+
+migrations-make:
+	$(php_console) make:migration
+
+fixtures: db-drop db-create db-schema
+	$(php_console) doctrine:fixtures:load -n
+
+## Clear cache
+cc: cache-clear
+
+cache-clear:
+	$(php_console) cache:clear
