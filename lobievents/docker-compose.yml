@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  fpm:
+    restart: always
+    external_links:
+      - infra-services-db-1:db
+    build:
+      context: ./app
+      dockerfile: docker/php-fpm/Dockerfile
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "9000:9000"
+    networks:
+      - tools
+
+  nginx-lobievents:
+    container_name: nginx-lobievents
+    build:
+      context: ./app
+      dockerfile: docker/nginx/Dockerfile-nginx
+    restart: always
+    links:
+      - fpm
+    depends_on:
+      - fpm
+    volumes:
+      - ./app:/app:rw,cached
+#      - /etc/letsencrypt:/etc/letsencrypt:ro
+#      - /tmp/acme_challenge:/tmp/acme_challenge
+    ports:
+      - "8081:80"
+#      - '443:443'
+    networks:
+      - tools
+
+volumes:
+  db-data-lobievents: {}
+
+networks:
+    tools:
+        name: infra-services_tools

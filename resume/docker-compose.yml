@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  fpm:
+    restart: always
+    external_links:
+      - infra-services-db-1:db
+    build:
+      context: ./docker
+      dockerfile: php-fpm/Dockerfile
+    volumes:
+      - .:/app:rw,cached
+    ports:
+      - "9001:9000"
+    networks:
+      - tools
+
+  nginx-resume:
+    container_name: nginx-resume
+    build:
+      context: ./docker
+      dockerfile: nginx/Dockerfile-nginx
+    restart: always
+    links:
+      - fpm
+    depends_on:
+      - fpm
+    volumes:
+      - .:/app:rw,cached
+#      - /etc/letsencrypt:/etc/letsencrypt:ro
+#      - /tmp/acme_challenge:/tmp/acme_challenge
+    ports:
+      - '8080:80'
+#      - '443:443'
+    networks:
+      - tools
+
+volumes:
+  db-data-resume: {}
+
+networks:
+  tools:
+      name: infra-services_tools

@@ -1,0 +1,261 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <!------- Hero Section ------->
+    <section id="hero">
+        <img class="hero_image" src="{{ asset('img/hero-image.svg') }}" alt="Wedding Photo" />
+        <div class="content text-center">
+            <div class="container">
+                <h1 class="display-4 fw-normal">Nous donnons vie à vos événements</h1>
+                <h2>
+                    Lorem ipsum dolor sit amet consectetur adipisicing. Blanditiis iste dolores cupiditate commodi officiis
+                </h2>
+                <a id="contact_btn" class="btn btn-light" href="#contact">Nous contacter</a>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero -->
+
+    <!------- Services Section ------->
+    <section id="services" class="services">
+        <div class="container" data-aos="fade-up">
+            <div class="section_title">
+                <h2>Que faisons nous ?</h2>
+                <p>Fournir les meilleurs services de gestion d'événements</p>
+            </div>
+
+            <div class="content row">
+                <div class="col-lg-4 col-md-6">
+                    <!-- CARD ITEM -->
+                    <div class="card mt-4">
+                        <img src="{{ asset('img/gallery/event-wedding.jpg') }}" alt="services" />
+                        <div class="card-body">
+                            <h5 class="card-title">Organisation de mariages</h5>
+                            <p class="card-text">
+                                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                                Iure natus aliquid quia molestiae hic? Nisi exercitationem,
+                                molestias alias non, similique a, voluptatem corporis autem
+                                tenetur blanditiis assumenda velit delectus reprehenderit.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <!-- CARD ITEM -->
+                    <div class="card mt-4">
+                        <img src="{{ asset('img/gallery/corporate.jpg') }}" alt="services" />
+                        <div class="card-body">
+                            <h5 class="card-title">Événements d'entreprises</h5>
+                            <p class="card-text">
+                                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                                Iure natus aliquid quia molestiae hic? Nisi exercitationem,
+                                molestias alias non, similique a, voluptatem corporis autem
+                                tenetur blanditiis assumenda velit delectus reprehenderit.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <!-- CARD ITEM -->
+                    <div class="card mt-4">
+                        <img src="{{ asset('img/gallery/event-birthday.jpg') }}" alt="services" />
+                        <div class="card-body">
+                            <h5 class="card-title">Anniversaires</h5>
+                            <p class="card-text">
+                                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                                Iure natus aliquid quia molestiae hic? Nisi exercitationem,
+                                molestias alias non, similique a, voluptatem corporis autem
+                                tenetur blanditiis assumenda velit delectus reprehenderit.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Services Section -->
+
+    <!------- About Section ------->
+    <section id="about" class="about">
+        <div class="container" data-aos="fade-up">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="about_img">
+                        <img src="{{ asset('img/about.jpg') }}" alt="" />
+                    </div>
+                </div>
+                <div class="col-md-6 mt-5 mt-md-0 ps-md-5 text-white content">
+                    <h2 class="section_title">À propos de nous</h2>
+                    <h3>Nous planifions et concevons des événements qui captent l'imagination.</h3>
+                    <p class="mt-3">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
+                        nesciunt qui ad, commodi autem reiciendis, voluptatum ex
+                        voluptate adipisci quo aspernatur ea accusantium, dicta
+                        voluptatem. Quam ea ad minus nisi! reiciendis,adipisci quo
+                        aspernatur ea accusantium.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End About Section -->
+
+    <!------- Gallery Section ------->
+    <section id="gallery" class="gallery">
+        <div class="container" data-aos="fade-up">
+            <div class="section_title">
+                <h2>Galerie</h2>
+                <p>Quelques photos de nos évènements</p>
+            </div>
+
+            <div class="content">
+                <div class="row g-0">
+                    <!-- GALLERY ITEM -->
+                    <div class="col-6 col-md-4">
+                        <div class="gallery_item m-1">
+                            <a href="{{ asset('img/gallery/gallery-1.jpg') }}" class="glightbox" data-gallery="gallery-item"
+                               data-description="#Lorem. Lorem ipsum">
+                                <img src="{{ asset('img/gallery/gallery-1.jpg') }}" alt="Lorem ipsum" />
+                            </a>
+                        </div>
+                    </div>
+                    <!-- GALLERY ITEM -->
+                    <div class="col-6 col-md-4">
+                        <div class="gallery_item m-1">
+                            <a href="{{ asset('img/gallery/gallery-2.jpg') }}" class="glightbox" data-gallery="gallery-item"
+                               data-description="#Lorem. Lorem ipsum">
+                                <img src="{{ asset('img/gallery/gallery-2.jpg') }}" alt="Lorem ipsum" />
+                            </a>
+                        </div>
+                    </div>
+                    <!-- GALLERY ITEM -->
+                    <div class="col-6 col-md-4">
+                        <div class="gallery_item m-1">
+                            <a href="{{ asset('img/gallery/gallery-3.jpg') }}" class="glightbox" data-gallery="gallery-item"
+                               data-description="#Lorem. Lorem ipsum">
+                                <img src="{{ asset('img/gallery/gallery-3.jpg') }}" alt="Lorem ipsum" />
+                            </a>
+                        </div>
+                    </div>
+                    <!-- GALLERY ITEM -->
+                    <div class="col-6 col-md-4">
+                        <div class="gallery_item m-1">
+                            <a href="{{ asset('img/gallery/gallery-4.jpg') }}" class="glightbox" data-gallery="gallery-item"
+                               data-description="#Lorem. Lorem ipsum">
+                                <img src="{{ asset('img/gallery/gallery-4.jpg') }}" alt="Lorem ipsum" />
+                            </a>
+                        </div>
+                    </div>
+                    <!-- GALLERY ITEM -->
+                    <div class="col-6 col-md-4">
+                        <div class="gallery_item m-1">
+                            <a href="{{ asset('img/gallery/gallery-5.jpg') }}" class="glightbox" data-gallery="gallery-item"
+                               data-description="#Lorem. Lorem ipsum">
+                                <img src="{{ asset('img/gallery/gallery-5.jpg') }}" alt="Lorem ipsum" />
+                            </a>
+                        </div>
+                    </div>
+                    <!-- GALLERY ITEM -->
+                    <div class="col-6 col-md-4">
+                        <div class="gallery_item m-1">
+                            <a href="{{ asset('img/gallery/gallery-6.jpg') }}" class="glightbox" data-gallery="gallery-item"
+                               data-description="#Lorem. Lorem ipsum">
+                                <img src="{{ asset('img/gallery/gallery-6.jpg') }}" alt="Lorem ipsum" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Gallery Section -->
+
+    <!------- Contact Section ------->
+    <section id="contact" class="contact">
+        <div class="section_title">
+            <h2>Contacts</h2>
+            <p>Restons en contact</p>
+        </div>
+        <div class="container" data-aos="fade-up">
+            <div class="row info">
+                <div class="col-md-4">
+                    <div class="info_box mb-4">
+                        <i class="bi bi-pin-map"></i>
+                        <h5>Notre adresse</h5>
+                        <p>Cité An III, Ouagadougou</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info_box mb-4">
+                        <i class="bi bi-phone"></i>
+                        <h5>Appelez-nous</h5>
+                        <p>+226 66 36 85 07</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info_box mb-4">
+                        <i class="bi bi-envelope"></i>
+                        <h5>Envoyez nous un email</h5>
+                        <p>contact@lobievents.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row contactBox">
+                <div class="col-lg-6 order-1 order-lg-0 map">
+                    <!-- GOTO https://www.maps.ie/create-google-map/ to generate your location map iframe -->
+                    <div style="width: 100%">
+                        <iframe width="100%" height="600" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=9FG8+QXX,%20Cit%C3%A9%20An%20III,%20Ouagadougou,%20Burkina%20Faso+(Lobi%20Event's)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                            <a href="https://www.maps.ie/population/">Find Population on Map</a>
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 p-lg-5 form">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Votre Nom" required="" />
+                            </div>
+                            <div class="col-md-6 mt-md-0 form-group">
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Votre Email"
+                                       required="" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="phone" id="phone" placeholder="Votre numéro de téléphone"
+                                   required="" />
+                        </div>
+                        <div class="form-group">
+                            <select class="form-select" required>
+                                <option selected="">Le type d'évènement</option>
+                                <option value="wedding">Mariage</option>
+                                <option value="2">Évènement d'entreprise</option>
+                                <option value="2">Anniversaire</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <textarea class="form-control" name="message" rows="5" placeholder="Message" required=""></textarea>
+                        </div>
+                        <!-- <div class="status">
+                            <div class="alert alert-success" role="alert">
+                              <div>Your message has been sent. Thank you!</div>
+                            </div>
+                            <div class="alert alert-danger" role="alert">
+                              <div class="error-message">Error! Message not sent.</div>
+                            </div>
+                          </div> -->
+                        <div>
+                            <button type="submit" class="btn btn-dark">
+                                Envoyer le message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Contact Section -->
+{% endblock %}
