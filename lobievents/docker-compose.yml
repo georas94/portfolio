@@ -29,11 +29,14 @@ services:
       - ./app:/app:rw,cached
 #      - /etc/letsencrypt:/etc/letsencrypt:ro
 #      - /tmp/acme_challenge:/tmp/acme_challenge
-    ports:
-      - "8081:80"
+    expose:
+      - "8081"
 #      - '443:443'
     networks:
       - tools
+    environment:
+      - VIRTUAL_HOST=resume.tlabs.digital
+      - VIRTUAL_PORT=8081
 
 volumes:
   db-data-lobievents: {}

@@ -25,5 +25,19 @@ services:
             - '1080:1080'
             - '1025:1025'
 
+    nginx-proxy:
+        image: 'jc21/nginx-proxy-manager:latest'
+        restart: unless-stopped
+        ports:
+            - '80:80'
+            - '81:81'
+            - '443:443'
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - ./data:/data
+            - ./letsencrypt:/etc/letsencrypt
+        networks:
+            - tools
+
 networks:
     tools:

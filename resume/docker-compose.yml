@@ -29,11 +29,14 @@ services:
       - .:/app:rw,cached
 #      - /etc/letsencrypt:/etc/letsencrypt:ro
 #      - /tmp/acme_challenge:/tmp/acme_challenge
-    ports:
-      - '8080:80'
+    expose:
+      - '8080'
 #      - '443:443'
     networks:
       - tools
+    environment:
+      - VIRTUAL_HOST=resume.tlabs.digital
+      - VIRTUAL_PORT=8080
 
 volumes:
   db-data-resume: {}
