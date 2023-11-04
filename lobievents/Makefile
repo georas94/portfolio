@@ -1,5 +1,5 @@
 docker_compose_exec = docker compose exec -T
-php_console = $(docker_compose_exec) php bin/console
+php_console = $(docker_compose_exec) lobievents-fpm-1 bin/console
 
 #########
 # Utils #
