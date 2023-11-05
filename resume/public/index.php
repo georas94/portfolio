@@ -121,7 +121,7 @@
                         Ayant toujours été passionné par le numérique et les nouvelles technologies, c'est naturellement
                         que je me suis dirigé vers le développement web avant de terminer mes études. Je suis passionné
                         par ce que je fais et j’ai de l'ambition !
-                        <br>
+                        <br><br>
                         L’adaptation est l’un des aspects que j’ai le plus travaillé durant ces dernières années. Ayant
                         vécu au Burkina Faso, au Tchad, au Mali, au Maroc ainsi qu’en France (3 villes), cela m’a permis
                         de rencontrer différentes cultures. Rencontrer des personnes, avec des valeurs diverses nous
