@@ -1,5 +1,10 @@
 <nav>
     <div id="menu">
+        <div class="div-image">
+            <a href="{{ path("app_home") }}">
+                <img src="{{ asset('/media/logo.jpg') }}" alt="Logo de l'entreprise" width="90" height="70" class="logo"/>
+            </a>
+        </div>
         <ul>
             {% if is_granted('ROLE_EMPLOYEE') %}
                 <li>
