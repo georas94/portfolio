@@ -118,11 +118,14 @@
                     <h2 class="delaySmallReveal">Rashid Tamboura</h2>
 
                     <p class="delayLargeReveal">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium architecto eaque et
-                        facilis qui.
-                        Aliquid consequuntur, cum debitis doloremque eaque fugiat laudantium magnam necessitatibus
-                        neque, quia
-                        reprehenderit rerum! Ea, ullam. Elit debitis doloremque eaque fugiat laudantium magnam.
+                        Ayant toujours été passionné par le numérique et les nouvelles technologies, c'est naturellement
+                        que je me suis dirigé vers le développement web avant de terminer mes études. Je suis passionné
+                        par ce que je fais et j’ai de l'ambition !
+
+                        L’adaptation est l’un des aspects que j’ai le plus travaillé durant ces dernières années. Ayant
+                        vécu au Burkina Faso, au Tchad, au Mali, au Maroc ainsi qu’en France (3 villes), cela m’a permis
+                        de rencontrer différentes cultures. Rencontrer des personnes, avec des valeurs diverses nous
+                        apprend, à mon avis, à développer nos relations interpersonnelles !
                     </p>
                     <nav class="delayLargeReveal">
                         <ul>
@@ -250,11 +253,7 @@
                     </div>
                     <h3>Consulting dans la transformation digitale</h3>
                     <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid eos eum non officiis omnis
-                        optio quam
-                        vel voluptas. Asperiores facere incidunt quisquam! Aliquid, asperiores eius ipsum officiis
-                        perferendis
-                        praesentium rem.
+                        Diagnostic et conseils dans l'objectif de vous accompagner dans votre vision.
                     </p>
                 </article>
             </div>
@@ -265,11 +264,13 @@
         <div class="grid-layout">
             <h2 class="delaySmallReveal">Projets <span>.</span></h2>
             <div id="projects">
-                <article class="intervalCardReveal expenseReport" style="display: flex; flex-direction: column; justify-content: space-between">
+                <article class="intervalCardReveal expenseReport"
+                         style="display: flex; flex-direction: column; justify-content: space-between">
                     <h3>Notes de frais</h3>
                     <p>
                         Site réalisé pour le compte de la MABUCIG.
-                        C'est un outil complet de note des frais réalisé en Php avec le framework symfony, mySQL et javascript
+                        C'est un outil complet de note des frais réalisé en Php avec le framework symfony, mySQL et
+                        javascript
                     </p>
 
                     <a
@@ -281,7 +282,8 @@
                     </a>
                 </article>
 
-                <article class="intervalCardReveal lobievents" style="display: flex; flex-direction: column; justify-content: space-between">
+                <article class="intervalCardReveal lobievents"
+                         style="display: flex; flex-direction: column; justify-content: space-between">
                     <h3>Lobi Event's</h3>
                     <p>
                         Site vitrine réalise pour le compte de Lobi Event’s. Il présente les différents services ainsi
@@ -297,7 +299,8 @@
                     </a>
                 </article>
 
-                <article class="intervalCardReveal barke" style="display: flex; flex-direction: column; justify-content: space-between">
+                <article class="intervalCardReveal barke"
+                         style="display: flex; flex-direction: column; justify-content: space-between">
                     <h3>Barke</h3>
                     <p>
                         Site en cours de construction. Finalisé, ça sera le site vitrine de l'association Fondation
