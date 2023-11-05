@@ -286,7 +286,7 @@
                          style="display: flex; flex-direction: column; justify-content: space-between">
                     <h3>Lobi Event's</h3>
                     <p>
-                        Site vitrine réalise pour le compte de Lobi Event’s. Il présente les différents services ainsi
+                        Site vitrine en cours de réalisation pour le compte de Lobi Event’s. Il présente les différents services ainsi
                         que les informations de contact de l'entreprise.
                     </p>
 
