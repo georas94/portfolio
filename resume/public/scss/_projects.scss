@@ -20,7 +20,7 @@
       flex-wrap: wrap;
       text-align: left;
 
-      .teslabank {
+      .expenseReport {
         border: 1px solid #e51d37;
 
         &:hover {
@@ -28,7 +28,7 @@
         }
       }
 
-      .naped {
+      .lobievents {
         border: 1px solid #00a3ff;
 
         &:hover {
@@ -36,7 +36,7 @@
         }
       }
 
-      .efront {
+      .barke {
         border: 1px solid #a6fb98;
 
         &:hover {
@@ -79,7 +79,7 @@
       }
     }
 
-    #teslabank {
+    #expenseReport {
       color: #e51d37;
 
       &::after {
@@ -87,7 +87,7 @@
       }
     }
 
-    #naped {
+    #lobievents {
       color: #00a3ff;
 
       &::after {
@@ -95,7 +95,7 @@
       }
     }
 
-    #efront {
+    #barke {
       color: #a6fb98;
 
       &::after {

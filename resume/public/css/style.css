@@ -550,22 +550,22 @@ header .grid-layout nav .nav-list li a:hover {
   flex-wrap: wrap;
   text-align: left;
 }
-#s-projects .grid-layout #projects .teslabank {
+#s-projects .grid-layout #projects .expenseReport {
   border: 1px solid #e51d37;
 }
-#s-projects .grid-layout #projects .teslabank:hover {
+#s-projects .grid-layout #projects .expenseReport:hover {
   border: 1px solid #e51d37;
 }
-#s-projects .grid-layout #projects .naped {
+#s-projects .grid-layout #projects .lobievents {
   border: 1px solid #00a3ff;
 }
-#s-projects .grid-layout #projects .naped:hover {
+#s-projects .grid-layout #projects .lobievents:hover {
   border: 1px solid #00a3ff;
 }
-#s-projects .grid-layout #projects .efront {
+#s-projects .grid-layout #projects .barke {
   border: 1px solid #a6fb98;
 }
-#s-projects .grid-layout #projects .efront:hover {
+#s-projects .grid-layout #projects .barke:hover {
   border: 1px solid #a6fb98;
 }
 #s-projects .grid-layout #projects .steam {
@@ -610,22 +610,22 @@ header .grid-layout nav .nav-list li a:hover {
   line-height: 3.2rem;
   font-size: 1.8rem;
 }
-#s-projects .grid-layout #teslabank {
+#s-projects .grid-layout #expenseReport {
   color: #e51d37;
 }
-#s-projects .grid-layout #teslabank::after {
+#s-projects .grid-layout #expenseReport::after {
   background: linear-gradient(270deg, #e51d37 0%, #17161d 100%);
 }
-#s-projects .grid-layout #naped {
+#s-projects .grid-layout #lobievents {
   color: #00a3ff;
 }
-#s-projects .grid-layout #naped::after {
+#s-projects .grid-layout #lobievents::after {
   background: linear-gradient(270deg, #00a3ff 0%, #17161d 100%);
 }
-#s-projects .grid-layout #efront {
+#s-projects .grid-layout #barke {
   color: #a6fb98;
 }
-#s-projects .grid-layout #efront::after {
+#s-projects .grid-layout #barke::after {
   background: linear-gradient(270deg, #a6fb98 0%, #17161d 100%);
 }
 #s-projects .grid-layout #steam {

@@ -63,6 +63,7 @@
                 <li>
                     <a href="#s-services">Services</a>
                 </li>
+                <li><a href="#s-projects">Projets</a></li>
                 <li>
                     <a href="#s-skills">Outils - Langages</a>
                 </li>
@@ -258,6 +259,66 @@
                     </p>
                 </article>
             </div>
+        </div>
+    </section>
+
+    <section id="s-projects">
+        <div class="grid-layout">
+            <h2 class="delaySmallReveal">Projets <span>.</span></h2>
+            <div id="projects">
+                <article class="intervalCardReveal expenseReport" style="display: flex; flex-direction: column; justify-content: space-between">
+                    <h3>Notes de frais</h3>
+                    <p>
+                        Site réalisé pour le compte de la MABUCIG.
+                        C'est un outil complet de note des frais réalisé en Php avec le framework symfony, mySQL et javascript
+                    </p>
+
+                    <a
+                            href="https://notes-de-frais.tlabs.digital"
+                            rel="noopener"
+                            target="_blank"
+                            id="expenseReport"
+                    >Voir le projet
+                    </a>
+                </article>
+
+                <article class="intervalCardReveal lobievents" style="display: flex; flex-direction: column; justify-content: space-between">
+                    <h3>Lobi Event's</h3>
+                    <p>
+                        Site vitrine réalise pour le compte de Lobi Event’s. Il présente les différents services ainsi
+                        que les informations de contact de l'entreprise.
+                    </p>
+
+                    <a
+                            href="https://lobievents.tlabs.digital"
+                            rel="noopener"
+                            target="_blank"
+                            id="lobievents"
+                    >Voir le projet
+                    </a>
+                </article>
+
+                <article class="intervalCardReveal barke" style="display: flex; flex-direction: column; justify-content: space-between">
+                    <h3>Barke</h3>
+                    <p>
+                        Site en cours de construction. Finalisé, ça sera le site vitrine de l'association Fondation
+                        Barke Beidari.
+                    </p>
+                    <a
+                            href="#"
+                            rel="noopener"
+                            id="barke"
+                    >Voir le projet
+                    </a>
+                </article>
+            </div>
+            <a
+                    href="https://github.com/georas94?tab=repositories"
+                    rel="noopener"
+                    target="_blank"
+                    class="delayExtraBigReveal"
+            >Dépôt GitHub</a
+            >
         </div>
     </section>
 
