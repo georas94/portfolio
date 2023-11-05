@@ -1,0 +1,42 @@
+{% extends 'expense-base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12" style="height: 30em;">
+                <h1 class="mb-5 text-center">Bonjour {{ user.firstname }} !</h1>
+                <div class="table-responsive-md div-home-dashboard">
+                    {% if expensesResultSet|length > 0 %}
+                        <h3><strong>{{ expensesResultSet|length }}</strong> notes de frais en attente de validation</h3>
+                        <table class="table text-center table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="p-3">Créateur</th>
+                            <th scope="col" class="p-3">Date de création</th>
+                            <th scope="col" class="p-3">Montant total</th>
+                            <th scope="col" class="p-3">Statut</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key,expenseResultSet in expensesResultSet %}
+                            <tr onclick="document.location = '{{ path('app_managerial_expense_edit', {'id': expenseResultSet.expense.id }) }}'">
+                                <td>{{ expenseResultSet.expense.user.firstname|capitalize ~ ' ' ~ expenseResultSet.expense.user.lastname|upper }}</td>
+                                <td>{{ expenseResultSet.expense.date|date('d/m/Y') }}</td>
+                                <td>{{ expenseResultSet.expense.totalAmount|number_format(0, ' ', ' ') }}
+                                    <small>Xof</small></td>
+                                <td>{{ expenseResultSet.expense.getStatusForDisplay }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <h3>Dernières notes de frais en attente de validation</h3>
+                        <h5 class="text-center mt-5 alert-danger">Aucune note de frais en attente</h5>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

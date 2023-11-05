@@ -1,0 +1,44 @@
+{% extends 'expense-base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-4 d-flex flex-column justify-content-center mt-2" style="width: 35%;">
+                <h3 class="mt-5 text-center">Création d'un nouvel utilisateur</h3>
+                <div class="mt-5 div-managerial-user-create">
+                    {% set formErrors = registrationForm.vars.errors.form.getErrors(true) %}
+
+                    {% if formErrors|length %}
+                        <div class="alert alert-danger">
+                            {% for i, error in formErrors %}
+                                <div class="mb-2">{{ (i+1) }}. {{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {{ form_start(registrationForm) }}
+                    <div class="form-outline mb-4">
+                        {{ form_label(registrationForm.lastname, 'Nom', {'label_attr': {'class': 'foo'}}) }}
+                        {{ form_widget(registrationForm.lastname, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-outline mb-4">
+                        {{ form_label(registrationForm.firstname, 'Prénom', {'label_attr': {'class': 'foo'}}) }}
+                        {{ form_widget(registrationForm.firstname, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-outline mb-4">
+                        {{ form_label(registrationForm.email, 'Adresse email', {'label_attr': {'class': 'foo'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+                    <div class="form-outline mb-4">
+                        {{ form_label(registrationForm.roles, 'Role', {'label_attr': {'class': 'foo'}}) }}
+                        {{ form_widget(registrationForm.roles) }}
+                    </div>
+                    <button type="submit" class="btn btn-imperial mt-2 w-100 btn-lg">Soumettre</button>
+                    {{ form_end(registrationForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

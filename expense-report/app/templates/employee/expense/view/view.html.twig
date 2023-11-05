@@ -1,0 +1,74 @@
+{% extends 'expense-base.html.twig' %}
+
+{% block title %}Détail note de frais{% endblock %}
+
+{% block body %}
+    <div class="main-sub container">
+        <div class="row mt-5">
+            {% for message in app.flashes('success') %}
+                <div class="d-flex justify-content-end">
+                    <div class="alert w-25 text-center" style="background: #4CAF50!important;font-weight: 900 !important;">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+            <h1 class="text-center">Détail de la note de frais</h1>
+            <div class="col-12 mt-5 d-flex flex-column align-items-center justify-content-evenly">
+                <p><strong>Référence :</strong> {{ expense.id }}</p>
+                <p>
+                    <strong>Montant total :</strong>
+                    {{ expense.totalAmount|number_format(0, ' ', ' ') }} <small>Xof</small>
+                    {% if expense.advancedTotalAmount != '' %}
+                        <small class="mt-1 mb-3 d-flex span-expense-create-total-advanced-amount">
+                            <span>Dont avance totale de : </span> &nbsp;
+                            <span>{{ expense.advancedTotalAmount|number_format(0, ' ', ' ') }} <small>Xof</small></span>
+                        </small>
+                    {% endif %}
+                </p>
+                <p><strong>Adresse email :</strong> {{ expense.user.email }}</p>
+                <p><strong>Statut :</strong> {{ expense.getStatusForDisplay }}</p>
+                {% for expenseItem in expense.expenseItems %}
+                    {% if expenseItem.id%2 == 0 %}
+                        <div class="div-expense-items mt-3" style="background: #dedddd">
+                    {% else %}
+                        <div class="div-expense-items mt-3" style="background: #f5f1f1">
+                    {% endif %}
+                            <div class="d-flex flex-column justify-content-center align-items-center mt-3 mb-5 div-expense-items-commentaires">
+                                <strong class="text-center">Commentaire : </strong>
+                                <span class="mt-4">{{ expenseItem.comment }}</span>
+                            </div>
+                            <div class="mt-3 mb-3">
+                                <strong>Type : </strong>
+                                <span>{{ expenseItem.getTypeForDisplay }}</span>
+                            </div>
+                            {% if expenseItem.advancedFeesAmount > 0 %}
+                                <div class="mt-3 mb-3">
+                                    <strong>Avance : </strong>
+                                    <span>{{ expenseItem.advancedFeesAmount|number_format(0, ' ', ' ') }} <small>Xof</small></span>
+                                </div>
+                            {% endif %}
+                            <div class="mt-3">
+                                <strong>Montant de la sous note :</strong>
+                                <span>{{ expenseItem.amount|number_format(0, ' ', ' ') }} <small>Xof</small></span>
+                            </div>
+                            {% if expenseItem.imageName != '' %}
+                                <div class="mt-3">
+                                    <strong>Justificatif :</strong>
+                                    <span>
+                                        <a class="btn" target="_blank" href="{{ path('app_employee_expense_file_download', {'id': expenseItem.id}) }}">
+                                            <img class="img-file" src="{{ asset('media/file.png') }}" alt="file icon">
+                                        </a>
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="div-link-back">
+        <a onclick="history.back()" class="text-start">
+            <img src="{{ asset('media/back.png') }}" alt="logo retour">
+        </a>
+    </div>
+{% endblock %}

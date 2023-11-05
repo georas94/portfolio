@@ -1,0 +1,25 @@
+<nav>
+    <div id="menu">
+{#        <div class="div-image">#}
+{#            <a href="{{ path("app_home") }}">#}
+{#                <img src="{{ asset('/media/logo.jpg') }}" alt="Logo de l'entreprise" width="90" height="70" class="logo"/>#}
+{#            </a>#}
+{#        </div>#}
+        <ul>
+            <li>
+                <a class="nav-link logout" href="{{ path("app_home") }}">
+                    <span class="nav-item" style="margin-bottom: 0">Accueil</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="button-group">
+        <a class="menu-button" href="#menu" id="button-open-menu">
+                  <span class="menu-button-span">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </span>
+        </a>
+        <a class="menu-button off" href="#off-menu" id="button-close-menu"></a>
+    </div>
+</nav>

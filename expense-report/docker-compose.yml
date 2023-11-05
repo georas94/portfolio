@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   fpm:
@@ -11,12 +11,12 @@ services:
     volumes:
       - ./app:/app:rw,cached
     ports:
-      - "9000:9000"
+      - "9002:9000"
     networks:
       - tools
 
-  nginx-lobievents:
-    container_name: nginx-lobievents
+  nginx-expense-report:
+    container_name: nginx-expense-report
     build:
       context: ./app
       dockerfile: docker/nginx/Dockerfile-nginx
@@ -28,14 +28,11 @@ services:
     volumes:
       - ./app:/app:rw,cached
     ports:
-      - "8081:80"
+      - "8082:80"
     networks:
       - tools
 
-volumes:
-  db-data-lobievents: {}
-
 networks:
-    tools:
-        external: true
-        name: infra-services_tools
+  tools:
+    external: true
+    name: infra-services_tools

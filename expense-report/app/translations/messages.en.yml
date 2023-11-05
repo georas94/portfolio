@@ -1,0 +1,37 @@
+app:
+  success:
+    expense:
+      create: Expense report created !
+    user:
+      create: User created !
+    employee:
+      user:
+        update:
+          password: Password updated with success !
+  error:
+    expense:
+      employee:
+        update:
+          totalAmount: An error occured when calculating the total amount
+      create:
+        notBlank: This field shloud not be blank
+        amount:
+        document:
+          size: The file size is too heavy
+          mimeType: The file type given is not listed in the accepted ones
+    text:
+      notBlank:
+    user:
+      employee:
+        create: An error occured when creating the user
+      not:
+        found: We didn't find any connected user
+    login:
+      invalid:
+        credentials: Invalid credentials
+    employee:
+      user:
+        update:
+          password:
+            notSame: Passwords are not identical. Please try again
+            generic: We've encoured a error when processing the password update. Please try again

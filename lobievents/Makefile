@@ -1,5 +1,6 @@
 docker_compose_exec = docker compose exec -T
 php_console = $(docker_compose_exec) fpm bin/console
+symfony_console = $(docker_compose_exec) bash symfony
 
 #########
 # Utils #

@@ -1,0 +1,38 @@
+app:
+  success:
+    expense:
+      create: Note de frais créée !
+    user:
+      create: Utilisateur créé !
+    employee:
+      user:
+        update:
+          password: Mot de passe mis à jour avec succès !
+  error:
+    expense:
+      employee:
+        update:
+          totalAmount: Une erreur s'est produite lors du calcul du montant total de la note de frais
+      create:
+        notBlank: Ce champ ne doit pas être vide
+        amount:
+        document:
+          size: La taille du fichier dépasse la limite autorisée
+          mimeType: Le type du fichier fournit n'est pas autorisé
+    text:
+      notBlank:
+    user:
+      employee:
+        create: Une erreur s'est produite lors de la création de l'utilisateur
+      not:
+        found: Nous n'avons pas trouvé d'utilisateur connecté
+    login:
+      invalid:
+        credentials: Informations d'identification invalides
+    employee:
+      user:
+        update:
+          password:
+            notSame: Les mots de passe entrés ne sont pas identiques
+            noContainsInteger: Votre mot de passe doit contenir au moins un chiffre
+            generic: Un souci a été rencontré lors de la mise à jour de votre mot de passe

@@ -1,0 +1,11 @@
+vich_uploader:
+    db_driver: orm
+
+    metadata:
+        type: attribute
+
+    mappings:
+        expenses:
+            uri_prefix: /uploads/expenseDocuments
+            upload_destination: '%kernel.project_dir%/public/uploads/expenseDocuments'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

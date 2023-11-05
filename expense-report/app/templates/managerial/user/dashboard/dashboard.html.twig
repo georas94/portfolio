@@ -1,0 +1,50 @@
+{% extends 'expense-base.html.twig' %}
+
+{% block title %}Tableau de bord utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                {% for message in app.flashes('success') %}
+                    <div class="d-flex justify-content-end">
+                        <div class="alert alert-success w-25 text-center">
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+                <h3 class="mt-5 text-center">Liste des utilisateurs créés</h3>
+                {% if usersResultSet|length > 0 %}
+                <div class="table-responsive-md mt-4">
+                    <table class="table text-center table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="p-3">Id</th>
+                            <th scope="col" class="p-3">Prénom</th>
+                            <th scope="col" class="p-3">Nom</th>
+                            <th scope="col" class="p-3">Email</th>
+                            <th scope="col" class="p-3">Role</th>
+                            <th scope="col" class="p-3">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key,userResultSet in usersResultSet %}
+                            <tr onclick="document.location = '{{ path('app_managerial_user_view', {'id': userResultSet.user.id }) }}'">
+                                <td><strong>{{ userResultSet.user.id }}</strong></td>
+                                <td>{{ userResultSet.user.firstname }}</td>
+                                <td>{{ userResultSet.user.lastname}}</td>
+                                <td>{{ userResultSet.user.email}}</td>
+                                <td>{{ userResultSet.getRole }}</td>
+                                <td>A VENIR</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <h5 class="text-center mt-5 alert-danger">Vous n’avez crée aucun utilisateur</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

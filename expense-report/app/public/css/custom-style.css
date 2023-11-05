@@ -1,0 +1,359 @@
+body {
+    font-size: 100%;
+    background-color: #B43830;
+    color: #e8e5e5;
+}
+
+.main-sub {
+    padding-bottom: 2.5rem;
+}
+
+footer{
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 2.5rem;
+    z-index: -3;
+    padding: 0 1em 5em 1em;
+}
+
+td{
+    padding: 1.5em !important;
+}
+
+main .main-sub{
+    margin-top: 5em;
+}
+
+nav ul{
+    margin-top: 2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 15em;
+    padding-inline-start:0;
+}
+
+.ul-nav-item{
+    margin-top: 4em;
+}
+
+li{
+    list-style: none;
+}
+
+.btn-imperial{
+    background: #B43830;
+    border-color: #B43830;
+    color: #FFFFFF;
+}
+
+.btn-imperial:hover{
+    background: #b43830bd;
+    color: #FFFFFF;
+}
+
+.big-checkbox {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+/* Nav*/
+.logo-nav{
+    height: 1.9em;
+    width: 1.9em;
+}
+
+.nav-link{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.logo{
+    width: 60%;
+    height: 60%;
+}
+
+.div-image{
+    text-align: center;
+    padding: 2em;
+}
+
+.button-group {
+    position: absolute;
+    width: 4em;
+    height: 4em;
+    top: 0;
+    left: 0;
+    margin: 0.5em;
+    /* just to give some space*/
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.menu-button {
+    width: 70%;
+    height: 70%;
+    position: absolute;
+    display: block;
+    background-color: #B43830;
+    text-align: center;
+    color: #fff;
+    left: 0;
+    top: 0.5em;
+}
+
+.menu-button span {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+.menu-button span .fa-times {
+    display: none;
+}
+
+.menu-button.off {
+    z-index: -1;
+}
+
+#menu {
+    z-index: 10;
+    bottom: 0;
+    position: absolute;
+    height: 100vh;
+    width: 18.75em;
+    margin: 0;
+    background-color: #FFFFFF;
+    transform: translateX(-100%);
+    transition-duration: 0.5s;
+    transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+#menu a {
+    color: #000;
+    text-decoration: none;
+}
+
+#menu:target {
+    transform: translateX(0);
+}
+
+#menu:target + .button-group {
+    left: 18.75em;
+}
+
+#menu:target + .button-group .menu-button:first-child span .fa-times {
+    display: block;
+}
+
+#menu:target + .button-group .menu-button:first-child span .fa-bars {
+    display: none;
+}
+
+#menu:target + .button-group .off {
+    z-index: 0;
+    background-color: transparent;
+}
+
+.menu-button-span{
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout{
+    color: inherit;
+    text-decoration: none;
+}
+
+.div-expense-create-date dt{
+    margin-right: 1em;
+}
+
+.expense-create-container-infos{
+    width: 77%;
+}
+
+.expense-create-container-infos, .exp_list{
+    margin-bottom: 2em;
+    background: #e7e7e7;
+    padding: 1em;
+    border-radius: 1em;
+}
+
+.div-managerial-user-create{
+    padding: 1.5em;
+    background: #ffffff;
+    color: #232323;
+    border-radius: 1em;
+}
+
+.expense-create-isAdvanceTaken-input{
+    margin-left: 1em;
+}
+
+.btn-expense-create{
+    margin-top: 6em;
+}
+
+.panel-warning{
+    border-radius: 1em;
+    padding: 1.5em;
+    background: #dedddd;
+}
+
+.panel-warning.expense-added{
+    border-radius: 1em;
+    margin-top: 1em;
+}
+
+#expense_form_validate, #expense_form_delete, #action_form_reject, #action_form_validate, #action_form_to_manager{
+    width: 17em;
+    height: 3em;
+    font-size: 1.12em;
+}
+
+.div-expense-items-commentaires span, .div-expense-items-commentaires strong{
+    width: 100% !important;
+}
+
+.div-expense-items-commentaires span{
+    background: #7674742b;
+    padding: 1.2em;
+    border-radius: 1em;
+}
+
+.span-expense-create-total-advanced-amount{
+    color: #c5c2c2;
+}
+
+.div-expense-items div span, .div-expense-items div strong{
+    width: 5em;
+}
+
+.div-expense-items{
+    border-radius: 1em;
+    width: 75%;
+    padding: 1em;
+    color: #232323;
+}
+
+.expense-create-container-infos, .exp_list{
+    color: #232323;
+}
+
+.div-link-home{
+    margin-top: 8em;
+    text-align: end;
+    right: 1em;
+}
+
+.div-link-home a img{
+    width: 2.5em;
+    height: 2.5em;
+    bottom: 3em;
+    position: fixed;
+    right: 1em;
+}
+
+.div-link-back a img{
+    width: 2.5em;
+    height: 2.5em;
+    bottom: 3em;
+    position: fixed;
+    right: 5em;
+}
+
+.expense-create-container-data.container {
+    width: 75%;
+}
+
+.div-expense-create-data form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.div-expense-actions-buttons{
+    width: 100%;
+}
+
+.btn-employee-expense-create-validate, .btn-managerial-user-create{
+    background: #dee7d8;
+    color: #232323;
+}
+
+.btn-employee-expense-create-validate:hover, .btn-managerial-user-create:hover{
+    background: #FFFFFF;
+    color: #232323;
+}
+
+.expense-create-container-data .alert-danger{
+    margin-top: 2em !important;
+    padding: 0.5em;
+    text-align: center;
+}
+
+.expense-create-container-data .alert-danger ul{
+    margin-bottom: 0;
+}
+
+.div-info-file-upload{
+    margin-top: 0.5em;
+}
+.div-info-file-upload span, .fa-solid.fa-circle-info{
+    margin-left: 1em;
+}
+
+.div-login{
+    margin-top: 8em;
+}
+
+.alert-danger{
+    color: #fff!important;
+    background: #f44336!important;
+    font-weight: 700 !important;
+    padding: 1em;
+    border: none;
+}
+
+.alert-success{
+    color: #fff!important;
+    background: #4CAF50!important;
+    font-weight: 700 !important;
+    padding: 1em;
+    border: none;
+}
+
+.div-home-dashboard{
+    margin-top: 3em;
+    margin-left: 20em;
+}
+
+.img-file{
+    width: 3em;
+    height: 3em;
+}
+
+.div-logo-without-letters{
+    visibility: hidden;
+    opacity: 0;
+}
+
+/*Responsive mobile screen */
+@media only screen
+and (min-device-width : 360px)
+and (max-device-width : 640px)
+{
+    .div-image{
+        margin-top: 6em;
+    }
+}

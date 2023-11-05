@@ -1,0 +1,44 @@
+framework:
+    workflows:
+        expense:
+            type: 'workflow'
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'currentPlace'
+            supports:
+                - App\Entity\Expense
+            initial_marking: draft
+            places:
+                - draft
+                - sent-to-accounting
+                - sent-to-treasury
+                - sent-to-manager
+                - rejected
+                - approved
+            transitions:
+                to_review_accounting:
+                    from: draft
+                    to: sent-to-accounting
+                from_draft_to_delete:
+                    from: draft
+                    to: rejected
+                rejected_from_accounting:
+                    from: sent-to-accounting
+                    to: rejected
+                to_review_manager:
+                    from: sent-to-accounting
+                    to: sent-to-manager
+                rejected_from_manager:
+                    from: sent-to-manager
+                    to: rejected
+                to_review_from_manager_to_treasury:
+                    from: sent-to-manager
+                    to: sent-to-treasury
+                to_review_from_accountant_to_treasury:
+                    from: sent-to-accounting
+                    to: sent-to-treasury
+                validated_from_treasury:
+                    from: sent-to-treasury
+                    to: approved

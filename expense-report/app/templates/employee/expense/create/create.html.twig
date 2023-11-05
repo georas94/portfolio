@@ -1,0 +1,129 @@
+{% extends 'expense-base.html.twig' %}
+
+{% block title %}Créer une note de frais{% endblock %}
+
+{% block body %}
+    <div class="main-sub expense-create">
+        <div class="expense-create-wrapper-content">
+            <h1 class="text-center mb-5">Nouvelle note de frais</h1>
+            <div class="expense-create-container-infos container">
+                <div class="row justify-content-evenly">
+                    <div class="col-lg-4">
+                        <dl class="row mb-0">
+                            <div class="col-sm-4 text-sm-left">
+                                <dt>Créateur :</dt>
+                            </div>
+                            <div class="col-sm-8 text-sm-left">
+                                <dd class="mb-1"> {{ expense.user.firstname ~ ' ' ~ expense.user.lastname }}</dd>
+                            </div>
+
+                        </dl>
+                        <dl class="row mb-0">
+                            <div class="col-sm-4 text-sm-left">
+                                <dt>Statut :</dt>
+                            </div>
+                            <div class="col-sm-8 text-sm-left">
+                                <dd class="mb-1"><span class="label ">{{ expense.getStatusForDisplay }}</span></dd>
+                            </div>
+                        </dl>
+                    </div>
+                    <div class="col-lg-4 div-expense-create-date d-flex align-items-center">
+                        <dl class="mb-0">
+                            <div class="text-sm-right d-flex">
+                                <dt class="mr-5">Date :</dt>
+                                <span>{{ expense.date|format_date(locale='fr', pattern='MMMM')|capitalize ~' '~ expense.date|date('Y') }}</span>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            {% if  expense.user.isPasswordChanged %}
+            <div class="expense-create-container-data container">
+                <div class="col-lg-12 div-expense-create-data">
+                    {{ form_start(form) }}
+                    <div class="col-sm-12 col-md-12 exp_list" id="exp_list" data-prototype="{{ form_widget(form.expenseItems.vars.prototype)|e('html_attr') }}">
+                        {% set formErrors = form.vars.errors.form.getErrors(true) %}
+
+                        {% if formErrors|length %}
+                            <div class="d-flex justify-content-center">
+                                <div class="mb-2 alert alert-danger w-50">Certains champs ne sont pas valides. <br> Veuillez vérifier les notes de frais soumises</div>
+                            </div>
+                        {% endif %}
+
+                        {% for row in form.expenseItems %}
+                                <div class="panel panel-warning">
+                                    <div class="panel-body panel-body-id-0 d-flex flex-column align-items-center" id="panel-body-id-0">
+                                        {% if form_errors(row.expenseType) != '' %}
+                                            <div class="alert alert-danger w-50 mt-2">
+                                                {{ form_errors(row.expenseType) }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="w-100">
+                                            {{ form_label(row.expenseType) }}
+                                            {{ form_widget(row.expenseType) }}
+                                        </div>
+                                        {% if form_errors(row.comment) != '' %}
+                                            <div class="alert alert-danger w-50 mt-2">
+                                                {{ form_errors(row.comment) }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="w-100">
+                                            {{ form_label(row.comment) }}
+                                            {{ form_widget(row.comment) }}
+                                        </div>
+                                        {% if form_errors(row.isAdvanceTaken) != '' %}
+                                            <div class="alert alert-danger w-50 mt-2">
+                                                {{ form_errors(row.isAdvanceTaken) }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="w-100">
+                                            {{ form_label(row.isAdvanceTaken) }}
+                                            {{ form_widget(row.isAdvanceTaken) }}
+                                        </div>
+                                        {% if form_errors(row.advancedFeesAmount) != '' %}
+                                            <div class="alert alert-danger w-50 mt-2">
+                                                {{ form_errors(row.advancedFeesAmount) }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="w-100">
+                                            {{ form_widget(row.advancedFeesAmount) }}
+                                        </div>
+                                        {% if form_errors(row.imageFile) != '' %}
+                                            <div class="alert alert-danger w-50 mt-2">
+                                                {{ form_errors(row.imageFile) }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="w-100">
+                                            {{ form_label(row.imageFile) }}
+                                            {{ form_widget(row.imageFile) }}
+                                        </div>
+                                        {% if form_errors(row.amount) != '' %}
+                                            <div class="alert alert-danger w-50 mt-2">
+                                                {{ form_errors(row.amount) }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="w-100">
+                                            {{ form_label(row.amount) }}
+                                            {{ form_widget(row.amount) }}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="d-flex justify-content-evenly div-expense-actions-buttons">
+                            <button type="button" class="btn btn-dark " onclick="history.back()" id="expense_form_delete">Abandonner</button>
+                            {{ form_widget(form.validate) }}
+                        </div>
+                        {{ form_row(form._token) }}
+                    {{ form_end(form, {render_rest: false}) }}
+                </div>
+            </div>
+            {% else %}
+            <div class="expense-create-container-data container text-center mt-5 alert-danger">
+                <p>Veuillez mettre à jour votre <a style="text-decoration: none" href="{{ path('app_employee_user_account', {'id': expense.user.id}) }}">mot de passe</a> avant de pouvoir créer une note frais. <br> <br> Si vous rencontrez des difficultés, veuillez contacter l’administration.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

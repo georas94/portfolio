@@ -1,0 +1,51 @@
+{% extends 'expense-base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-5 mt-5">Tableau de bord</h1>
+                {% if expensesResultSet|length > 0  %}
+                <h3 class="mt-5 text-center">Liste des notes de frais créés</h3>
+                <div class="table-responsive-md mt-4">
+                    <table class="table text-center table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="p-3">Référence</th>
+                            <th scope="col" class="p-3">Date</th>
+                            <th scope="col" class="p-3">Montant total</th>
+                            <th scope="col" class="p-3">Statut</th>
+                            <th scope="col" class="p-3">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key,expenseResultSet in expensesResultSet %}
+                            <tr onclick="document.location = '{{ path('app_employee_expense_view', {'id': expenseResultSet.expense.id }) }}'">
+                                <td><strong>{{ expenseResultSet.expense.id }}</strong></td>
+                                <td>{{ expenseResultSet.expense.date|date('d/m/Y') }}</td>
+                                <td>{{ expenseResultSet.expense.totalAmount|number_format(0, ' ', ' ') }}
+                                    <small>Xof</small></td>
+                                <td>{{ expenseResultSet.expense.getStatusForDisplay }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        {% if expenseResultSet.canEdit %}
+                                                <a type="button"
+                                                   href="{{ path('app_employee_expense_edit', {id: expenseResultSet.expense.id}) }}"
+                                                   class="btn btn-imperial">Editer</a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <h5 class="text-center mt-5 alert-danger">Vous n’avez crée aucune note de frais</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

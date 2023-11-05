@@ -1,0 +1,48 @@
+{% extends 'expense-base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row d-flex justify-content-center div-login">
+            {% if error %}
+                <div class=" d-flex justify-content-center mb-3">
+                    <div class="text-center w-25 alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                </div>
+            {% endif %}
+            <div class="d-flex justify-content-center flex-column w-25 p-3"   style="
+                background: #FFFF;
+                border-radius: 1em;
+                padding: 1em;
+                color: #232323;
+        ">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <div class="main-sub">
+                        <div class="mt-5">
+                            <span>Vous êtes déjà connecté, pour vous déconnecter, cliquer ci dessous</span>
+                            <a class="nav-link logout" href="{{ path("app_logout") }}">
+                                <span class="nav-item btn btn-imperial mt-3" style="margin-bottom: 0">Déconnexion</span>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                <h1 class="mt-3 text-center">Connexion</h1>
+                <form action="{{ path('app_login') }}" class="d-flex align-items-center flex-column mt-3" method="post">
+                    <div class="w-100">
+                        <label for="username" class="label-username">Email:</label>
+                        <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}">
+                    </div>
+
+                    <div class="w-100 mt-4">
+                        <label for="password" class="label-password">Mot de passe :</label>
+                        <input type="password" id="password" class="form-control" name="_password">
+                    </div>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    
+                    <button class="btn btn-imperial mt-5 w-100" type="submit">Connexion</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

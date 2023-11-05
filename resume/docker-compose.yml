@@ -37,4 +37,5 @@ volumes:
 
 networks:
   tools:
+      external: true
       name: infra-services_tools
