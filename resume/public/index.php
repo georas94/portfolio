@@ -405,7 +405,7 @@
         <div class="grid-layout">
             <p>
                 Copyright © 2023
-                <a href="https://tlabs.digital" rel="noopener" target="_blank">
+                <a href="https://rashid.tlabs.digital" rel="noopener" target="_blank">
                     tlabs.digital
                 </a>
                 Tous droits réservés.
