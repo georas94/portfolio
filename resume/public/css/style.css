@@ -205,6 +205,11 @@ header .grid-layout nav .nav-list li a:hover {
   .mobile-menu {
     display: block;
   }
+
+  h3{
+    margin: 0 !important;
+  }
+
 }
 #s-home {
   padding: 0px 50px;
@@ -581,7 +586,7 @@ header .grid-layout nav .nav-list li a:hover {
   height: auto;
 }
 #s-projects .grid-layout #projects > article:hover {
-  border: 1px solid #986dff;
+  border: 1px solid #00E5FF;
 }
 @media screen and (max-width: 1200px) {
   #s-projects .grid-layout #projects > article {
@@ -705,7 +710,7 @@ header .grid-layout nav .nav-list li a:hover {
   border-radius: 4px;
 }
 #s-services .grid-layout #services article:hover {
-  border: 1px solid #986dff;
+  border: 1px solid #00E5FF;
 }
 @media screen and (max-width: 1200px) {
   #s-services .grid-layout #services article {
@@ -819,7 +824,7 @@ header .grid-layout nav .nav-list li a:hover {
   transition: 1s all ease;
 }
 #s-skills .grid-layout #skills #skills-cards article:hover {
-  border: 1px solid #986dff;
+  border: 1px solid #00E5FF;
 }
 @media screen and (max-width: 768px) {
   #s-skills .grid-layout #skills #skills-cards article {

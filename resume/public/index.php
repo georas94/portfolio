@@ -12,7 +12,7 @@
             content="sites, web, desenvolvimento, frontend, iuri silva, ui designer, programador, iuricode, front-end, designer, ui, iuri, freelancer, freela, website, portfólio"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="theme-color" content="#986DFF"/>
+    <meta name="theme-color" content="#00E5FF"/>
     <meta name="copyright" content="Iuri Silva 2021"/>
     <meta http-equiv="content-language" content="pt-br"/>
     <meta
