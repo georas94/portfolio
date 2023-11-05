@@ -188,11 +188,11 @@ header .grid-layout nav .nav-list li a:hover {
     top: 100px;
     right: 0;
     width: 100vw;
-    height: 100vh;
+    height: 90vh;
+    margin-top: -2em;
     z-index: 999;
     background-color: #151515;
     flex-direction: column;
-    padding-top: 96px;
     visibility: hidden;
   }
   header .grid-layout nav .nav-list li {
