@@ -1,16 +1,56 @@
 <nav>
     <div id="menu">
-{#        <div class="div-image">#}
-{#            <a href="{{ path("app_home") }}">#}
-{#                <img src="{{ asset('/media/logo.jpg') }}" alt="Logo de l'entreprise" width="90" height="70" class="logo"/>#}
-{#            </a>#}
-{#        </div>#}
         <ul>
-            <li>
-                <a class="nav-link logout" href="{{ path("app_home") }}">
-                    <span class="nav-item" style="margin-bottom: 0">Accueil</span>
-                </a>
-            </li>
+            {% if is_granted('ROLE_EMPLOYEE') %}
+                <li>
+                    <a class="nav-link" href="{{ path("app_employee_dashboard") }}">
+                        <span class="nav-item" style="margin-bottom: 0">Tableau de bord</span>
+                    </a>
+                </li>
+            {% elseif is_granted('ROLE_TREASURER') or is_granted('ROLE_MANAGER') or is_granted('ROLE_ACCOUNTANT') or is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a class="nav-link" href="{{ path("app_managerial_expense_dashboard") }}">
+                        <span class="nav-item" style="margin-bottom: 0">Tableau de bord</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_EMPLOYEE') %}
+                <li>
+                    <a class="nav-link logout" href="{{ path("app_employee_expense_create") }}">
+                        <span class="nav-item" style="margin-bottom: 0">Créer une note de frais</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{{ path("app_employee_user_account", {'id': app.user.id}) }}">
+                        <span class="nav-item" style="margin-bottom: 0">Mon compte</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_TREASURER') or is_granted('ROLE_MANAGER') or is_granted('ROLE_ACCOUNTANT') or is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a class="nav-link" href="{{ path("app_register") }}">
+                        <span class="nav-item" style="margin-bottom: 0">Créer un nouvel utilisateur</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link" href="{{ path("app_managerial_user_dashboard") }}">
+                        <span class="nav-item" style="margin-bottom: 0">Liste des utilisateurs créés</span>
+                    </a>
+                </li>
+            {% endif %}
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li>
+                    <a class="nav-link logout" href="{{ path("app_logout") }}">
+                        <span class="nav-item" style="margin-bottom: 0">Déconnexion</span>
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a class="nav-link logout" href="{{ path("app_login") }}">
+                        <span class="nav-item" style="margin-bottom: 0">Connexion</span>
+                    </a>
+                </li>
+            {% endif %}
         </ul>
     </div>
     <div class="button-group">
