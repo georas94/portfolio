@@ -5,22 +5,22 @@
     <meta name="author" content="Rashid Tamboura"/>
     <meta
             name="description"
-            content="Meu nome é Iuri, desenvolvo interfaces modernas e de alta qualidade, concentrado em performance, animações, responsividade e SEO."
+            content="Portfolio personnel sur le développement web"
     />
     <meta
             name="keywords"
-            content="sites, web, desenvolvimento, frontend, iuri silva, ui designer, programador, iuricode, front-end, designer, ui, iuri, freelancer, freela, website, portfólio"
+            content="sites, web, internet, backend, frontend, rashid, tamboura, developpeur, programmeur, back-end, front-end, portfolio"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="theme-color" content="#00E5FF"/>
-    <meta name="copyright" content="Iuri Silva 2021"/>
-    <meta http-equiv="content-language" content="pt-br"/>
+    <meta name="copyright" content="Rashid Tamboura"/>
+    <meta http-equiv="content-language" content="fr-FR"/>
     <meta
             property="og:image"
-            content="https://iuricode.com/image/preview.png"
+            content="https://resume.tlabs.digital/image/og-image.png"
     />
-    <meta property="og:title" content="Portfólio // Iuri Silva"/>
-    <meta property="og:description" content="Portfólio // Iuri Silva"/>
+    <meta property="og:title" content="Portfolio // Rashid Tamboura"/>
+    <meta property="og:description" content="Portfolio // Rashid Tamboura"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
@@ -35,7 +35,6 @@
     />
     <link rel="icon" href="image/logo-page.svg"/>
     <link rel="apple-touch-icon" href="image/logo-page.svg"/>
-    <link rel="canonical" href="https://iuricode.com/"/>
     <script src="js/svg-inject.min.js"></script>
     <title>Rashid Tamboura</title>
 </head>
@@ -46,8 +45,8 @@
         <nav>
             <img
                     onclick="scrollToTop()"
-                    src="image/logo-iuricode.svg"
-                    alt="iuricode"
+                    src="image/logo-rashid.svg"
+                    alt="Logo du site"
                     width="150px"
                     height="25px"
             />
@@ -98,7 +97,7 @@
 
                 <img
                         src="image/logo.svg"
-                        alt="ìcone iuricode"
+                        alt="Logo du site"
                         onload="SVGInject(this)"
                         id="logo"
                         width="500px"
@@ -415,8 +414,8 @@
             <div>
                 <p>Powered by</p>
                 <img
-                        src="icons/iuricode-logo-footer.svg"
-                        alt="Logo iuricode"
+                        src="icons/rashid-logo-footer.svg"
+                        alt="Logo du site"
                 />
             </div>
         </div>

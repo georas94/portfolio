@@ -205,11 +205,9 @@ header .grid-layout nav .nav-list li a:hover {
   .mobile-menu {
     display: block;
   }
-
-  h3{
+  h3 {
     margin: 0 !important;
   }
-
 }
 #s-home {
   padding: 0px 50px;
@@ -329,7 +327,7 @@ header .grid-layout nav .nav-list li a:hover {
 }
 #s-about .grid-layout > div #creator-photo {
   width: 47%;
-  background-image: url("../image/foto-iuricode.svg");
+  background-image: url("../image/foto-rashid.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
