@@ -304,7 +304,7 @@
                         Barke Beidari.
                     </p>
                     <a
-                            href="#"
+                            href="#!"
                             rel="noopener"
                             id="barke"
                     >Voir le projet
