@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  metube:
+    image: ghcr.io/alexta69/metube
+    container_name: music
+    restart: always
+    ports:
+      - "8083:8081"
+    networks:
+      - tools
+    volumes:
+      - ./downloads:/downloads
+
+networks:
+  tools:
+    external: true
+    name: infra-services_tools
