@@ -6,7 +6,7 @@ services:
     container_name: music
     restart: always
     ports:
-      - "8083:8081"
+      - "8084:8081"
     networks:
       - tools
     volumes:

@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="d-flex justify-content-center" style="padding: 1.5em;">
+            <section style="background-color: rgba(238,238,238,0.47);margin-top: 2em"
+                     class="col-md-12 col-lg-10 mb-4 mb-lg-0">
+                <div class="row m-0 pt-2 pb-2">
+                    {% for key,product in products %}
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-4 mb-4 d-flex justify-content-center">
+                            <a class="w-100" href="{{ path('app_product_view', {id: product.id}) }}">
+                                <div class="card">
+                                    <img src="{{ asset('img/random_article.png') }}" alt="image de l'article"/>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between mb-3 product-name-and-price-div">
+                                            <h5 class="mb-0">{{ product.name }}</h5>
+                                            <h6 class="text-dark mb-0">{{ product.price|number_format(2, '.', ' ') }}
+                                                Fcfa</h6>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2 quantity-available-div">
+                                            <p class="small text-muted mb-0">Quantité disponible : <span
+                                                        class="fw-bold">6</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </section>
+{% endblock %}

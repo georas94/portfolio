@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>{% block title %}Accueil{% endblock %}</title>
+        <link rel="icon"
+              href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <meta content="" name="description"/>
+        <meta content="" name="keywords"/>
+        <!-- Favicons -->
+        <link href="{{ asset('img/favicon.png') }}" rel="icon"/>
+        <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon"/>
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Open+Sans:wght@300;400;500&display=swap"
+              rel="stylesheet">
+        <!-- Vendor CSS Files -->
+        <link href="{{ asset('vendor/bootstrap.min.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('vendor/glightbox.min.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet"/>
+        <!-- Template Main CSS File -->
+        <link href="{{ asset('css/main.css') }}" rel="stylesheet"/>
+        <!-- Font awesome CSS File -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <!-- SweetAlert JS-->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <!-- jQuery core JS-->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{ asset('js/base.js') }}"></script>
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+        {% endblock %}
+    </head>
+    <body>
+    <header id="header" class="header">
+            <a href="" class="logo">F E R E</a>
+            <input class="menu-btn" type="checkbox" id="menu-btn" />
+            <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+            <ul class="menu">
+                <li class="menu-work">
+                    <a href="#work">Our Work</a>
+                    <div class="bg-dark hidden text-white sub-menu-work">Ninja</div>
+                </li>
+                <li class="menu-about">
+                    <a href="#about">About</a>
+                    <div class="bg-dark hidden text-white sub-menu-about">Ninja2</div>
+                </li>
+                <li class="menu-careers">
+                    <a href="#careers">Careers</a>
+                    <div class="bg-dark hidden text-white sub-menu-careers">Ninja3</div>
+                </li>
+                <li class="menu-contact">
+                    <a href="#contact">Contact</a>
+                    <div class="bg-dark hidden text-white sub-menu-contact">Ninja4</div>
+                </li>
+            </ul>
+    </header>
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+    <footer>
+        <div class="container flex-wrap">
+            <div class="col-md-8 d-flex align-items-center">
+                <div class="d-flex">
+                    <span><i class="fa-regular fa-copyright"></i></span>&nbsp;&nbsp;
+                    <strong>{{ 'now' | date('Y') }} Copyrights</strong>
+                    <span style="margin-left: 1em;">Created by Abdoul-Rashid TAMBOURA</span>
+                </div>
+                <div class="nav col-md-4 d-flex social">
+                    <div class="ms-3">
+                        <a class="text-white" href="#">
+                            <i class="bi-whatsapp fa-2x"></i>
+                        </a>
+                    </div>
+                    <div class="ms-3">
+                        <a class="text-white" href="#">
+                            <i class="bi-facebook fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <!-- Vendor JS Files -->
+    <script src="{{ asset('vendor/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendor/glightbox.min.js') }}"></script>
+    </body>
+</html>
