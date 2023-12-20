@@ -1,8 +1,8 @@
 $(document).ready(function () {
+    let subMenuItemsDiv = $('.subMenuItems div');
     $('.menu li').on('click',function (event) {
         event.preventDefault();
         let selector = $('.sub-'+$(this).attr('class'));
-        let subMenuItemsDiv = $('.subMenuItems div');
         if (selector.hasClass('show') && !(selector.hasClass('show') && selector.hasClass('hidden'))){
             selector.addClass('hidden');
             selector.removeClass('show');
@@ -12,7 +12,6 @@ $(document).ready(function () {
             if(subMenuItemsDiv.is(':visible')) {
                 selector.css('position', 'fixed');
             }
-
         }else{
             selector.removeClass('hidden');
             selector.addClass('show');
@@ -25,6 +24,12 @@ $(document).ready(function () {
                 $(this).addClass('hidden');
             }
         })
+    })
+
+    $('.menu-icon').on('click', function () {
+        if (subMenuItemsDiv.is(':visible')){
+            subMenuItemsDiv.addClass('hidden');
+        }
     })
 
     $('.close-mobile-sub-menu-button').on('click',function (event) {
