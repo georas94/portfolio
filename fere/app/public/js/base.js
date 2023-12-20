@@ -8,9 +8,16 @@ $(document).ready(function () {
         }else if(selector.hasClass('show hidden')){
             selector.removeClass('hidden');
             selector.addClass('show');
+            if($('.subMenuItems div').is(':visible')) {
+                selector.css('position', 'fixed');
+            }
+
         }else{
             selector.removeClass('hidden');
             selector.addClass('show');
+            if($('.subMenuItems div').is(':visible')) {
+                selector.css('position', 'fixed');
+            }
         }
         $('.subMenuItems div').each(function () {
             if (!($(this).attr('class') === selector.attr('class'))){
@@ -24,10 +31,4 @@ $(document).ready(function () {
         $(this).parent().removeClass('show');
         $(this).parent().addClass('hidden');
     })
-
-    if ($('.menu-icon').is(':visible')) {
-        $('body').addClass("fixed-position");
-    } else {
-        $('body').removeClass("fixed-position");
-    }
 })
