@@ -9,8 +9,18 @@ body {
   background-color: #f4f4f4;
 }
 
-a {
+.menu span {
   color: #000;
+  cursor: pointer;
+}
+
+a{
+  color: #000;
+}
+
+main{
+  margin-top: 5em;
+  margin-bottom: 5em;
 }
 
 /* header */
@@ -31,14 +41,14 @@ a {
   background-color: #fff;
 }
 
-.header li a {
+.header li span {
   display: block;
   padding: 20px 20px;
   border-right: 1px solid #f4f4f4;
   text-decoration: none;
 }
 
-.header li a:hover,
+.header li span:hover,
 .header .menu-btn:hover {
   background-color: #f4f4f4;
 }
@@ -126,23 +136,6 @@ a {
   top: 0;
 }
 
-@media (min-width: 48em) {
-  .header li {
-    float: left;
-  }
-  .header li a {
-    padding: 20px 30px;
-  }
-  .header .menu {
-    clear: none;
-    float: right;
-    max-height: none;
-  }
-  .header .menu-icon {
-    display: none;
-  }
-}
-
 /*!----- FOOTER -------*/
 footer {
   position: absolute;
@@ -169,4 +162,59 @@ footer .container .col-md-6 .bi {
 
 .hidden {
   display: none;
+}
+
+.subMenuItems div{
+  background: #f4f4f4;
+  padding: 4em 1em 1em;
+}
+
+.subMenuItems div p{
+  color: black;
+}
+
+.content p{
+  padding: 1em;
+}
+
+.close-mobile-sub-menu-button{
+  height: 1em;
+  display: none;
+}
+
+@media (min-width: 48em) {
+  .header li {
+    float: left;
+  }
+  .header li span {
+    padding: 20px 30px;
+  }
+  .header .menu {
+    clear: none;
+    float: right;
+    max-height: none;
+  }
+  .header .menu-icon {
+    display: none;
+  }
+}
+
+/**  Mobile screen **/
+@media only screen
+and (min-device-width : 12px)
+and (max-device-width : 640px)
+{
+  .subMenuItems div{
+    position: absolute;
+    z-index: 4;
+    top: 3.5em;
+    height: 100vh;
+    width: 96vw;
+  }
+
+  .close-mobile-sub-menu-button{
+    display: block;
+    top: 1em;
+    position: absolute;
+  }
 }
