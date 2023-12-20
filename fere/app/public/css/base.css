@@ -141,11 +141,11 @@ footer {
   position: absolute;
   bottom: 0;
   color: #bbb;
-  padding: 10px;
   background: #222;
   text-align: center;
   width: 100%;
   margin-top: 2em;
+  font-size: 0.9em;
 }
 
 footer .container .col-md-6 {
