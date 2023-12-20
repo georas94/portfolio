@@ -24,4 +24,10 @@ $(document).ready(function () {
         $(this).parent().removeClass('show');
         $(this).parent().addClass('hidden');
     })
+
+    if ($('.menu-icon').is(':visible')) {
+        $('body').addClass("fixed-position");
+    } else {
+        $('body').removeClass("fixed-position");
+    }
 })
