@@ -24,6 +24,8 @@
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <!-- jQuery core JS-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Bootstrap-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <!-- Core theme JS-->
         <script src="{{ asset('js/base.js') }}"></script>
         {% block stylesheets %}
@@ -38,14 +40,14 @@
             <input class="menu-btn" type="checkbox" id="menu-btn" />
             <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
             <ul class="menu">
-                <li class="menu-selection">
-                    <span>Sélection</span>
-                </li>
                 <li class="menu-clothes">
                     <span>Vêtements / Tissus</span>
                 </li>
                 <li class="menu-beauty">
                     <span>Beauté et cheveux</span>
+                </li>
+                <li class="menu-jewelry">
+                    <span>Bijoux</span>
                 </li>
                 <li class="menu-home-art">
                     <span>Maison et Art</span>
@@ -53,25 +55,28 @@
             </ul>
     </header>
     <div class="subMenuItems">
-        <div style="" class="hidden sub-menu-selection">
+        <div class="hidden sub-menu-clothes items">
             <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
-            <p>
-                SUB MENU SELECTION
-            </p>
+            <span class="sub-menu-items-rectangle">Tous vêtements</span>
+            <div class="div-sub-menu-items-square">
+                <span class="sub-menu-items-square">Vêtements Femme</span>
+                <span class="sub-menu-items-square">Vêtements Homme</span>
+                <span class="sub-menu-items-square">Bébés et enfants</span>
+            </div>
         </div>
-        <div class="hidden sub-menu-clothes">
-            <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
-            <p>
-                SUB MENU VETEMENTS ET TISSUS
-            </p>
-        </div>
-        <div class="hidden sub-menu-beauty">
+        <div class="hidden sub-menu-beauty items">
             <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
             <p>
                 SUB MENU BEAUTÉ
             </p>
         </div>
-        <div class="hidden sub-menu-home-art">
+        <div style="" class="hidden sub-menu-jewelry items">
+            <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
+            <p>
+                SUB MENU BIJOUX
+            </p>
+        </div>
+        <div class="hidden sub-menu-home-art items">
             <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
             <p>
                 SUB MENU MAISON ET ART

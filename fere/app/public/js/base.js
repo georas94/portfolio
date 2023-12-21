@@ -1,5 +1,5 @@
-$(document).ready(function () {
-    let subMenuItemsDiv = $('.subMenuItems div');
+$(function () {
+    let subMenuItemsDiv = $('.subMenuItems .items');
     $('.menu li').on('click',function (event) {
         event.preventDefault();
         let selector = $('.sub-'+$(this).attr('class'));
