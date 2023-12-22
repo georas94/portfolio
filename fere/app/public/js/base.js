@@ -15,7 +15,16 @@ $(function () {
             $(this).addClass('hidden');
         })
     })
-    $('.menu-icon').on('click tap touchstart', function (event) {
+    let timesClicked = 0;
+    $('.menu-icon').on('click tap', function (event) {
+        timesClicked++;
+        if ((timesClicked%2) === 0) {
+            $('.selection').addClass('hidden');
+            $('.selection').removeClass('show');
+        }else if((timesClicked%2) === 1) {
+                $('.selection').removeClass('hidden');
+                $('.selection').addClass('show');
+        }
         let selectors = spanPMenu.next('ul').find('div');
         selectors.each(function () {
             if ($(this).hasClass('show')){

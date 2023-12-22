@@ -7,6 +7,7 @@ body {
   margin: 0;
   font-family: Helvetica, sans-serif;
   background-color: #f4f4f4;
+  font-size: 1.6em !important;
 }
 
 main{
@@ -207,6 +208,10 @@ a{
   .header .menu-icon {
     display: none;
   }
+
+  .li-selection{
+    display: none !important;
+  }
 }
 
 /**  Mobile screen **/
@@ -248,5 +253,9 @@ and (max-device-width : 640px)
 
   .menu li ul li{
     width: 100%;
+  }
+
+  body{
+    font-size: 1.7em !important;
   }
 }
