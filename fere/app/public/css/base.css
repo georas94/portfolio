@@ -180,11 +180,6 @@ a{
   padding: 1em;
 }
 
-.close-mobile-sub-menu-button{
-  height: 1em;
-  display: none;
-}
-
 .menu li ul li{
   position: absolute;
 }

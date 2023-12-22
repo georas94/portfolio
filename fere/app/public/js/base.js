@@ -15,6 +15,14 @@ $(function () {
             $(this).addClass('hidden');
         })
     })
+    $('.menu-icon').on('click tap touchstart', function (event) {
+        let selectors = spanPMenu.next('ul').find('div');
+        selectors.each(function () {
+            if ($(this).hasClass('show')){
+                $(this).addClass('hidden');
+            }
+        })
+    })
 })
 
 function manageNavbar(spanPrincipalMenu){
