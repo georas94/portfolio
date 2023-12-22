@@ -9,15 +9,6 @@ body {
   background-color: #f4f4f4;
 }
 
-.menu span {
-  color: #000;
-  cursor: pointer;
-}
-
-a{
-  color: #000;
-}
-
 main{
   margin-top: 5em;
   margin-bottom: 5em;
@@ -157,6 +148,17 @@ footer .container .col-md-6 .bi {
   font-size: 18px;
 }
 
+/** END FOOTER**/
+
+.menu span {
+  color: #000;
+  cursor: pointer;
+}
+
+a{
+  color: #000;
+}
+
 .show{
   display: block;
 }
@@ -181,6 +183,18 @@ footer .container .col-md-6 .bi {
 .close-mobile-sub-menu-button{
   height: 1em;
   display: none;
+}
+
+.menu li ul li{
+  position: absolute;
+}
+
+.menu li ul li div{
+  background: #fffdfd;
+}
+
+.menu li ul li div span{
+  background: #c2bcbc42;
 }
 
 @media (min-width: 48em) {
@@ -227,7 +241,6 @@ and (max-device-width : 640px)
     left: 0;
     width: 100%;
     background: #c2bcbc42;
-    height: 10em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -238,10 +251,7 @@ and (max-device-width : 640px)
     width: 100%;
   }
 
-  .close-mobile-sub-menu-button{
-    display: block;
-    top: 1em;
-    position: absolute;
-    z-index: 5;
+  .menu li ul li{
+    width: 100%;
   }
 }

@@ -41,48 +41,50 @@
             <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
             <ul class="menu">
                 <li class="menu-clothes">
-                    <span>Vêtements / Tissus</span>
+                    <span class="span-principal-menu">Vêtements / Tissus</span>
+                    <ul class="sub-menu-clothes">
+                        <li>
+                            <div class="hidden sub-menu-items-square">
+                                <span class="">Tous vêtements</span>
+                                <span class="">Vêtements Femme</span>
+                                <span class="">Vêtements Homme</span>
+                                <span class="">Bébés et enfants</span>
+                            </div>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu-beauty">
-                    <span>Beauté et cheveux</span>
+                    <span class="span-principal-menu">Beauté et cheveux</span>
+                    <ul class="sub-menu-beauty">
+                        <li>
+                            <div class="hidden">
+                                <span class="sub-menu-items-square">SOUS MENU BEAUTÉ ET CHEVEUX</span>
+                            </div>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu-jewelry">
-                    <span>Bijoux</span>
+                    <span class="span-principal-menu">Bijoux</span>
+                    <ul class="sub-menu-jewelry">
+                        <li>
+                            <div class="hidden">
+                                <span class="sub-menu-items-square">SOUS MENU BIJOUX</span>
+                            </div>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu-home-art">
-                    <span>Maison et Art</span>
+                    <span class="span-principal-menu">Maison et Art</span>
+                    <ul class="sub-menu-home-art">
+                        <li>
+                            <div class="hidden">
+                                <span class="sub-menu-items-square">SOUS MENU MAISON ET ART</span>
+                            </div>
+                        </li>
+                    </ul>
                 </li>
             </ul>
     </header>
-    <div class="subMenuItems">
-        <div class="hidden sub-menu-clothes items">
-            <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
-            <span class="sub-menu-items-rectangle">Tous vêtements</span>
-            <div class="div-sub-menu-items-square">
-                <span class="sub-menu-items-square">Vêtements Femme</span>
-                <span class="sub-menu-items-square">Vêtements Homme</span>
-                <span class="sub-menu-items-square">Bébés et enfants</span>
-            </div>
-        </div>
-        <div class="hidden sub-menu-beauty items">
-            <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
-            <p>
-                SUB MENU BEAUTÉ
-            </p>
-        </div>
-        <div style="" class="hidden sub-menu-jewelry items">
-            <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
-            <p>
-                SUB MENU BIJOUX
-            </p>
-        </div>
-        <div class="hidden sub-menu-home-art items">
-            <img class="close-mobile-sub-menu-button" src="{{ asset('img/icons/mark.png') }}" alt="Croix pour fermer la modal">
-            <p>
-                SUB MENU MAISON ET ART
-            </p>
-        </div>
-    </div>
     <main>
         {% block body %}{% endblock %}
     </main>

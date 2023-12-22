@@ -1,40 +1,38 @@
 $(function () {
-    let subMenuItemsDiv = $('.subMenuItems .items');
-    $('.menu li').on('click',function (event) {
+    let spanPMenu = $('.span-principal-menu');
+    spanPMenu.on('mouseenter',function (event) {
         event.preventDefault();
-        let selector = $('.sub-'+$(this).attr('class'));
-        if (selector.hasClass('show') && !(selector.hasClass('show') && selector.hasClass('hidden'))){
-            selector.addClass('hidden');
-            selector.removeClass('show');
-        }else if(selector.hasClass('show hidden')){
-            selector.removeClass('hidden');
-            selector.addClass('show');
-            if(subMenuItemsDiv.is(':visible')) {
-                selector.css('position', 'fixed');
-            }
-        }else{
-            selector.removeClass('hidden');
-            selector.addClass('show');
-            if(subMenuItemsDiv.is(':visible')) {
-                selector.css('position', 'fixed');
-            }
-        }
-        subMenuItemsDiv.each(function () {
-            if (!($(this).attr('class') === selector.attr('class'))){
-                $(this).addClass('hidden');
-            }
+        manageNavbar($(this))
+    })
+    spanPMenu.on('click tap touchstart',function (event) {
+        event.preventDefault();
+        manageNavbar($(this))
+    })
+    $('.sub-menu-items-square').on('mouseleave',function (event) {
+        event.preventDefault();
+        let selectors = spanPMenu.next('ul').find('div');
+        selectors.each(function () {
+            $(this).addClass('hidden');
         })
     })
+})
 
-    $('.menu-icon').on('click', function () {
-        if (subMenuItemsDiv.is(':visible')){
-            subMenuItemsDiv.addClass('hidden');
+function manageNavbar(spanPrincipalMenu){
+    let selector = spanPrincipalMenu.next('ul').find('div');
+    let selectors = $('.span-principal-menu').next('ul').find('div');
+    selectors.each(function () {
+        if (!($(this).attr('class') === selector.attr('class'))){
+            $(this).addClass('hidden');
         }
     })
-
-    $('.close-mobile-sub-menu-button').on('click',function (event) {
-        event.preventDefault();
-        $(this).parent().removeClass('show');
-        $(this).parent().addClass('hidden');
-    })
-})
+    if (selector.hasClass('show') && !(selector.hasClass('show') && selector.hasClass('hidden'))){
+        selector.removeClass('show');
+        selector.addClass('hidden');
+    }else if(selector.hasClass('show hidden')){
+        selector.removeClass('hidden');
+        selector.addClass('show');
+    } else{
+        selector.removeClass('hidden');
+        selector.addClass('show');
+    }
+}
