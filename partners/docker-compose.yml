@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  fpm:
+    restart: always
+    external_links:
+      - infra-services-db-1:db
+    build:
+      context: ./app
+      dockerfile: docker/php-fpm/Dockerfile
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "9005:9000"
+    networks:
+      - tools
+
+  nginx-partners:
+    container_name: nginx-partners
+    build:
+      context: ./app
+      dockerfile: docker/nginx/Dockerfile-nginx
+    restart: always
+    links:
+      - fpm
+    depends_on:
+      - fpm
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "8085:80"
+    networks:
+      - tools
+
+volumes:
+  db-data-partners: {}
+
+networks:
+    tools:
+        external: true
+        name: infra-services_tools

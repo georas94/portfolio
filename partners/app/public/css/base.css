@@ -11,7 +11,7 @@ body {
 }
 
 main{
-  margin-top: 5em;
+  margin-top: 6em;
   margin-bottom: 5em;
 }
 
@@ -48,10 +48,13 @@ main{
 .header .logo {
   display: block;
   float: left;
-  font-size: 2em;
-  padding: 10px 20px;
+  padding: 0.3em;
   text-decoration: none;
   color: black;
+}
+
+.logo-img {
+  height: 4em;
 }
 
 /* menu */
@@ -201,6 +204,7 @@ a{
   .header li {
     float: left;
   }
+
   .header li span {
     padding: 20px 30px;
   }
@@ -257,6 +261,10 @@ and (max-device-width : 640px)
 
   .menu li ul li{
     width: 100%;
+  }
+
+  .header .menu-icon{
+    margin-top: 0.5em;
   }
 
   body{

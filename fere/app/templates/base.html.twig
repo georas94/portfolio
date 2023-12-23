@@ -36,7 +36,7 @@
     </head>
     <body>
     <header id="header" class="header">
-            <a href="" class="logo">F E R E</a>
+            <a href="{{ path('app_home') }}" class="logo">F E R E</a>
             <input class="menu-btn" type="checkbox" id="menu-btn" />
             <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
             <ul class="menu">
@@ -210,6 +210,9 @@
                         </li>
                     </ul>
                 </li>
+                <li class="menu-open-shop">
+                    <a href="https://partners.tlabs.digital" target="_blank"><span class=""><strong>Ouvrir ma boutique</strong></span></a>
+                </li>
             </ul>
     </header>
     <main>
@@ -221,7 +224,7 @@
                 <div class="d-flex">
                     <span><i class="fa-regular fa-copyright"></i></span>&nbsp;&nbsp;
                     <strong>{{ 'now' | date('Y') }} Copyrights</strong>
-                    <span style="margin-left: 1em;">Created by Abdoul-Rashid TAMBOURA</span>
+                    <span style="margin-left: 1em;">Created by Tlabs</span>
                 </div>
                 <div class="nav col-md-4 d-flex social">
                     <div class="ms-3">

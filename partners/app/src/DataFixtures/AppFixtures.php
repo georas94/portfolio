@@ -2,8 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Product;
-use App\Entity\ProductCategory;
 use App\Entity\User;
 use App\Entity\ApplicationRole;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -13,7 +11,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    private const NB_PRODUCTS = 50;
     private const NB_USERS = 3;
 
     private UserPasswordHasherInterface $hasher;
@@ -66,31 +63,6 @@ class AppFixtures extends Fixture
         $user->setRoles(['ROLE_ADMIN']);
         $user->setApplicationRole($teamMemberApplicationRole);
         $manager->persist($user);
-
-        // products
-        $productCategory1 = new ProductCategory();
-        $productCategory1->setName('catégorie 1');
-        $productCategory1->setIsActive(true);
-        $manager->persist($productCategory1);
-        $productCategory2 = new ProductCategory();
-        $productCategory2->setName('catégorie 2');
-        $productCategory2->setIsActive(false);
-        $manager->persist($productCategory2);
-        // create n number products
-        for ($i = 0; $i < self::NB_PRODUCTS; $i++) {
-            $product = new Product();
-            $product->setName($this->faker->word());
-            $product->setReference($this->faker->uuid());
-            $product->setPrice($this->faker->randomFloat(2, 30000, 650000));
-            $product->setRated($this->faker->numberBetween(0, 5));
-            if ($i % 2 === 0){
-                $product->setCategory($productCategory1);
-            }else{
-                $product->setCategory($productCategory2);
-            }
-
-            $manager->persist($product);
-        }
 
         $manager->flush();
     }

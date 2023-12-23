@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>{% block title %}Accueil{% endblock %}</title>
+        <link rel="icon"
+              href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <meta content="" name="description"/>
+        <meta content="" name="keywords"/>
+{#        <!-- Favicons -->#}
+{#        <link href="{{ asset('img/favicon.png') }}" rel="icon"/>#}
+{#        <link href="{{ asset('img/apple-touch-icon.png') }}" rel="apple-touch-icon"/>#}
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&family=Open+Sans:wght@300;400;500&display=swap"
+              rel="stylesheet">
+        <!-- Template Main CSS File -->
+        <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
+        <!-- Font awesome CSS File -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+        <!-- SweetAlert JS-->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <!-- jQuery core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Bootstrap-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <!-- Core theme JS-->
+        <script src="{{ asset('js/base.js') }}"></script>
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+        {% endblock %}
+    </head>
+    <body>
+    <header id="header" class="header">
+            <a href="{{ path('app_home') }}" class="logo"><img class="logo-img" src="{{ asset('img/logo.svg') }}" alt="Logo"></a>
+            <input class="menu-btn" type="checkbox" id="menu-btn" />
+            <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+            <ul class="menu">
+                <li class="menu-clothes">
+                    <span class="span-principal-menu">Menu 1</span>
+                    <ul class="sub-menu-clothes">
+                        <li>
+                            <div class="hidden sub-menu-items-square">
+                                <span class="">Sous menu1</span>
+                                <span class="">Sous menu 2</span>
+                                <span class="">Sous menu 3</span>
+                                <span class="">Sous menu 4</span>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-beauty">
+                    <span class="span-principal-menu">Menu 2</span>
+                    <ul class="sub-menu-beauty">
+                        <li>
+                            <div class="hidden">
+                                <span class="sub-menu-items-square">Sous menu 1</span>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+    </header>
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+    <footer>
+        <div class="container flex-wrap" style="margin-top: 1em;margin-bottom: 1em">
+            <div class="col-md-8 d-flex align-items-center">
+                <div class="d-flex">
+                    <span><i class="fa-regular fa-copyright"></i></span>&nbsp;&nbsp;
+                    <strong>{{ 'now' | date('Y') }} Copyrights</strong>
+                    <span style="margin-left: 1em;">Created by Tlabs</span>
+                </div>
+                <div class="nav col-md-4 d-flex social">
+                    <div class="ms-3">
+                        <a class="text-white" href="#">
+                            <i class="bi-whatsapp fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </body>
+</html>
