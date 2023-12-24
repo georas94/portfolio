@@ -200,13 +200,40 @@ a{
   background: #c2bcbc42;
 }
 
+.menu-start-selling{
+  background: #02E5FF;
+}
+
+.menu-login{
+  background: #343434;
+}
+
+.menu-login .span-principal-menu{
+  color: #02E5FF;
+}
+
+.menu-start-selling .span-principal-menu:hover{
+  color: #02E5FF;
+  background: #343434 !important;
+}
+
+.menu-login .span-principal-menu:hover{
+  background: #02E5FF !important;
+  color: black;
+}
+
 @media (min-width: 48em) {
   .header li {
     float: left;
   }
 
+  .header{
+    display: flex;
+    align-items: center;
+  }
+
   .header li span {
-    padding: 20px 30px;
+    padding: 0.6em;
   }
   .header .menu {
     clear: none;

@@ -8,23 +8,7 @@ $(function () {
         event.preventDefault();
         manageNavbar($(this))
     })
-    $('.sub-menu-items-square').on('mouseleave',function (event) {
-        event.preventDefault();
-        let selectors = spanPMenu.next('ul').find('div');
-        selectors.each(function () {
-            $(this).addClass('hidden');
-        })
-    })
-    let timesClicked = 0;
     $('.menu-icon').on('click tap', function (event) {
-        timesClicked++;
-        if ((timesClicked%2) === 0) {
-            $('.selection').addClass('hidden');
-            $('.selection').removeClass('show');
-        }else if((timesClicked%2) === 1) {
-                $('.selection').removeClass('hidden');
-                $('.selection').addClass('show');
-        }
         let selectors = spanPMenu.next('ul').find('div');
         selectors.each(function () {
             if ($(this).hasClass('show')){
