@@ -1,3 +1,6 @@
+docker_compose_exec = docker compose exec -T
+php_console = $(docker_compose_exec) fpm bin/console
+
 #########
 # Utils #
 #########
@@ -17,3 +20,9 @@ docker-clean:
 ## PHP bash
 bash:
 	docker compose exec php bash
+
+## Clear cache
+cc: cache-clear
+
+cache-clear:
+	$(php_console) cache:clear
