@@ -27,7 +27,7 @@ class RegistrationController extends AbstractController
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/become-supplier', name: 'app_registration_start_selling')]
     public function register(
         Request                     $request,
         UserPasswordHasherInterface $userPasswordHasher,

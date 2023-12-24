@@ -212,7 +212,7 @@ a{
   color: #02E5FF;
 }
 
-.menu-start-selling .span-principal-menu:hover{
+.menu-start-selling span:hover{
   color: #02E5FF;
   background: #343434 !important;
 }
