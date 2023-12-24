@@ -20,9 +20,3 @@ docker-clean:
 ## PHP bash
 bash:
 	docker compose exec php bash
-
-## Clear cache
-cc: cache-clear
-
-cache-clear:
-	$(php_console) cache:clear

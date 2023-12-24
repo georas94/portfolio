@@ -13,7 +13,7 @@ restart-all:
 	(cd infra-services && make restart) && (cd lobievents && make restart) && (cd resume && make restart) && (cd expense-report && make restart) && (cd fere && make restart) && (cd partners && make restart)
 
 cache-clean-all:
-	(cd lobievents && make cache-clear) && (cd resume && make cache-clear) && (cd expense-report && make cache-clear) && (cd fere && make cache-clear) && (cd partners && make cache-clear)
+	(cd lobievents && make cache-clear) && (cd expense-report && make cache-clear) && (cd fere && make cache-clear) && (cd partners && make cache-clear)
 
 docker-clean:
 	docker system prune --all --force && docker system prune --all --force --volumes
