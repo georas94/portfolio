@@ -12,6 +12,12 @@ stop-all:
 restart-all:
 	(cd infra-services && make restart) && (cd lobievents && make restart) && (cd resume && make restart) && (cd expense-report && make restart) && (cd fere && make restart) && (cd partners && make restart)
 
+start-infra-services:
+	(cd infra-services && make start)
+
+stop-infra-services:
+	(cd infra-services && make stop)
+
 cache-clean-all:
 	(cd lobievents && make cache-clear) && (cd expense-report && make cache-clear) && (cd fere && make cache-clear) && (cd partners && make cache-clear)
 

@@ -2,14 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Form\BecomeSupplierFormType;
 use App\Security\EmailVerifier;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -23,18 +19,9 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/become-supplier', name: 'app_registration_start_selling')]
-    public function register(
-        Request                     $request,
-        UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface      $entityManager
-    ): Response
+    public function register(): Response
     {
-        $becomeSupplierForm = $this->createForm(BecomeSupplierFormType::class, new User());
-        $becomeSupplierForm->handleRequest($request);
-
-        return $this->render('registration/supplier/become.html.twig', [
-            'becomeSupplierForm'  => $becomeSupplierForm
-        ]);
+        return $this->render('registration/supplier/become.html.twig');
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
