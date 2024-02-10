@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commencer à vendre{% endblock %}
+
+{% block body %}
+    {% for message in app.flashes('error') %}
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-success w-25 text-center">
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="container">
+        <div class="row" style="display: flex;justify-content: center;">
+            <div class="login-div col-8 col-md-8 col-xs-12">
+                <h3>Choisissez votre abonnement</h3>
+                <small class="text-muted">Sans engagement, arrêtez quand vous le souhaitez</small>
+
+                <div class="row">
+                    <div class="col-12 col-md-4 div-subscription-card" data-action="select-plan" data-value="starter" data-plan-amount="27" data-plan-name="3 mois">
+                        <div class="card subscription-card is-selected mb-4 rounded-3 shadow-sm card-plan cardx so-card-active" data-value="starter">
+                            <div class="card-body subscription-card-body">
+                                <h1 class="h4 card-title pricing-card-title fw-bold">
+                                    3 mois <span class="pull-right">15 000</span>
+                                </h1>
+                                <br><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 div-subscription-card" data-action="select-plan" data-value="growth" data-plan-amount="50" data-plan-name="6 mois">
+                        <div class="card subscription-card mb-4 rounded-3 shadow-sm card-plan cardx" data-value="growth">
+                            <div class="card-body subscription-card-body">
+                                <h1 class="h4 card-title pricing-card-title fw-bold">
+                                    6 mois <span class="pull-right">25 000</span>
+                                </h1>
+                                <small class="my-3">Au lieu de 35 000</small><br>
+                                <small class="my-3 text-success">1 mois offert</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 div-subscription-card" data-action="select-plan" data-value="ambitious" data-plan-amount="100.0" data-plan-name="un an">
+                        <div class="card subscription-card mb-4 rounded-3 shadow-sm card-plan cardx" data-value="ambitious">
+                            <div class="card-body subscription-card-body">
+                                <h1 class="h4 card-title pricing-card-title fw-bold">
+                                    un an <span class="pull-right">60 000</span>
+                                </h1>
+                                <small class="my-3">Au lieu de 75 000</small><br>
+                                <small class="my-3 text-success">2 mois offert</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Méthodes de paiement</h3>
+
+                <div class="row">
+                    <div class="col-6 col-md-4 div-payment-card" data-action="payment-method" data-value="card">
+                        <div class="card payment-card is-selected mb-4 rounded-3 shadow-sm payment-method cardx so-card-active" data-value="card">
+                            <div class="card-body payment-card-body">
+                                <img height="24px" src="https://www.afrikrea.com/assets/anka/card_visa-eac2ec6295d7d77495000056e45856a808d1583ea51ef31acfac3936d2b31bbb.png" alt="Card visa">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4 div-payment-card" data-action="payment-method" data-value="paypal">
+                        <div class="card payment-card mb-4 rounded-3 shadow-sm payment-method cardx" data-value="paypal">
+                            <div class="card-body payment-card-body text-center d-flex justify-content-between">
+                                <img height="24px" src="https://www.afrikrea.com/assets/anka/so_paypal-e8d11831505fd0f4d63e3c2a44e123e2eb29a3942a70e24eff2b9c082123f422.png" alt="So paypal"> <small class="pull-right fees-paypal">+1 000cfa</small>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 div-payment-card" data-action="payment-method" data-value="orange_money">
+                        <div class="card payment-card mb-4 rounded-3 shadow-sm payment-method cardx" data-value="orange_money">
+                            <div class="card-body payment-card-body text-center d-flex justify-content-between">
+                                <img height="24px" src="https://www.afrikrea.com/assets/anka/so_orange_money-b1cc5f56f4d5f080af299549e6554c180fca2c6e764168b3d5bc55c384af24e1.png" alt="So orange money">
+                                <!--<small class="pull-right fees-orange-money">+€0.72</small>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 div-payment-card" data-action="payment-method" data-value="mpesa">
+                        <div class="card payment-card mb-4 rounded-3 shadow-sm payment-method cardx" data-value="mpesa">
+                            <div class="card-body payment-card-body text-center d-flex justify-content-between">
+                                <img height="24px" src="https://www.afrikrea.com/assets/anka/so_mpesa-a77026f770188b9977533aa3d592211d527cb0bfb8c07306f172013208e817e3.png" alt="So mpesa">
+                                <small class="pull-right fees-mpesa">+1 500cfa</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4 div-payment-card" data-action="payment-method" data-value="mtn">
+                        <div class="card payment-card mb-4 rounded-3 shadow-sm payment-method cardx" data-value="mtn">
+                            <div class="card-body payment-card-body text-center d-flex justify-content-between">
+                                <span class="help-block help-block-hint"><img height="24px" src="https://www.afrikrea.com/assets/wallet/mtn-2e12a7edfd966fe4d089ec063c2bbbb2d70989fbfd8ef2438ac32f640049a99d.png" alt="Mtn"> MTN Mobile Money </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4 div-payment-card" data-action="payment-method" data-value="ng_bank">
+                        <div class="card payment-card mb-4 rounded-3 shadow-sm payment-method cardx" data-value="ng_bank">
+                            <div class="card-body payment-card-body text-center d-flex justify-content-between">
+                                <span class="help-block help-block-hint"><img height="24px" src="https://www.afrikrea.com/assets/wallet/opay-d6c422ea7fdcdffa0a64e2ca0f60db5dc50cb86833e31bdb1191a14573d9e23e.png" alt="Opay"> Compte bancaire </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#                {{ form_errors(becomeSupplierForm) }}#}
+
+{#                {{ form_start(becomeSupplierForm) }}#}
+{#                <div class="form-outline mb-4 w-25">#}
+{#                    {{ form_row(becomeSupplierForm.email) }}#}
+{#                </div>#}
+{#                <div class="form-outline mb-4 w-25">#}
+{#                    <div>#}
+{#                        {{ form_row(becomeSupplierForm.surname) }}#}
+{#                    </div>#}
+{#                    <div>#}
+{#                        {{ form_row(becomeSupplierForm.name) }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="form-outline mb-4 w-25">#}
+{#                    {{ form_row(becomeSupplierForm.plainPassword) }}#}
+{#                </div>#}
+{#                <div class="form-outline mb-4 w-25">#}
+{#                    {{ form_row(becomeSupplierForm.agreeTerms) }}#}
+{#                </div>#}
+
+{#                #}{#            <button type="submit" class="btn btn-primary btn-block mb-4">S'inscrire</button>#}
+{#                {{ form_end(becomeSupplierForm) }}#}
+            </div>
+        </div>
+    </div>
+{% endblock %}

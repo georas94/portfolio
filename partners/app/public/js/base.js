@@ -16,6 +16,23 @@ $(function () {
             }
         })
     })
+
+    $('.subscription-card').on('click tap', function (event) {
+        $('.subscription-card').each(function () {
+            if ($(this).hasClass('is-selected')){
+                $(this).removeClass('is-selected');
+            }
+        });
+        $(this).addClass('is-selected');
+    });
+    $('.payment-card').on('click tap', function (event) {
+        $('.payment-card').each(function () {
+            if ($(this).hasClass('is-selected')){
+                $(this).removeClass('is-selected');
+            }
+        });
+        $(this).addClass('is-selected');
+    });
 })
 
 function manageNavbar(spanPrincipalMenu){

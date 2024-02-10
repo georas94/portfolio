@@ -222,6 +222,22 @@ a{
   color: black;
 }
 
+.subscription-card, .payment-card{
+  border: 1px solid grey;
+}
+
+.is-selected{
+  border: 1px solid #02c5db !important;
+  background: #eefafc !important;
+}
+
+.subscription-card-body, .payment-card-body{
+  padding: 1em;
+}
+
+.div-payment-card{
+  margin-bottom: 1em;
+}
 @media (min-width: 48em) {
   .header li {
     float: left;
@@ -296,5 +312,9 @@ and (max-device-width : 640px)
 
   body{
     font-size: 1.7em !important;
+  }
+
+  .div-subscription-card{
+    margin-bottom: 1em;
   }
 }

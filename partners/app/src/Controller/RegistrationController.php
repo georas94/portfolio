@@ -3,20 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
+use App\Form\BecomeSupplierFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use LogicException;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
-use Throwable;
 
 class RegistrationController extends AbstractController
 {
@@ -34,45 +29,11 @@ class RegistrationController extends AbstractController
         EntityManagerInterface      $entityManager
     ): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+        $becomeSupplierForm = $this->createForm(BecomeSupplierFormType::class, new User());
+        $becomeSupplierForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            try {
-                $entityManager->beginTransaction();
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                // generate a signed url and email it to the user
-                $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                    (new TemplatedEmail())
-                        ->from(new Address('admin@fere.com', 'Admin F E R E'))
-                        ->to($user->getEmail())
-                        ->subject('Merci de confirmer ton email')
-                        ->htmlTemplate('registration/confirmation_email.html.twig')
-                );
-                // do anything else you need here, like send an email
-                $entityManager->commit();
-
-                return $this->redirectToRoute('app_account', [], Response::HTTP_SEE_OTHER);
-
-            } catch (Throwable $exception) {
-                $entityManager->rollback();
-                $this->addFlash('error', $exception->getMessage());
-                return $this->redirectToRoute('app_register');
-            }
-        }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+        return $this->render('registration/supplier/become.html.twig', [
+            'becomeSupplierForm'  => $becomeSupplierForm
         ]);
     }
 
