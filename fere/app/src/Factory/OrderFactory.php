@@ -2,8 +2,8 @@
 
 namespace App\Factory;
 
-use App\Entity\Order;
-use App\Entity\OrderItem;
+use App\Entity\ShoppingCart;
+use App\Entity\ShoppingCartItem;
 use App\Entity\Product;
 use DateTime;
 
@@ -16,13 +16,13 @@ class OrderFactory
     /**
      * Creates an order.
      *
-     * @return Order
+     * @return ShoppingCart
      */
-    public function create(): Order
+    public function create(): ShoppingCart
     {
-        $order = new Order();
+        $order = new ShoppingCart();
         $order
-            ->setStatus(Order::STATUS_CART)
+            ->setStatus(ShoppingCart::STATUS_CART)
             ->setCreatedAt(new DateTime())
             ->setUpdatedAt(new DateTime());
 
@@ -34,11 +34,11 @@ class OrderFactory
      *
      * @param Product $product
      *
-     * @return OrderItem
+     * @return ShoppingCartItem
      */
-    public function createItem(Product $product): OrderItem
+    public function createItem(Product $product): ShoppingCartItem
     {
-        $item = new OrderItem();
+        $item = new ShoppingCartItem();
         $item->setProduct($product);
         $item->setQuantity(1);
 

@@ -9,15 +9,14 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ShoppingCartRepository::class)]
-#[ORM\Table(name: '`order`')]
-class Order
+class ShoppingCart
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'orderRef', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'orderRef', targetEntity: ShoppingCartItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $items;
 
     #[ORM\Column(length: 255)]
@@ -70,14 +69,14 @@ class Order
     }
 
     /**
-     * @return Collection<int, OrderItem>
+     * @return Collection<int, ShoppingCartItem>
      */
     public function getItems(): Collection
     {
         return $this->items;
     }
 
-    public function addItem(OrderItem $item): static
+    public function addItem(ShoppingCartItem $item): static
     {
         foreach ($this->getItems() as $existingItem) {
             // The item already exists, update the quantity
@@ -96,7 +95,7 @@ class Order
         return $this;
     }
 
-    public function removeItem(OrderItem $item): static
+    public function removeItem(ShoppingCartItem $item): static
     {
         if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)

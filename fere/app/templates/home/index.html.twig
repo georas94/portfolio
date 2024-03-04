@@ -6,10 +6,10 @@
     <section id="">
         <div class="content text-center">
             <div class="">
-                <img style="width: 100%; height: auto" src="{{ asset('img/woman-model.png') }}" alt="Modèle catégorie femme">
+                <a href="{{ path('app_products', {gender: 'WOMEN', category: 'clothes'}) }}"><img style="width: 100%; height: auto" src="{{ asset('img/woman-model.png') }}" alt="Modèle catégorie femme"></a>
             </div>
             <div class="">
-                <img style="width: 100%; height: auto" src="{{ asset('img/man-model.png') }}" alt="Modèle catégorie homme">
+                <a href="{{ path('app_products', {gender: 'MEN', category: 'clothes'}) }}"><img style="width: 100%; height: auto" src="{{ asset('img/man-model.png') }}" alt="Modèle catégorie homme"></a>
             </div>
         </div>
     </section>

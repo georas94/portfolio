@@ -3,7 +3,7 @@
 namespace App\Storage;
 
 use App\Entity\Order;
-use App\Repository\OrderRepository;
+use App\Repository\ShoppingCartRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -19,9 +19,9 @@ class CartSessionStorage
     /**
      * The cart repository.
      *
-     * @var OrderRepository
+     * @var ShoppingCartRepository
      */
-    private OrderRepository $cartRepository;
+    private ShoppingCartRepository $cartRepository;
 
     /**
      * @var string
@@ -32,9 +32,9 @@ class CartSessionStorage
      * CartSessionStorage constructor.
      *
      * @param RequestStack $requestStack
-     * @param OrderRepository $cartRepository
+     * @param ShoppingCartRepository $cartRepository
      */
-    public function __construct(RequestStack $requestStack, OrderRepository $cartRepository)
+    public function __construct(RequestStack $requestStack, ShoppingCartRepository $cartRepository)
     {
         $this->requestStack = $requestStack;
         $this->cartRepository = $cartRepository;

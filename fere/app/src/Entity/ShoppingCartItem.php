@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderItemRepository;
+use App\Repository\ShoppingCartItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use LogicException;
 
-#[ORM\Entity(repositoryClass: OrderItemRepository::class)]
-class OrderItem
+#[ORM\Entity(repositoryClass: ShoppingCartItemRepository::class)]
+class ShoppingCartItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,16 +26,16 @@ class OrderItem
 
     #[ORM\ManyToOne(inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Order $orderRef = null;
+    private ?ShoppingCart $orderRef = null;
 
     /**
      * Tests if the given item given corresponds to the same order item.
      *
-     * @param OrderItem $item
+     * @param ShoppingCartItem $item
      *
      * @return bool
      */
-    public function equals(OrderItem $item): bool
+    public function equals(ShoppingCartItem $item): bool
     {
         if (!$this->getProduct() || !$item->getProduct()) {
             throw new LogicException('Aucun produit fournit en paramètre');
@@ -87,12 +87,12 @@ class OrderItem
         return $this;
     }
 
-    public function getOrderRef(): ?Order
+    public function getOrderRef(): ?ShoppingCart
     {
         return $this->orderRef;
     }
 
-    public function setOrderRef(?Order $orderRef): static
+    public function setOrderRef(?ShoppingCart $orderRef): static
     {
         $this->orderRef = $orderRef;
 

@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderItemRepository;
+use App\Repository\ShoppingCartItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use LogicException;
 
-#[ORM\Entity(repositoryClass: OrderItemRepository::class)]
+#[ORM\Entity(repositoryClass: ShoppingCartItemRepository::class)]
 class OrderItem
 {
     #[ORM\Id]

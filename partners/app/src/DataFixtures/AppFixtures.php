@@ -8,6 +8,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+//use Faker\Provider\fr_FR\PhoneNumber as FakerPhoneNumber;
 
 class AppFixtures extends Fixture
 {
@@ -19,7 +20,7 @@ class AppFixtures extends Fixture
     public function __construct(UserPasswordHasherInterface $hasher)
     {
         $this->hasher = $hasher;
-        $this->faker = Faker\Factory::create();
+        $this->faker = Faker\Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager): void
@@ -29,6 +30,7 @@ class AppFixtures extends Fixture
         //principal user role
         $teamMemberApplicationRole = new ApplicationRole();
         $teamMemberApplicationRole->setDescription('Team member role');
+        $teamMemberApplicationRole->setName('Team member');
         $teamMemberApplicationRole->setName('Team member');
         $teamMemberApplicationRole->setIsActive(true);
         $buyerApplicationRole = new ApplicationRole();
@@ -46,6 +48,7 @@ class AppFixtures extends Fixture
             $user->setName($this->faker->lastName());
             $user->setSurname($this->faker->firstName());
             $user->setIsVerified(true);
+            $user->setPhoneNumber($this->faker->mobileNumber());
             $password = $this->hasher->hashPassword($user, 'pass'.$i);
             $user->setPassword($password);
             $user->setRoles([]);
@@ -59,6 +62,7 @@ class AppFixtures extends Fixture
         $user->setSurname($this->faker->firstName());
         $user->setIsVerified(true);
         $password = $this->hasher->hashPassword($user, 'rashid');
+        $user->setPhoneNumber($this->faker->mobileNumber());
         $user->setPassword($password);
         $user->setRoles(['ROLE_ADMIN']);
         $user->setApplicationRole($teamMemberApplicationRole);

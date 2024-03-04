@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\OrderItem;
+use App\Entity\ProductCategory;
+use App\Entity\ShoppingCartItem;
 use App\Form\AddToCartType;
 use App\Manager\CartManager;
+use App\Repository\ProductCategoryRepository;
 use App\Repository\ProductRepository;
 use DateTime;
 use LogicException;
@@ -17,18 +19,60 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController extends AbstractController
 {
     private ProductRepository $productRepository;
+    private ProductCategoryRepository $productCategoryRepository;
     private CartManager $cartManager;
-    public function __construct(ProductRepository $productRepository, CartManager $cartManager)
+    public function __construct(ProductRepository $productRepository,ProductCategoryRepository $productCategoryRepository, CartManager $cartManager)
     {
         $this->productRepository = $productRepository;
+        $this->productCategoryRepository = $productCategoryRepository;
         $this->cartManager = $cartManager;
     }
 
-    #[Route('/products', name: 'app_products')]
-    public function index(): Response
+    #[Route('/products/{gender}/{category}', name: 'app_products')]
+    public function index(string $gender, string $category): Response
     {
-        $products = $this->productRepository->findAll();
+        if (!$gender || !$category){
+            throw new LogicException('Aucun paramètre envoyé dans la requête');
+        }
+        $productCategory = $this->productCategoryRepository->findOneBy([
+            'name' => $category
+        ]);
 
+        if ($gender === 'ALL' && $category === 'ALL'){
+            $products = $this->productRepository->findAll();
+        }else {
+            $products = $this->productRepository->findBy(
+                [
+                    'gender' => $gender,
+                    'category' => $productCategory,
+                ]
+            );
+        }
+
+        return $this->render('product/product_list.html.twig', [
+            'products' => $products
+        ]);
+    }
+
+    /**
+     * @throws LogicException
+     */
+    #[Route('/products/{gender}/{category}', name: 'app_products_gender')]
+    public function productsGender(string $gender): Response
+    {
+        if (!$gender){
+            throw new LogicException('Aucun paramètre envoyé dans la requête');
+        }
+        $productCategory = $this->productCategoryRepository->findOneBy([
+            'name' => 'clothes'
+        ]);
+
+        $products = $this->productRepository->findBy(
+            [
+            'gender' => $gender,
+            'category' => $productCategory,
+            ]
+        );
         if (!(count($products) > 0)){
             throw new LogicException('Aucun produit trouvé en base de données');
         }
@@ -95,7 +139,7 @@ class ProductController extends AbstractController
         $cart = $this->cartManager->getCurrentCart();
 
         try {
-            $orderItem = new OrderItem();
+            $orderItem = new ShoppingCartItem();
             $orderItem->setProduct($product);
             $orderItem->setQuantity($quantity);
             $orderItem->setOrderRef($cart);

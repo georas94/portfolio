@@ -43,6 +43,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?ApplicationRole $applicationRole = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $phoneNumber = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,6 +160,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApplicationRole(?ApplicationRole $applicationRole): static
     {
         $this->applicationRole = $applicationRole;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): static
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }

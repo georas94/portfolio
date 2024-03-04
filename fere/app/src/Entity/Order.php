@@ -5,11 +5,9 @@ namespace App\Entity;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
-#[ORM\Table(name: '`order`')]
 class Order
 {
     #[ORM\Id]
@@ -17,51 +15,27 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'orderRef', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $items;
+    #[ORM\OneToMany(mappedBy: 'orderProducts' , targetEntity: Product::class)]
+    private Collection $products;
 
-    #[ORM\Column(length: 255)]
-    private ?string $status = self::STATUS_CART;
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $buyer = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $createdAt = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PaymentType $payment = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $updatedAt = null;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Address $deliverTo = null;
 
-    /**
-     * An order that is in progress, not placed yet.
-     */
-    public const STATUS_CART = 'cart';
+    #[ORM\Column]
+    private ?float $amount = null;
 
     public function __construct()
     {
-        $this->items = new ArrayCollection();
-    }
-
-    public function __toString(): string
-    {
-        if ($this->getTotal()){
-            return 'total : '.$this->getTotal();
-        }
-
-        return 'Commande total';
-    }
-
-    /**
-     * Calculates the order total.
-     *
-     * @return float
-     */
-    public function getTotal(): float
-    {
-        $total = 0;
-
-        foreach ($this->getItems() as $item) {
-            $total += $item->getTotal();
-        }
-
-        return $total;
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,90 +44,73 @@ class Order
     }
 
     /**
-     * @return Collection<int, OrderItem>
+     * @return Collection<int, Product>
      */
-    public function getItems(): Collection
+    public function getProducts(): Collection
     {
-        return $this->items;
+        return $this->products;
     }
 
-    public function addItem(OrderItem $item): static
+    public function addProduct(Product $product): static
     {
-        foreach ($this->getItems() as $existingItem) {
-            // The item already exists, update the quantity
-            if ($existingItem->equals($item)) {
-                $existingItem->setQuantity(
-                    $existingItem->getQuantity() + $item->getQuantity()
-                );
-
-                return $this;
-            }
-        }
-
-        $this->items[] = $item;
-        $item->setOrderRef($this);
-
-        return $this;
-    }
-
-    public function removeItem(OrderItem $item): static
-    {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getOrderRef() === $this) {
-                $item->setOrderRef(null);
-            }
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
         }
 
         return $this;
     }
 
-    /**
-     * Removes all items from the order.
-     *
-     * @return $this
-     */
-    public function removeItems(): self
+    public function removeProduct(Product $product): static
     {
-        foreach ($this->getItems() as $item) {
-            $this->removeItem($item);
-        }
+        $this->products->removeElement($product);
 
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getBuyer(): ?User
     {
-        return $this->status;
+        return $this->buyer;
     }
 
-    public function setStatus(string $status): static
+    public function setBuyer(?User $buyer): static
     {
-        $this->status = $status;
+        $this->buyer = $buyer;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getPayment(): ?PaymentType
     {
-        return $this->createdAt;
+        return $this->payment;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    public function setPayment(?PaymentType $payment): static
     {
-        $this->createdAt = $createdAt;
+        $this->payment = $payment;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getDeliverTo(): ?Address
     {
-        return $this->updatedAt;
+        return $this->deliverTo;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): static
+    public function setDeliverTo(?Address $deliverTo): static
     {
-        $this->updatedAt = $updatedAt;
+        $this->deliverTo = $deliverTo;
+
+        return $this;
+    }
+
+    public function getAmount(): ?float
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(float $amount): static
+    {
+        $this->amount = $amount;
 
         return $this;
     }

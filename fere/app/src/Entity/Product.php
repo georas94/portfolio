@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -28,6 +30,24 @@ class Product
 
     #[ORM\Column]
     private ?int $rated = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $gender = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $size = null;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Inventory::class, orphanRemoval: true)]
+    private Collection $inventories;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Seller $seller = null;
+
+    public function __construct()
+    {
+        $this->inventories = new ArrayCollection();
+    }
 
     public function __toString(): string
     {
@@ -99,6 +119,72 @@ class Product
     public function setRated(int $rated): static
     {
         $this->rated = $rated;
+
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(string $gender): static
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getSize(): ?string
+    {
+        return $this->size;
+    }
+
+    public function setSize(string $size): static
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Inventory>
+     */
+    public function getInventories(): Collection
+    {
+        return $this->inventories;
+    }
+
+    public function addInventory(Inventory $inventory): static
+    {
+        if (!$this->inventories->contains($inventory)) {
+            $this->inventories->add($inventory);
+            $inventory->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventory(Inventory $inventory): static
+    {
+        if ($this->inventories->removeElement($inventory)) {
+            // set the owning side to null (unless already changed)
+            if ($inventory->getProduct() === $this) {
+                $inventory->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSeller(): ?Seller
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?Seller $seller): static
+    {
+        $this->seller = $seller;
 
         return $this;
     }
