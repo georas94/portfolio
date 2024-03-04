@@ -4,6 +4,11 @@ $(function () {
     let maxValue = parseInt(input.attr('max'));
     let $container = $('.btn-cart-add-container');
 
+    let rating = $('.seller-rating')
+    for(let i = 0; i < rating.val(); i++) {
+        $("#seller-star-" + (i+1) ).css('color', 'orange');
+    }
+
     $('.plus').on('click', function () {
         let inputValue = input.val();
         if (inputValue < maxValue) {

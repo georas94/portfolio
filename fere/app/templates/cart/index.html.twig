@@ -13,9 +13,6 @@
                     {{ form_start(form) }}
                     <div class="card">
                         <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                            <div class="btn-cart-save-and-clear">
-                                {{ form_widget(form.clear, {'attr': {'class': 'btn btn-light'}}) }}
-                            </div>
                         </div>
                         <ul class="list-group list-group-flush">
                             {% for item in form.items %}
@@ -32,7 +29,9 @@
                                                 <div class="form-group mb-0 mr-2">
                                                     {{ form_widget(item.quantity, {
                                                         'attr': {
-                                                            'class': 'form-control form-control-sm quantity-value w-25 text-center' ~ (item.quantity.vars.valid ? '' : 'is-invalid')
+                                                            'class': 'form-control form-control-sm quantity-value w-25 text-center' ~ (item.quantity.vars.valid ? '' : 'is-invalid'),
+                                                            'readonly': 'readonly',
+                                                            'style': 'width: 7em;',
                                                         }
                                                     }) }}
                                                     <div class="invalid-feedback">
@@ -45,7 +44,8 @@
                                     <div class="d-flex">
                                         {{ form_widget(item.remove, {
                                             'attr': {
-                                                'class': 'cart_items_remove'
+                                                'class': 'cart_items_remove btn',
+                                                'style': 'margin-left: 2.5em;'
                                             }
                                         }) }}
                                     </div>
@@ -57,6 +57,9 @@
                                 {% endif %}
                             {% endfor %}
                         </ul>
+                        <div class="btn-cart-save-and-clear">
+                            {{ form_widget(form.clear, {'attr': {'class': 'btn btn-light'}}) }}
+                        </div>
                     </div>
                     {{ form_rest(form) }}
                     {{ form_end(form, {'render_rest': false}) }}

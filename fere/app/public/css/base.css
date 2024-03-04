@@ -302,4 +302,8 @@ and (max-device-width : 640px)
   .sub-wrapper-div-product{
     display: inherit;
   }
+
+  .btn-cart-save-and-clear{
+    margin-bottom: 2em;
+  }
 }
