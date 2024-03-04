@@ -79,7 +79,7 @@ class ProductController extends AbstractController
 
             $this->cartManager->save($cart);
 
-            return $this->redirectToRoute('product.detail',
+            return $this->redirectToRoute('app_product_view',
                 [
                     'id' => $product->getId()
                 ],

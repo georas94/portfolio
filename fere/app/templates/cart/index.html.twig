@@ -13,16 +13,15 @@
                     {{ form_start(form) }}
                     <div class="card">
                         <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
-                            <h5 class="">Articles</h5>
                             <div class="btn-cart-save-and-clear">
                                 {{ form_widget(form.clear, {'attr': {'class': 'btn btn-light'}}) }}
                             </div>
                         </div>
                         <ul class="list-group list-group-flush">
                             {% for item in form.items %}
-                                <li class="d-flex">
-                                    <div class="flex-fill" style="padding: 0.5em;">
-                                        <img src="{{ asset('img/random_article.png') }}" class="img-fluid img-cart" alt="Article aléatoire" />
+                                <li class="" style="list-style: none;">
+                                    <div class="" style="padding: 0.5em;">
+                                        <img src="{{ asset('img/icons/random_article.png') }}" class="img-fluid img-cart" alt="Article aléatoire" />
                                     </div>
                                     <div class="d-flex flex-column" style="padding: 0.5em;">
                                         <strong><span style="width: 100%; color: #4f4f4f;">{{ item.vars.data.product.price|number_format(2, '.', ' ') }} Fcfa</span></strong>
@@ -75,7 +74,7 @@
             </div>
         {% else %}
             <div class="alert alert-info">
-                Votre panier est vide. Aller à la liste des <a href="{{ path('app_products') }}"><mark>produits</mark></a>.
+                Votre panier est vide. Aller à la liste des <a href="{{ path('app_products', {gender: 'all', category: 'all'}) }}"><mark>produits</mark></a>.
             </div>
         {% endif %}
     </div>
