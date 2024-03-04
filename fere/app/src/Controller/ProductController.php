@@ -38,7 +38,7 @@ class ProductController extends AbstractController
             'name' => $category
         ]);
 
-        if ($gender === 'ALL' && $category === 'ALL'){
+        if ($gender === 'all' && $category === 'all'){
             $products = $this->productRepository->findAll();
         }else {
             $products = $this->productRepository->findBy(
@@ -47,34 +47,6 @@ class ProductController extends AbstractController
                     'category' => $productCategory,
                 ]
             );
-        }
-
-        return $this->render('product/product_list.html.twig', [
-            'products' => $products
-        ]);
-    }
-
-    /**
-     * @throws LogicException
-     */
-    #[Route('/products/{gender}/{category}', name: 'app_products_gender')]
-    public function productsGender(string $gender): Response
-    {
-        if (!$gender){
-            throw new LogicException('Aucun paramètre envoyé dans la requête');
-        }
-        $productCategory = $this->productCategoryRepository->findOneBy([
-            'name' => 'clothes'
-        ]);
-
-        $products = $this->productRepository->findBy(
-            [
-            'gender' => $gender,
-            'category' => $productCategory,
-            ]
-        );
-        if (!(count($products) > 0)){
-            throw new LogicException('Aucun produit trouvé en base de données');
         }
 
         return $this->render('product/product_list.html.twig', [

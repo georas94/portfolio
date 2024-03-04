@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
     private const NB_PRODUCTS = 100;
     private const NB_USERS = 3;
     private const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-    private const GENDERS = ['MEN', 'WOMEN', 'CHILDREN', 'ALL'];
+    private const GENDERS = ['men', 'women', 'children', 'all'];
 
     private UserPasswordHasherInterface $hasher;
     private $faker;
@@ -118,7 +118,7 @@ class AppFixtures extends Fixture
             $product->setSize(self::getRandomSize());
             $product->setCategory(self::getRandomProductCategory($productCategories));
             if($product->getCategory()->getName() === 'home'){
-                $product->setGender('ALL');
+                $product->setGender('all');
             }else {
                 $product->setGender(self::getRandomGender());
             }
