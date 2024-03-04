@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\ProductCategory;
-use App\Entity\ShoppingCartItem;
 use App\Form\AddToCartType;
 use App\Manager\CartManager;
 use App\Repository\ProductCategoryRepository;
@@ -11,7 +9,6 @@ use App\Repository\ProductRepository;
 use DateTime;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -90,53 +87,6 @@ class ProductController extends AbstractController
         return $this->render('product/product_view.html.twig', [
             'product' => $product,
             'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @throws LogicException
-     */
-    #[Route('/products/{id}/add-to-cart', name: 'app_product_add_to_cart')]
-    public function addToCart(int $id, Request $request): JsonResponse
-    {
-        $product = $this->productRepository->find($id);
-        $quantity = $request->request->get('quantity');
-        if (!$product){
-            throw new LogicException('Produit non existant');
-        }
-        if (!$quantity){
-            throw new LogicException('Quantité non fournie');
-        }
-
-        $cart = $this->cartManager->getCurrentCart();
-
-        try {
-            $orderItem = new ShoppingCartItem();
-            $orderItem->setProduct($product);
-            $orderItem->setQuantity($quantity);
-            $orderItem->setOrderRef($cart);
-            $cart->addItem($orderItem);
-            $cart->setUpdatedAt(new DateTime());
-            if ($this->cartManager->save($cart)){
-                return $this->json([
-                    'OK ! Retournés' => [
-                        $cart
-                    ],
-                    Response::HTTP_OK
-                ]);
-            }
-        }catch (\Throwable $throwable){
-            return $this->json([
-               'erreur' => $throwable->getMessage(),
-               'code' => $throwable->getCode()
-            ]);
-        }
-
-        return $this->json([
-            'retournés' => [
-                $request->request->get('quantity')
-            ],
-            Response::HTTP_OK
         ]);
     }
 }

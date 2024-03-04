@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ShoppingCartItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 use LogicException;
 
@@ -17,6 +18,7 @@ class ShoppingCartItem
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?Product $product = null;
 
     #[ORM\Column]
@@ -26,6 +28,7 @@ class ShoppingCartItem
 
     #[ORM\ManyToOne(inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Ignore]
     private ?ShoppingCart $orderRef = null;
 
     /**

@@ -1,4 +1,22 @@
 $(function () {
+    if (sessionStorage.getItem('cart-quantity')){
+        let cartCountSelector = $('.cart-count');
+        cartCountSelector.text( parseInt(sessionStorage.getItem('cart-quantity')));
+        cartCountSelector.data('count', parseInt(sessionStorage.getItem('cart-quantity')));
+    }
+    $('#cart_clear').on('click tap touchstart',function () {
+        sessionStorage.removeItem('cart-quantity');
+    })
+    $('.cart_items_remove').on('click tap touchstart',function () {
+        var suffix = this.id.match(/\d+/);
+        let quantityToSub = parseInt($('#cart_items_' + suffix + '_quantity').val());
+        let actualQuantity = sessionStorage.getItem('cart-quantity') ? parseInt(sessionStorage.getItem('cart-quantity')) : 0;
+        let calculatedQuantity = (actualQuantity - quantityToSub) >= 0 ? (actualQuantity - quantityToSub) : 0;
+        sessionStorage.removeItem('cart-quantity');
+
+        sessionStorage.setItem('cart-quantity', calculatedQuantity.toString());
+    })
+
     let spanPMenu = $('.span-principal-menu');
     spanPMenu.on('mouseenter',function (event) {
         event.preventDefault();
@@ -16,14 +34,15 @@ $(function () {
         })
     })
     let timesClicked = 0;
-    $('.menu-icon').on('click tap', function (event) {
+    $('.menu-icon').on('click tap', function () {
         timesClicked++;
+        let selectionSelector = $('.selection');
         if ((timesClicked%2) === 0) {
-            $('.selection').addClass('hidden');
-            $('.selection').removeClass('show');
+            selectionSelector.addClass('hidden');
+            selectionSelector.removeClass('show');
         }else if((timesClicked%2) === 1) {
-                $('.selection').removeClass('hidden');
-                $('.selection').addClass('show');
+                selectionSelector.removeClass('hidden');
+                selectionSelector.addClass('show');
         }
         let selectors = spanPMenu.next('ul').find('div');
         selectors.each(function () {

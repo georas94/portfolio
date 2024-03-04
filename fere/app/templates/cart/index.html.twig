@@ -43,7 +43,11 @@
                                         </div>
                                     </div>
                                     <div class="d-flex">
-                                        {{ form_widget(item.remove) }}
+                                        {{ form_widget(item.remove, {
+                                            'attr': {
+                                                'class': 'cart_items_remove'
+                                            }
+                                        }) }}
                                     </div>
                                 </li>
                                 {% if form.items|length > 1 and loop.last == false %}
