@@ -46,6 +46,16 @@ class CartController extends AbstractController
         ]);
     }
 
+    #[Route('/cart/checkout', name: 'app_cart_checkout')]
+    public function cartCheckout(CartManager $cartManager, Request $request): Response
+    {
+        $cart = $cartManager->getCurrentCart();
+
+        return $this->render('cart/checkout/index.html.twig', [
+            'cart' => $cart,
+        ]);
+    }
+
     /**
      * @throws LogicException
      */

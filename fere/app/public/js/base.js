@@ -7,6 +7,9 @@ $(function () {
     $('#cart_clear').on('click tap touchstart',function () {
         sessionStorage.removeItem('cart-quantity');
     })
+    $('.logout').on('click tap touchstart',function () {
+        sessionStorage.removeItem('cart-quantity');
+    })
     $('.cart_items_remove').on('click tap touchstart',function () {
         var suffix = this.id.match(/\d+/);
         let quantityToSub = parseInt($('#cart_items_' + suffix + '_quantity').val());
@@ -26,7 +29,7 @@ $(function () {
         event.preventDefault();
         manageNavbar($(this))
     })
-    $('.sub-menu-items-square').on('mouseleave',function (event) {
+    $('.menu li ul li').on('mouseleave',function (event) {
         event.preventDefault();
         let selectors = spanPMenu.next('ul').find('div');
         selectors.each(function () {

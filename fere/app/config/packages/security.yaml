@@ -35,6 +35,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/account, roles: ROLE_USER }
+         - { path: ^/login, role: PUBLIC_ACCESS }
+         - { path: ^/cart/checkout, role: [ROLE_USER, ROLE_ADMIN] }
 
 when@test:
     security:

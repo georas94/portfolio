@@ -25,6 +25,12 @@
 
             <button class="btn btn-primary btn-block mb-4" type="submit">Se connecter</button>
         </form>
+        <br>
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') == false %}
+            <a type="button" class="register" href="{{ path("app_register") }}">
+                <button class="btn btn-secondary btn-block mt-4" type="button">S'inscrire</button>
+            </a>
+        {% endif %}
     </div>
 
 {% endblock %}

@@ -28,7 +28,7 @@ class AppFixtures extends Fixture
     public function __construct(UserPasswordHasherInterface $hasher)
     {
         $this->hasher = $hasher;
-        $this->faker = Faker\Factory::create();
+        $this->faker = Faker\Factory::create('fr_FR');
     }
 
     public function load(ObjectManager $manager): void
@@ -36,16 +36,16 @@ class AppFixtures extends Fixture
         // users roles
 
         //principal user role
-        $teamMemberApplicationRole = new ApplicationRole();
-        $teamMemberApplicationRole->setDescription('Team member role');
-        $teamMemberApplicationRole->setName('Team member');
-        $teamMemberApplicationRole->setIsActive(true);
         $buyerApplicationRole = new ApplicationRole();
         $buyerApplicationRole->setDescription('Buyer role');
         $buyerApplicationRole->setName('Buyer');
         $buyerApplicationRole->setIsActive(true);
-        $manager->persist($teamMemberApplicationRole);
+        $sellerApplicationRole = new ApplicationRole();
+        $sellerApplicationRole->setDescription('Buyer role');
+        $sellerApplicationRole->setName('Buyer');
+        $sellerApplicationRole->setIsActive(true);
         $manager->persist($buyerApplicationRole);
+        $manager->persist($sellerApplicationRole);
 
         // users
         // create 3 lambda user
@@ -54,6 +54,7 @@ class AppFixtures extends Fixture
             $user->setEmail($this->faker->email());
             $user->setName($this->faker->lastName());
             $user->setSurname($this->faker->firstName());
+            $user->setPhoneNumber($this->faker->unique()->e164PhoneNumber());
             $user->setIsVerified(true);
             $password = $this->hasher->hashPassword($user, 'pass'.$i);
             $user->setPassword($password);
@@ -70,7 +71,8 @@ class AppFixtures extends Fixture
         $password = $this->hasher->hashPassword($user, 'rashid');
         $user->setPassword($password);
         $user->setRoles(['ROLE_ADMIN']);
-        $user->setApplicationRole($teamMemberApplicationRole);
+        $user->setApplicationRole($sellerApplicationRole);
+        $user->setPhoneNumber($this->faker->unique()->e164PhoneNumber());
         $manager->persist($user);
 
         // products categories
@@ -102,9 +104,12 @@ class AppFixtures extends Fixture
         $sellerAddress->setComment('No comment');
         $sellerAddress->setLatitude('12.393230');
         $sellerAddress->setLongitude('-1.502792');
+        $sellerAddress->setUser($user);
+        $sellerAddress->setCreatedAt(new \DateTime('now'));
         $seller->setIsActive(true);
         $seller->setName('Seller 1');
         $seller->setAddress($sellerAddress);
+        $seller->setRated($this->faker->randomFloat(1, 3.5, 5));
         $seller->setRated($this->faker->randomFloat(1, 3.5, 5));
         $manager->persist($seller);
 

@@ -218,6 +218,19 @@
                 <li class="menu-open-shop">
                     <a href="https://partners.tlabs.digital" target="_blank"><span class=""><strong>Ouvrir ma boutique</strong></span></a>
                 </li>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li>
+                        <a class="logout" href="{{ path("app_logout") }}">
+                            <span class="">Déconnexion</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="nav-link logout" href="{{ path("app_login") }}">
+                            <span class="">Connexion</span>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
     </header>
     <main>

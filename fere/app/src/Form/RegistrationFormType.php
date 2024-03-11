@@ -55,19 +55,6 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'attr' => [
-                    'autocomplete' => 'new-password',
-                    'class' => 'form-check-input ml-1',
-                ],
-                'label' => 'Accepter les termes',
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Veuillez accepter nos termes',
-                    ])
-                ]
-            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
