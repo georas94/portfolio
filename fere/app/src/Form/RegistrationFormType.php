@@ -55,6 +55,17 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
+            ->add('phoneNumber', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control',
+                ],
+                'label' => 'Numéro de téléphone',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un numéro de téléphone',
+                    ])
+                ]
+            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
