@@ -30,6 +30,9 @@
                     {{ form_row(registrationForm.phoneNumber) }}
                     <small id="phoneNumberHelp" class="form-text text-muted">Exemple : 22661736484</small>
                 </div>
+                <div style="display: none">
+                    {{ form_row(registrationForm.applicationRole) }}
+                </div>
             </div>
             <div class="form-outline mb-4 w-25">
                 {{ form_row(registrationForm.plainPassword) }}
