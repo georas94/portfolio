@@ -55,6 +55,14 @@ class SecurityController extends AbstractController
             $user = $this->userRepository->findOneBy([
                 'phoneNumber' => $message['from']
             ]);
+            if(!$user){
+                return $this->json(
+                    [
+                        'User not found in the db with the provided number'
+                    ],
+                    404
+                );
+            }
 
             $address = new Address();
             $address->setUser($user);
