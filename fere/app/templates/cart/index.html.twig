@@ -21,8 +21,8 @@
                                         <img src="{{ asset('img/icons/random_article.png') }}" class="img-fluid img-cart" alt="Article aléatoire" />
                                     </div>
                                     <div class="d-flex flex-column" style="padding: 0.5em;">
-                                        <strong><span style="width: 100%; color: #4f4f4f;">{{ item.vars.data.product.price|number_format(2, '.', ' ') }} Fcfa</span></strong>
-                                        <div class="d-flex flex-column">
+                                        <strong><span class="span-product-price" style="width: 100%; color: #4f4f4f;">{{ item.vars.data.product.price|number_format(2, '.', ' ') }} Fcfa</span></strong>
+                                        <div style="display: flex;flex-direction: column;align-items: center;">
                                             <h5 class="mt-0 mb-0 text-secondary">{{ item.vars.data.product.name }}</h5>
                                             <small>{{ item.vars.data.product.category[:50] }}</small>
                                             <div class="form-inline mt-2">

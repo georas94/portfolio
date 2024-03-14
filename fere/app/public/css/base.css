@@ -213,6 +213,12 @@ a{
   width: 100%;
 }
 
+
+.list-group-flush li {
+  display: flex;
+  align-items: center;
+}
+
 @media (min-width: 48em) {
   .header li {
     float: left;
@@ -255,6 +261,10 @@ a{
 and (min-device-width : 12px)
 and (max-device-width : 640px)
 {
+  .span-product-price{
+    font-size: 0.78em;
+  }
+
   .subMenuItems .items{
     position: absolute;
     z-index: 4;
