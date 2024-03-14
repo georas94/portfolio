@@ -265,6 +265,11 @@ and (max-device-width : 640px)
     font-size: 0.78em;
   }
 
+  .cart_items_remove, #cart_clear{
+    background-color: rgb(239, 239, 239) !important;
+    border-color: rgba(0, 0, 0, 0);
+  }
+
   .subMenuItems .items{
     position: absolute;
     z-index: 4;
