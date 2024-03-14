@@ -219,6 +219,16 @@ a{
   align-items: center;
 }
 
+.btn-checkout{
+  font-size: 1.6em !important;
+}
+
+.list-group-flush .list-group-item{
+  display: flex;
+  justify-content: space-between;
+}
+
+
 @media (min-width: 48em) {
   .header li {
     float: left;
@@ -268,6 +278,14 @@ and (max-device-width : 640px)
   .cart_items_remove, #cart_clear{
     background-color: rgb(239, 239, 239) !important;
     border-color: rgba(0, 0, 0, 0);
+  }
+
+  .btn-checkout{
+    width: 100%;
+  }
+
+  .img-cart{
+    height: 8em !important;
   }
 
   .subMenuItems .items{

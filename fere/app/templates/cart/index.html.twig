@@ -8,8 +8,7 @@
         <h1>Votre panier</h1>
         {% if cart.items.count > 0 %}
             <div class="row mt-4">
-                <!-- List of items -->
-                <div class="col-md-8">
+                <div class="col-md-10">
                     {{ form_start(form) }}
                     <div class="card">
                         <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
@@ -64,8 +63,7 @@
                     {{ form_rest(form) }}
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>
-                <!-- Summary -->
-                <div class="col-md-4">
+                <div style="margin-top: 2em" class="col-md-12">
                     <div class="card mt-4 mt-md-0">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item d-flex justify-content-between">
@@ -74,7 +72,7 @@
                             </li>
                         </ul>
                         <div class="card-body">
-                            <a href="{{ path('app_cart_checkout') }}" class="btn btn-warning w-100">Paiement</a>
+                            <a href="{{ path('app_cart_checkout') }}" class="btn btn-warning w-100 btn-checkout">Paiement</a>
                         </div>
                     </div>
                 </div>
