@@ -1,0 +1,551 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container mt-4">
+            <h3>Livraison et paiement</h3>
+            <br>
+            <form id="multistep_form">
+                <!-- progressbar -->
+                <ul id="progress_header">
+                    <li class="active"></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+                <!-- Step 01 -->
+                <div class="multistep-box">
+                    <div class="title-box">
+                        <h2>Informations de contact</h2>
+                    </div>
+                    <p>
+                        <input type="text" name="fname" placeholder="Prénom" id="fname">
+                        <span id="error-fname"></span>
+                    </p>
+                    <p>
+                        <input type="text" name="lname" placeholder="Nom de famille" id="lname">
+                        <span id="error-lname"></span>
+                    </p>
+                    <div class="form-group">
+                        <div class="input-group date" data-date-foarmat="dd.mm.yyyy">
+                            <input type="text" placeholder="Date naissance JJ/MM/AAAA">
+                            <div class="input-group-addon" >
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="nxt-prev-button"><input type="button" name="next" class="fs_next_btn action-button" value="Suivant" /></p>
+                </div>
+                <!-- Step 02 -->
+                <div class="multistep-box">
+                    <div class="title-box">
+                        <h2>Adresse de livraison</h2>
+                    </div>
+                    <p>
+                        <input type="button" name="action-button-delivery-office" class="action-button-delivery-office" value="Adresse professionelle" />
+                    </p>
+                    <br>
+                    <div class="div-delivery-office" style="display: none; margin-bottom: 2em">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <input type="text" name="denomination" placeholder="Dénomination" id="denomination">
+                                <span id="error-denomination"></span>
+                            </div>
+                            <input type="text" name="address" placeholder="L'adresse de votre société" id="address">
+                            <small id="addressHelp" class="form-text text-muted"><i>Nous ne partagerons jamais votre adresse.</i></small>
+                            <br>
+                            <span id="error-address"></span> <br>
+                            <label style="display:flex;margin: 2em 5px 0.3em 0;">Ville</label>
+                            <select name="select-city" class="select-city">
+                                <option selected="selected" value="OUA">Ouagadougou</option>
+                                <option value="BOB">Bobo-dioulasso</option>
+                            </select>
+                            <span id="error-select-city"></span>
+                        </div>
+                    </div>
+                    <p>
+                        <input type="button" name="action-button-delivery-to-location" class="action-button-delivery-to-location" value="Envoyer une position via Whatsapp" />
+                    </p>
+                    <div class="div-delivery-to-location" style="display: none">
+                        <span style="color: grey">
+                            Afin de vous faire livrer à une position GPS il faudra que vous nous partagiez votre position via Whatsapp.
+                            <br>
+                            <br>
+                            Afin d'y parvenir veuillez suivre ces étapes : <br>
+                        <br>
+                            <strong>1)</strong> Cliquez sur le bouton "M’envoyer un message" afin de recevoir un message de notre part sur Whatsapp <br>
+                            <strong>2)</strong> Répondez à notre message en nous partageant <strong>UNIQUEMENT</strong> votre position actuelle ou l'endroit où vous souhaiteriez vous faire livrer. <br>
+                            <strong>3)</strong> Après avoir envoyé la position, cliquez enfin sur le bouton "J’ai envoyé l'adresse" afin d'afficher la position envoyée <br>
+                        </span>
+                        <br>
+                        <div style="">
+                            <div class="" style="display: flex; justify-content: space-around">
+                                <button type="button" class="action-button-ask-location">M'envoyer un message</button>
+                                <button type="button" disabled="disabled" class="action-button-validate-location bg-disabled">J'ai envoyé la localisation</button>
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="div-iframe-maps" style="display: none">
+                            <h5>Veuillez vérifier l'adresse envoyée</h5>
+                            <iframe class="iframe-maps" width="100%" style="height: 15em"></iframe>
+                        </div>
+                    </div>
+                    <br>
+                    <p class="nxt-prev-button">
+                        <input type="button" name="previous" class="previous action-button" value="Précédent" />
+                        <input type="button" name="next" class="ss_next_btn action-button" value="Suivant" />
+                    </p>
+                </div>
+                <!-- Step 03 -->
+                <div class="multistep-box">
+                    <div class="title-box">
+                        <h2>Paiement</h2>
+                    </div>
+                    <p class="nxt-prev-button"><input type="button" name="previous" class="previous action-button" value="Précédent" />
+                        <input type="submit" name="submit" class="submit_btn ts_next_btn action-button" value="Payer" />
+                    </p>
+                </div>
+            </form>
+            <h1>You are successfully logged in</h1>
+        </div>
+    </section>
+    <script>
+        var current_slide, next_slide, previous_slide;
+        var left, opacity, scale;
+
+        var error = false;
+
+        //Date picker
+        var bindDatePicker = function() {
+            $(".date").datetimepicker({
+                format:'DD/MM/YYYY',
+                language: 'fr',
+                autoclose: true,
+                defaultDate: new Date(),
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+            }).find('input:first').on("blur",function () {
+                // check if the date is correct. We can accept dd-mm-yyyy and yyyy-mm-dd.
+                // update the format if it's yyyy-mm-dd
+                var date = parseDate($(this).val());
+
+                if (! isValidDate(date)) {
+                    //create date based on momentjs (we have that)
+                    date = moment().format('DD/MM/YYYY');
+                }
+
+                $(this).val(date);
+            });
+        }
+
+        var isValidDate = function(value, format) {
+            format = format || false;
+            // let's parse the date to the best of our knowledge
+            if (format) {
+                value = parseDate(value);
+            }
+
+            var timestamp = Date.parse(value);
+
+            return isNaN(timestamp) == false;
+        }
+
+        var parseDate = function(value) {
+            var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
+            if (m)
+                value = m[5] + '-' + ("00" + m[3]).slice(-2) + '-' + ("00" + m[1]).slice(-2);
+
+            return value;
+        }
+
+        bindDatePicker();
+
+        $('form input').on('keypress', function(e) {
+            return e.which !== 13;
+        });
+        // first name
+        $("#fname").keyup(function() {
+            var fname = $("#fname").val();
+            if (fname != fname) {
+                $("#error-fname").text('Veuillez renseigner votre prénom.');
+                $("#fname").addClass("box_error");
+                error = true;
+            } else {
+                $("#error-fname").text('');
+                error = false;
+            }
+            if ((fname.length <= 2) || (fname.length > 20)) {
+                $("#error-fname").text("Le prénom doit contenir entre 2 et 20 caractères.");
+                $("#fname").addClass("box_error");
+                error = true;
+            }
+            if (!isNaN(fname)) {
+                $("#fname").addClass("box_error");
+                error = true;
+            } else {
+                $("#fname").removeClass("box_error");
+            }
+        });
+        //denomination
+        $("#denomination").keyup(function() {
+            var denomination = $("#denomination").val();
+            if (denomination != denomination) {
+                $("#error-denomination").text('Veuillez renseigner une dénomination.');
+                $("#denomination").addClass("box_error");
+                error = true;
+            } else {
+                $("#error-denomination").text('');
+                error = false;
+            }
+            if ((denomination.length <= 2) || (denomination.length > 20)) {
+                $("#error-denomination").text("La dénomination doit contenir entre 2 et 20 caractères.");
+                $("#denomination").addClass("box_error");
+                error = true;
+            }
+            if (!isNaN(denomination)) {
+                $("#denomination").addClass("box_error");
+                error = true;
+            } else {
+                $("#denomination").removeClass("box_error");
+            }
+        });
+        //address
+        $("#address").keyup(function() {
+            var address = $("#address").val();
+            if (address != address) {
+                $("#error-address").text('Veuillez renseigner l\'adresse de votre société.');
+                $("#address").addClass("box_error");
+                error = true;
+            } else {
+                $("#error-address").text('');
+                error = false;
+            }
+            if ((address.length <= 2) || (address.length > 20)) {
+                $("#error-address").text("L\'adresse doit contenir entre 2 et 20 caractères.");
+                $("#address").addClass("box_error");
+                error = true;
+            }
+            if (!isNaN(address)) {
+                $("#address").addClass("box_error");
+                error = true;
+            } else {
+                $("#address").removeClass("box_error");
+            }
+        });
+        // last name
+        $("#lname").keyup(function() {
+            var lname = $("#lname").val();
+            if (lname != lname) {
+                $("#error-lname").text('Veuillez renseigner votre nom de famille.');
+                $("#lname").addClass("box_error");
+                error = true;
+            } else {
+                $("#error-lname").text('');
+                error = false;
+            }
+            if ((lname.length <= 2) || (lname.length > 20)) {
+                $("#error-lname").text("Le nom doit contenir entre 2 et 20 caractères.");
+                $("#lname").addClass("box_error");
+                error = true;
+            }
+            if (!isNaN(lname)) {
+                $("#lname").addClass("box_error");
+                error = true;
+            } else {
+                $("#lname").removeClass("box_error");
+            }
+        });
+        // address
+        $("#address").keyup(function() {
+            var address = $("#address").val();
+            if (address != address) {
+                $("#error-address").text('Enter your Address.');
+                $("#address").addClass("box_error");
+                error = true;
+            } else {
+                $("#error-address").text('');
+                error = false;
+                $("#address").removeClass("box_error");
+            }
+        });
+
+        // first step validation
+        $(".fs_next_btn").click(function() {
+            // first name
+            if ($("#fname").val() == '') {
+                $("#error-fname").text('Veuillez renseigner votre prénom.');
+                $("#fname").addClass("box_error");
+                error = true;
+            } else {
+                var fname = $("#fname").val();
+                if (fname != fname) {
+                    $("#error-fname").text('Le prénom est requis.');
+                    error = true;
+                } else {
+                    $("#error-fname").text('');
+                    error = false;
+                    $("#fname").removeClass("box_error");
+                }
+                if ((fname.length <= 2) || (fname.length > 20)) {
+                    $("#error-fname").text("Le prénom doit contenir entre 2 et 20 caractères.");
+                    error = true;
+                }
+                if (!isNaN(fname)) {
+                    $("#error-fname").text("Seulement les caractères sont autorisés.");
+                    error = true;
+                } else {
+                    $("#fname").removeClass("box_error");
+                }
+            }
+            // last name
+            if ($("#lname").val() == '') {
+                $("#error-lname").text('Veuillez renseigner votre nom de famille.');
+                $("#lname").addClass("box_error");
+                error = true;
+            } else {
+                var lname = $("#lname").val();
+                if (lname != lname) {
+                    $("#error-lname").text('Le nom de famille est requis.');
+                    error = true;
+                } else {
+                    $("#error-lname").text('');
+                    error = false;
+                }
+                if ((lname.length <= 2) || (lname.length > 20)) {
+                    $("#error-lname").text("Le nom doit contenir entre 2 et 20 caractères.");
+                    error = true;
+                }
+                if (!isNaN(lname)) {
+                    $("#error-lname").text("Seulement les caractères sont autorisés.");
+                    error = true;
+                } else {
+                    $("#lname").removeClass("box_error");
+                }
+            }
+            if (!error) {
+                current_slide = $(this).parent().parent();
+                next_slide = $(this).parent().parent().next();
+
+                $("#progress_header li").eq($(".multistep-box").index(next_slide)).addClass("active");
+                current_slide.fadeOut('', function () {
+                    next_slide.show().fadeIn(1000);
+                });
+            }
+        });
+        // second step validation
+        $(".ss_next_btn").click(function() {
+            if ($('.div-delivery-office').is(':visible')){
+                if ($("#denomination").val() == '') {
+                    $("#error-denomination").text('Vous devez renseigner une dénomination.');
+                    $("#denomination").addClass("box_error");
+                    error = true;
+                } else {
+                    var denomination = $("#denomination").val();
+                    if (denomination != denomination) {
+                        $("#error-denomination").text('La dénomination est requise.');
+                        error = true;
+                    } else {
+                        $("#error-denomination").text('');
+                        error = false;
+                        $("#denomination").removeClass("box_error");
+                    }
+
+                    if ((denomination.length <= 2) || (denomination.length > 20)) {
+                        $("#error-denomination").text("La dénomination doit contenir entre 2 et 20 caractères.");
+                        error = true;
+                    }
+                }
+
+                if ($("#address").val() == '') {
+                    $("#error-address").text('Vous devez renseigner une adresse.');
+                    $("#address").addClass("box_error");
+                    error = true;
+                } else {
+                    var address = $("#address").val();
+                    if (address != address) {
+                        $("#error-address").text('L\'adresse est requise.');
+                        error = true;
+                    } else {
+                        $("#error-address").text('');
+                        error = false;
+                        $("#address").removeClass("box_error");
+                    }
+
+                    if ((address.length <= 2) || (address.length > 20)) {
+                        $("#error-address").text("L'adresse doit contenir entre 2 et 20 caractères.");
+                        error = true;
+                    }
+                }
+            }
+            if (!error) {
+                current_slide = $(this).parent().parent();
+                next_slide = $(this).parent().parent().next();
+
+                $("#progress_header li").eq($(".multistep-box").index(next_slide)).addClass("active");
+
+                current_slide.fadeOut('', function () {
+                    next_slide.show().fadeIn(1000);
+                });
+            }
+        });
+
+        // third step validation
+        $(".ts_next_btn").click(function() {
+            // phone
+            if ($("#phone").val() == '') {
+                $("#error-phone").text('Enter your Phone number.');
+                $("#phone").addClass("box_error");
+                error = true;
+            } else {
+                var phone = $("#phone").val();
+                if (phone != phone) {
+                    $("#error-phone").text('Phone number is required.');
+                    error = true;
+                } else {
+                    $("#error-phone").text('');
+                    error = false;
+                }
+                if (phone.length != 10) {
+                    $("#error-phone").text("Mobile number must be of 10 Digits only.");
+                    error = true;
+                } else {
+                    $("#phone").removeClass("box_error");
+                }
+            }
+            // address
+            if ($("#address").val() == '') {
+                $("#error-address").text('Enter your Address.');
+                $("#address").addClass("box_error");
+                error = true;
+            } else {
+                var address = $("#address").val();
+                if (address != address) {
+                    $("#error-address").text('Address is required.');
+                    error = true;
+                } else {
+                    $("#error-address").text('');
+                    $("#address").removeClass("box_error");
+                    error = false;
+                }
+            }
+
+            if (!error) {
+                current_slide = $(this).parent().parent();
+                next_slide = $(this).parent().parent().next();
+
+                $("#progress_header li").eq($(".multistep-box").index(next_slide)).addClass("active");
+
+                current_slide.fadeOut('', function () {
+                    next_slide.show().fadeIn(1000);
+                });
+            }
+        });
+        // previous
+        $(".previous").click(function() {
+            current_slide = $(this).parent().parent();
+            previous_slide = $(this).parent().parent().prev();
+
+            $("#progress_header li").eq($(".multistep-box").index(current_slide)).removeClass("active");
+
+            current_slide.fadeOut('', function () {
+                previous_slide.show().fadeIn(1000);
+            });
+        });
+
+        $(".submit_btn").click(function() {
+            if (!error){
+                $(".main").addClass("form_submited");
+            }
+            return false;
+        })
+
+        //Location part
+        let divDeliveryLocationSelector = $('.div-delivery-to-location');
+        let divDeliveryOfficeSelector = $('.div-delivery-office');
+        $('.action-button-delivery-to-location').on('click', function () {
+            if (divDeliveryLocationSelector.is(":hidden")){
+                divDeliveryLocationSelector.show();
+                divDeliveryOfficeSelector.hide();
+            }else{
+                divDeliveryLocationSelector.hide();
+            }
+        })
+        $('.action-button-delivery-office').on('click', function () {
+            if (divDeliveryOfficeSelector.is(":hidden")){
+                divDeliveryOfficeSelector.show();
+                divDeliveryLocationSelector.hide();
+                $('.iframe-maps').attr('src', '');
+                if (!$('.action-button-validate-location').hasClass('bg-disabled')){
+                    $('.action-button-validate-location').addClass('bg-disabled')
+                }
+                $(".action-button-validate-location").prop("disabled", true);
+                $('.div-iframe-maps').hide()
+            }else{
+                divDeliveryOfficeSelector.hide();
+            }
+        })
+
+        $('.action-button-ask-location').on('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "{{ path('app_ask_location') }}",
+                dataType: 'json',
+                data: {idUtilisateur: '{{ user.id }}'},
+                success: function (data) {
+                    if (data.statusCode === 200){
+                        $('.action-button-validate-location').removeClass('bg-disabled')
+                        $('.action-button-validate-location').removeAttr('disabled');
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Message envoyé",
+                            showConfirmButton: false,
+                            timer: 1600
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "Erreur rencontré lors de l'envoi du message",
+                        showConfirmButton: false,
+                        timer: 1600
+                    });
+                }
+            });
+        });
+
+        $('.action-button-validate-location').on('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "{{ path('app_validate_location') }}",
+                dataType: 'json',
+                data: {idUtilisateur: '{{ user.id }}'},
+                success: function (data) {
+                    if (data.statusCode === 200){
+                        $('.action-button-validate-location').addClass('bg-disabled')
+                        $(".action-button-validate-location").prop("disabled", true);
+                        $('.iframe-maps').attr('src', 'https://maps.google.com/maps?q='+ data.latitude + ',' + data.longitude +'&output=embed');
+                        $('.div-iframe-maps').show()
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "Erreur rencontré lors de la récupération du message",
+                        showConfirmButton: false,
+                        timer: 1600
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -48,9 +48,9 @@ class SecurityController extends AbstractController
     #[Route('/webhooks', name: 'app_webhooks', methods: ['POST'])]
     public function webhooks(Request $request): Response
     {
-        $message = json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']['messages'][0];
+        $message = isset(json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']) && isset(json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']['messages']) ? json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']['messages'][0] : null;
 
-        if(isset($message['location'])){
+        if($message && isset($message['location'])){
             $return = 'Message de : '. $message['from'] . ' longitude : ' . $message['location']['longitude'] . ' Latitude : '. $message['location']['latitude'];
             $user = $this->userRepository->findOneBy([
                 'phoneNumber' => $message['from']

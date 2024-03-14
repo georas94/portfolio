@@ -49,6 +49,18 @@ services:
         ports:
             - '9003:9000'
 
+    ngrok:
+        image: wernight/ngrok
+        container_name: ngrok
+        restart: unless-stopped
+        volumes:
+            - ./ngrok/ngrok.yml:/home/ngrok/.ngrok2/ngrok.yml
+        ports:
+            - "4040:4040"
+        command: ["ngrok", "http", "8083"]
+        networks:
+            - tools
+
 networks:
     tools:
 
