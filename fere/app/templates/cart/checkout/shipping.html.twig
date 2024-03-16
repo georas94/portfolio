@@ -497,7 +497,9 @@
                 url: "{{ path('app_ask_location') }}",
                 dataType: 'json',
                 data: {idUtilisateur: '{{ user.id }}'},
-                success: function (data) {
+                success: function (data, textStatus, xhr) {
+                    console.log(xhr.status)
+                    console.log(data)
                     if (data.statusCode === 200){
                         $('.action-button-validate-location').removeClass('bg-disabled')
                         $('.action-button-validate-location').removeAttr('disabled');

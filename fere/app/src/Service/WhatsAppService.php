@@ -92,8 +92,14 @@ class WhatsAppService
 //                ];
 //            }
             $content = json_decode($content, true);
-            $content['statusCode'] = $response->getStatusCode();
+            $change = $content['entry'][0]['changes'][0]['value'] ?? null;
+            $statuses = $change && isset($change['statuses']) ? $change['statuses'][0] : null;
 
+            if($statuses && $statuses['status'] === 'failed'){
+                $content['statusCode'] = 404;
+            }else {
+                $content['statusCode'] = $response->getStatusCode();
+            }
             return $content;
         } catch (\Throwable $e) {
             throw new Exception($e->getMessage());
