@@ -86,6 +86,9 @@ class SecurityController extends AbstractController
             }elseif ($statuses && $statuses['status'] === 'delivered'){
                 $return = 'Message distribué';
                 $status = 200;
+            }elseif ($statuses && $statuses['status'] === 'failed'){
+                $return = 'Message non distribuable.';
+                $status = 404;
             }
             return $this->json(
                 [

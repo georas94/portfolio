@@ -508,8 +508,16 @@
                             showConfirmButton: false,
                             timer: 1600
                         });
-                    }
-                    if (data.statusCode !== 200){
+                    }else if (data.statusCode === 404){
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "Le message n'a pas pu être distribué. Vérifiez que le numéro est le bon et que vous disposez de Whatsapp.",
+                            showConfirmButton: false,
+                            timer: 1900
+                        });
+                        console.log(data);
+                    }else{
                         Swal.fire({
                             position: "center",
                             icon: "error",
