@@ -26,10 +26,11 @@
                 <div>
                     {{ form_row(registrationForm.name) }}
                 </div>
-                <div>
-                    {{ form_row(registrationForm.phoneNumber) }}
-                    <small id="phoneNumberHelp" class="form-text text-muted">Exemple : 22661736484</small>
+                <div style="display: flex;flex-direction: column">
+                    {{ form_label(registrationForm.phoneNumber, 'Numéro de téléphone', { 'attr': {'class': 'control-label'} }) }}
+                    {{ form_widget(registrationForm.phoneNumber) }}
                 </div>
+                <div class="alert alert-error" style="display: none"></div>
                 <div style="display: none">
                     {{ form_row(registrationForm.applicationRole) }}
                 </div>
@@ -38,7 +39,39 @@
                 {{ form_row(registrationForm.plainPassword) }}
             </div>
             <br>
-            <button type="submit" class="btn btn-primary btn-block mb-4">S'inscrire</button>
+            <button type="submit" class="btn button-submit-register btn-primary btn-block mb-4">S'inscrire</button>
         {{ form_end(registrationForm) }}
     </div>
+    <script>
+        $(function () {
+            const phoneInputField = document.querySelector(".input-phone-number");
+            const error = document.querySelector(".alert-error");
+            const phoneInput = window.intlTelInput(phoneInputField, {
+                initialCountry: "auto",
+                geoIpLookup: function(callback) {
+                    fetch("https://ipapi.co/json")
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) { callback(data.country_code); })
+                        .catch(function() { callback(); });
+                },
+                utilsScript:
+                    "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/19.5.7/js/utils.js",
+            });
+
+            $('form[name="registration_form"]').on('submit', function (event) {
+                event.preventDefault();
+                const phoneNumber = phoneInput.getNumber();
+                error.style.display = "none";
+
+                if (phoneInput.isValidNumber()) {
+                    $('.input-phone-number').val(phoneNumber);
+                    $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
+                } else {
+                    error.style.display = "";
+                    error.innerHTML = `Numéro de téléphone invalide.`;
+                    return false;
+                }
+            })
+        })
+    </script>
 {% endblock %}

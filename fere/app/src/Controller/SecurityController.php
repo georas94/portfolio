@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 class SecurityController extends AbstractController
 {
@@ -48,43 +49,57 @@ class SecurityController extends AbstractController
     #[Route('/webhooks', name: 'app_webhooks', methods: ['POST'])]
     public function webhooks(Request $request): Response
     {
-        $message = isset(json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']) && isset(json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']['messages']) ? json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']['messages'][0] : null;
+        try{
+            $change = isset(json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']) && isset(json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value']) ? json_decode($request->getContent(), true)['entry'][0]['changes'][0]['value'] : null;
+            $message = $change && isset($change['messages']) ? $change['messages'][0] : null;
+            $statuses = $change && isset($change['statuses']) ? $change['statuses'][0] : null;
 
-        if($message && isset($message['location'])){
-            $return = 'Message de : '. $message['from'] . ' longitude : ' . $message['location']['longitude'] . ' Latitude : '. $message['location']['latitude'];
-            $user = $this->userRepository->findOneBy([
-                'phoneNumber' => $message['from']
-            ]);
-            if(!$user){
-                return $this->json(
-                    [
-                        'User not found in the db with the provided number'
-                    ],
-                    404
-                );
+            if($message && isset($message['location'])){
+                $return = 'Message de : '. $message['from'] . ' longitude : ' . $message['location']['longitude'] . ' Latitude : '. $message['location']['latitude'];
+                $user = $this->userRepository->findOneBy([
+                    'phoneNumber' => $message['from']
+                ]);
+                if(!$user){
+                    return $this->json(
+                        [
+                            'User not found in the db with the provided number'
+                        ],
+                        404
+                    );
+                }
+
+                $address = new Address();
+                $address->setUser($user);
+                $address->setLatitude($message['location']['latitude']);
+                $address->setLongitude($message['location']['longitude']);
+                $address->setCreatedAt(new \DateTime('now'));
+                $address->setComment('ninja');
+                $this->entityManager->persist($address);
+                $this->entityManager->flush();
+                $status = 200;
+            }elseif($message && $message['text']) {
+                $return = 'Message de : '. $message['from'] . '. Message : '. $message['text']['body'];
+                $status = 200;
+            }elseif ($statuses && $statuses['status'] === 'sent'){
+                $return = 'Message envoyé';
+                $status = 200;
+            }elseif ($statuses && $statuses['status'] === 'delivered'){
+                $return = 'Message distribué';
+                $status = 200;
             }
-
-            $address = new Address();
-            $address->setUser($user);
-            $address->setLatitude($message['location']['latitude']);
-            $address->setLongitude($message['location']['longitude']);
-            $address->setCreatedAt(new \DateTime('now'));
-            $address->setComment('ninja');
-            $this->entityManager->persist($address);
-            $this->entityManager->flush();
-            $status = 200;
-        }elseif($message['text']) {
-            $return = 'Message de : '. $message['from'] . '. Message : '. $message['text']['body'];
-            $status = 200;
-        }else {
-            $return = 'Error';
-            $status = 500;
+            return $this->json(
+                [
+                    $return ?? 'Return not managed by the API'
+                ],
+                $status ?? 500
+            );
+        }catch(Throwable $exception){
+            return $this->json(
+                [
+                    $exception->getMessage()
+                ],
+                $exception->getCode()
+            );
         }
-        return $this->json(
-            [
-                $return
-            ],
-            $status
-        );
     }
 }

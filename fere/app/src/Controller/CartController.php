@@ -119,20 +119,29 @@ class CartController extends AbstractController
     #[Route('/cart/checkout/ask-location', name: 'app_ask_location')]
     public function askLocation(Request $request): JsonResponse
     {
-        $idUtilisateur = $request->query->get('idUtilisateur');
-        if(!$idUtilisateur){
-            throw new Exception('Le paramètre idUtilisateur n\'a pas été fourni');
-        }
+        try{
+            $idUtilisateur = $request->query->get('idUtilisateur');
+            if(!$idUtilisateur){
+                throw new Exception('Le paramètre idUtilisateur n\'a pas été fourni');
+            }
 
-        $user = $this->userRepository->findOneBy(['id' => $idUtilisateur]);
-        $userPhoneNumber = $user->getPhoneNumber();
-        $response = $this->whatsAppService->postMessage('Bonjour, merci de nous partager une position. FERE', $userPhoneNumber);
-        return $this->json(
-            [
-                'statusCode' => (int)$response['statusCode'],
-                $response
-            ]
-        );
+            $user = $this->userRepository->findOneBy(['id' => $idUtilisateur]);
+            $userPhoneNumber = $user->getPhoneNumber();
+            $response = $this->whatsAppService->postMessage('Bonjour, merci de nous partager une position. FERE', $userPhoneNumber);
+            return $this->json(
+                [
+                    'statusCode' => (int)$response['statusCode'],
+                    $response
+                ]
+            );
+        }catch(Throwable $exception){
+            return $this->json(
+                [
+                    'statusCode' => $exception->getCode(),
+                    $exception->getMessage()
+                ]
+            );
+        }
     }
 
     #[Route('/cart/checkout/validate-location', name: 'app_validate_location')]

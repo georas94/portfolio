@@ -6,6 +6,7 @@ use App\Entity\ApplicationRole;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,16 +56,13 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('phoneNumber', TextType::class, [
+            ->add('phoneNumber', NumberType::class, [
                 'attr' => [
-                    'class' => 'form-control',
+                    'class' => 'form-control input-phone-number',
+                    'name' => 'input-phone-number',
+                    'oninput' => 'this.value = this.value.replace(/\D+/g, "")',
+                    'autocomplete' => 'input-phone-number',
                 ],
-                'label' => 'Numéro de téléphone',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer un numéro de téléphone',
-                    ])
-                ]
             ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
