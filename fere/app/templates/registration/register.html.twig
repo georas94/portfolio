@@ -60,16 +60,18 @@
 
             $('form[name="registration_form"]').on('submit', function (event) {
                 event.preventDefault();
-                const phoneNumber = phoneInput.getNumber();
+                const phoneNumber = phoneInput.getNumber().replace(/\+/g, '');
                 error.style.display = "none";
-
+                var inputPhoneNumber = $('.input-phone-number');
                 if (phoneInput.isValidNumber()) {
-                    $('.input-phone-number').val(phoneNumber);
-                    $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
+                    inputPhoneNumber.val(phoneNumber);
                 } else {
                     error.style.display = "";
                     error.innerHTML = `Numéro de téléphone invalide.`;
                     return false;
+                }
+                if (inputPhoneNumber.val() !== ''){
+                    $(this).unbind('submit').submit(); // continue the submit unbind preventDefault
                 }
             })
         })

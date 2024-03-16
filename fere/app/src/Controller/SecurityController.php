@@ -89,7 +89,11 @@ class SecurityController extends AbstractController
             }
             return $this->json(
                 [
-                    $return ?? 'Return not managed by the API'
+                    $return ?? [
+                        'result' => $change,
+                        'message' => 'Return not managed by the API',
+                        'path_name' => 'app_webhooks [POST]',
+                    ]
                 ],
                 $status ?? 500
             );

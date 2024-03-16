@@ -43,7 +43,7 @@ class WhatsAppService
                     'json' => [
                         "messaging_product"=>"whatsapp",
                         "recipient_type" => "individual",
-                        "to" => $to,
+                        "to" => '+' . $to,
                         "type" => "text",
                         "text"=> [
                             "preview_url" => false,

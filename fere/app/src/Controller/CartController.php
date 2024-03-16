@@ -127,7 +127,7 @@ class CartController extends AbstractController
 
             $user = $this->userRepository->findOneBy(['id' => $idUtilisateur]);
             $userPhoneNumber = $user->getPhoneNumber();
-            $response = $this->whatsAppService->postMessage('Bonjour, merci de nous partager une position. FERE', $userPhoneNumber);
+            $response = $this->whatsAppService->postMessage('Bonjour, merci de nous partager une position. Si vous n\'êtes pas à l\'origine de cette demande, veuillez l\'ignorer. '."\n".' FERE', $userPhoneNumber);
             return $this->json(
                 [
                     'statusCode' => (int)$response['statusCode'],

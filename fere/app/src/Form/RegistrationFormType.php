@@ -10,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -91,12 +94,26 @@ class RegistrationFormType extends AbstractType
                 'empty_data' => 'friend'
             ])
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) use ($options): void {
+            /** @var Request $request */
+            $data = $event->getData();
+            $request = $options['request'];
+            $form = $event->getForm();
+            if(isset($request->request->all()[$form->getName()])){
+                $phoneNumber = $request->request->all()[$form->getName()]['phoneNumber'];
+                $phoneNumber = str_replace('+', '', $phoneNumber);
+                $form->get('phoneNumber')->setData($phoneNumber);
+            }
+            $event->setData($data);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'request' => [],
         ]);
     }
 }
