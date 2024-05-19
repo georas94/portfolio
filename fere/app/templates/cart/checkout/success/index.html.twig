@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paiement validé !{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container mt-4">
+            <p>
+                Paiement validé ! Si vous avez des questions, envoyez nous un email
+                <a href="mailto:orders@fere.com">orders@fere.com</a>.
+            </p>
+        </div>
+    </section>
+    <script>
+        sessionStorage.removeItem('cart-quantity');
+    </script>
+{% endblock %}

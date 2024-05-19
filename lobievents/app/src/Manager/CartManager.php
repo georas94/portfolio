@@ -2,7 +2,8 @@
 
 namespace App\Manager;
 
-use App\Entity\Order;
+use App\Entity\Purchase;
+use App\Entity\ShoppingCart;
 use App\Factory\OrderFactory;
 use App\Storage\CartSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,9 +45,9 @@ class CartManager
     /**
      * Gets the current cart.
      *
-     * @return Order
+     * @return ShoppingCart
      */
-    public function getCurrentCart(): Order
+    public function getCurrentCart(): ShoppingCart
     {
         $cart = $this->cartSessionStorage->getCart();
 
@@ -60,10 +61,10 @@ class CartManager
     /**
      * Persists the cart in database and session.
      *
-     * @param Order $cart
+     * @param Purchase $cart
      * @return bool
      */
-    public function save(Order $cart): bool
+    public function save(Purchase $cart): bool
     {
         // Persist in database
         try {

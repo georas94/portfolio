@@ -103,12 +103,24 @@
                     <div class="title-box">
                         <h2>Paiement</h2>
                     </div>
-                    <p class="nxt-prev-button"><input type="button" name="previous" class="previous action-button" value="Précédent" />
-                        <input type="submit" name="submit" class="submit_btn ts_next_btn action-button" value="Payer" />
+                    {% for shoppingCartItem in cart.items %}
+                        <div class="product" style="display: flex;justify-content: space-between;">
+                            <img src="{{ asset('img/icons/random_article.png') }}"  alt="Image d'article aléatoire"/>
+                            <div class="description" style="display: flex; flex-direction: column;justify-content: center">
+                                <h5>{{ shoppingCartItem.product.price|number_format(0, '.', ' ') }} Fcfa</h5>
+                                <h3>{{ shoppingCartItem.product.name }}</h3>
+                                <small>Quantité : {{ shoppingCartItem.quantity }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <h3>Total : {{ cart.getTotal()|number_format(0, '.', ' ') }} Fcfa</h3>
+                    <input type="submit" formaction="{{ path('app_cart_checkout_card') }}" name="submit" id="checkout-button" class="btn" value="Payer par carte" />
+                    <p class="nxt-prev-button">
+                        <input type="button" name="previous" class="previous action-button" value="Précédent" />
+{#                        <input type="submit" formaction="{{ path('app_cart_checkout_stripe') }}" name="submit" id="checkout-button" class="submit_btn ts_next_btn action-button" value="Payer" />#}
                     </p>
                 </div>
             </form>
-            <h1>You are successfully logged in</h1>
         </div>
     </section>
     <script>

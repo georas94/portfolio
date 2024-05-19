@@ -11,13 +11,16 @@
                         <div class="product-seller-block">
                             <div style="display: flex;">
                                 <div style="display: flex;flex-direction: column;justify-content: center">
-                                    <a href="javascript:history.back()"><i class="fa fa-angle-left fa-4x"></i></a>
+                                    <a class="a-back-to-products" href="javascript:history.back()" style="">
+                                        <img class="icondrowdown-arrow" alt="" src="{{ asset('img/icons/left-arrow.svg') }}">
+                                        <div class="">Back to results</div>
+                                    </a>
                                 </div>
                                 <div style="display: flex;flex-direction: column;justify-content: center">
                                     <img class="seller-logo" src="{{ asset('img/icons/random_seller_logo.png') }}" alt="Seller logo">
                                 </div>
                                 <div style="display: flex; flex-direction: column; justify-content: center">
-                                    <div style="height: 6em; display: flex; flex-direction: column; justify-content: space-around">
+                                    <div style="height: 6em; display: flex; flex-direction: column; justify-content: center">
                                         <div>
                                             <span>{{ product.seller.name }}</span>
                                         </div>

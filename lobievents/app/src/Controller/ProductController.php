@@ -98,7 +98,7 @@ class ProductController extends AbstractController
             $orderItem = new OrderItem();
             $orderItem->setProduct($product);
             $orderItem->setQuantity($quantity);
-            $orderItem->setOrderRef($cart);
+            $orderItem->setShoppingCart($cart);
             $cart->addItem($orderItem);
             $cart->setUpdatedAt(new DateTime());
             if ($this->cartManager->save($cart)){

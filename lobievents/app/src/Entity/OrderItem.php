@@ -26,7 +26,7 @@ class OrderItem
 
     #[ORM\ManyToOne(inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Order $orderRef = null;
+    private ?ShoppingCart $shoppingCart = null;
 
     /**
      * Tests if the given item given corresponds to the same order item.
@@ -87,14 +87,14 @@ class OrderItem
         return $this;
     }
 
-    public function getOrderRef(): ?Order
+    public function getShoppingCart(): ?ShoppingCart
     {
-        return $this->orderRef;
+        return $this->shoppingCart;
     }
 
-    public function setOrderRef(?Order $orderRef): static
+    public function setShoppingCart(?ShoppingCart $shoppingCart): static
     {
-        $this->orderRef = $orderRef;
+        $this->shoppingCart = $shoppingCart;
 
         return $this;
     }

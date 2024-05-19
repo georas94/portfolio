@@ -1,30 +1,52 @@
 $(function () {
+    let cartCountSelector = $('.cart-count');
+    let imgCartSelector = $('.img-cart');
     if (sessionStorage.getItem('cart-quantity')){
-        let cartCountSelector = $('.cart-count');
         cartCountSelector.text( parseInt(sessionStorage.getItem('cart-quantity')));
         cartCountSelector.data('count', parseInt(sessionStorage.getItem('cart-quantity')));
+    }else{
+        cartCountSelector.text(cartCountSelector.data('count'));
     }
     $('#cart_clear').on('click tap touchstart',function () {
         sessionStorage.removeItem('cart-quantity');
+        cartCountSelector.css('color', '#FF0000FF !important')
+        imgCartSelector.css('color', '#FF0000FF !important')
+        cartCountSelector.animate({ 'zoom': 0.8}, 400);
+        imgCartSelector.animate({ 'zoom': 0.6}, 400);
+        cartCountSelector.animate({ 'zoom': 1}, 400);
+        imgCartSelector.animate({ 'zoom': 1}, 400);
+        window.setTimeout(animateBackToBlackColor, 2000);
+        function animateBackToBlackColor() {
+            cartCountSelector.css('color', '#000 !important')
+            imgCartSelector.css('color', '#000 !important')
+        }
     })
     $('.logout').on('click tap touchstart',function () {
         sessionStorage.removeItem('cart-quantity');
     })
     $('.cart_items_remove').on('click tap touchstart',function () {
-        var suffix = this.id.match(/\d+/);
+        let suffix = this.id.match(/\d+/);
         let quantityToSub = parseInt($('#cart_items_' + suffix + '_quantity').val());
         let actualQuantity = sessionStorage.getItem('cart-quantity') ? parseInt(sessionStorage.getItem('cart-quantity')) : 0;
         let calculatedQuantity = (actualQuantity - quantityToSub) >= 0 ? (actualQuantity - quantityToSub) : 0;
         sessionStorage.removeItem('cart-quantity');
 
+        cartCountSelector.css('color', '#FF0000FF !important')
+        imgCartSelector.css('color', '#FF0000FF !important')
+        cartCountSelector.animate({ 'zoom': 0.6}, 400);
+        imgCartSelector.animate({ 'zoom': 0.8}, 400);
+        cartCountSelector.animate({ 'zoom': 1}, 400);
+        imgCartSelector.animate({ 'zoom': 1}, 400);
+        window.setTimeout(animateBackToBlackColor, 2000);
+        function animateBackToBlackColor() {
+            cartCountSelector.css('color', '#000 !important')
+            imgCartSelector.css('color', '#000 !important')
+        }
+
         sessionStorage.setItem('cart-quantity', calculatedQuantity.toString());
     })
 
     let spanPMenu = $('.span-principal-menu');
-    spanPMenu.on('mouseenter',function (event) {
-        event.preventDefault();
-        manageNavbar($(this))
-    })
     spanPMenu.on('click tap touchstart',function (event) {
         event.preventDefault();
         manageNavbar($(this))

@@ -22,7 +22,7 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $reference = null;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: ProductCategory::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Ignore]
     private ?ProductCategory $category = null;

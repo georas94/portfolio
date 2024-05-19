@@ -4,27 +4,76 @@
 
 {% block body %}
     <section>
+        <div class="container" style="display: flex">
+            <div class="frame-parent" style="display: flex;justify-content: end;">
+                <div class="sort-by-parent">
+                    <div class="sort-by">Trier par :</div>
+                    <label for="select-sort-by"></label>
+                    <select name="select-sort-by" id="select-sort-by" class="dropdown-country"
+                            style="background-image: url('{{ asset('img/icons/drowdown-arrow.svg') }}');">
+                        <option selected value="relevance">Pertinence</option>
+                        <option value="price_low_to_high">Prix - Bas à Élevé</option>
+                        <option value="price_high_to_low">Prix - Élevé à Bas</option>
+                        <option value="price_discount_high_to_low">Réduction - Élevé à Bas</option>
+                    </select>
+                </div>
+            </div>
+        </div>
         <div class="container" style="display: flex;justify-content: center">
-            <section class="col-md-12 col-lg-10 mb-4 mb-lg-0">
+            <div class="frame-parent frame-parent-side-filter col-md-2 col-lg-2 mb-4 mb-lg-0">
+                <div class="price-parent">
+                    <div class="price">Prix</div>
+                    <div class="under-25-parent">
+                        <div class="above">En dessous de 5 000</div>
+                        <div class="to-50">5000 à 10 000</div>
+                        <div class="above">10 000 à 20 000</div>
+                        <div class="above">20 000 à 40 000</div>
+                        <div class="above">40 000 et plus</div>
+                    </div>
+                </div>
+                <div class="price-parent">
+                    <div class="price">Réduction</div>
+                    <div class="under-25-parent">
+                        <div class="above">10% et plus</div>
+                        <div class="to-50">25% et plus</div>
+                        <div class="above">50% et plus</div>
+                        <div class="above">70% et plus</div>
+                    </div>
+                </div>
+            </div>
+            <section class="col-xs-12 col-md-10 col-lg-10 mb-4 mb-lg-0">
+                <div>
+                    <div class="results">{{ nbProducts }} résultats</div>
+                </div>
                 <div class="row m-0 pt-2 pb-2">
                     {% for key,product in products %}
-                        <div class="col-6 col-sm-4 col-md-4 col-lg-4 mb-4 d-flex justify-content-center">
+                        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-3 d-flex justify-content-center" style="padding: 0">
                             <a class="w-100" href="{{ path('app_product_view', {id: product.id}) }}">
-                                <div class="card">
-                                    <img style="width: 100%" src="{{ asset('img/icons/random_article.png') }}" alt="article.image"/>
-                                    <div class="card-body text-center">
-                                        <div class="d-flex justify-content-between mb-3 product-name-and-price-div">
-                                            <h5 class="mb-0">{{ product.name }}</h5>
-                                            <h6 class="text-dark mb-0">{{ product.price|number_format(2, '.', ' ') }}
-                                                Fcfa</h6>
+                                <div class="card product-list-view">
+                                    {#                                    <img style="width: 100%" src="{{ asset('img/icons/random_article.png') }}" alt="article.image"/> #}
+                                    <img class="image-icon" alt="" src="{{ asset('img/icons/random_article.png') }}">
+                                    <div class="information card-body">
+                                        <div class="title">{{ product.name }}</div>
+                                        <div class="price-and-sales">
+                                            <div class="price">
+                                                <div class="us-1234567-wrapper">
+                                                    <div class="us-1234567">
+                                                        Fcfa {{ product.price|number_format(2, '.', ' ') }}</div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="d-flex justify-content-between mb-2 quantity-available-div">
                                             <p class="small text-muted mb-0">Quantité disponible : <span
-                                                        {% for inventory in product.inventories %}
-                                                            {% if loop.index == 1 %}
-                                                                class="fw-bold">{{ inventory.quantity }}</span></p>
-                                                            {% endif %}
-                                                        {% endfor %}
+                                            {% for inventory in product.inventories %}
+                                                    {% if loop.index == 1 %}
+                                                    class="fw-bold">{{ inventory.quantity }}</span></p>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <div class="more-options-parent">
+                                            <div class="more-options">Acheter</div>
+                                                <img class="chevron-right-icon" alt=""
+                                                     src="{{ asset('img/chevron-right.svg') }}">
                                         </div>
                                     </div>
                                 </div>

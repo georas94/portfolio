@@ -34,6 +34,7 @@ class SecurityController extends AbstractController
     #[Route('/webhooks', name: 'app_webhook_initiate', methods: ['GET'])]
     public function webhookInitiate(Request $request): Response
     {
+        dd('ninj');
         $token = $request->query->get('hub_verify_token');
         $challenge = $request->query->get('hub_challenge');
         $mode = $request->query->get('hub_mode');

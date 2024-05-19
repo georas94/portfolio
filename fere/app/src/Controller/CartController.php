@@ -2,32 +2,41 @@
 
 namespace App\Controller;
 
+use App\Entity\Purchase;
 use App\Entity\ShoppingCartItem;
+use App\Entity\User;
 use App\Form\CartType;
 use App\Manager\CartManager;
 use App\Repository\AddressRepository;
+use App\Repository\OrderRepository;
+use App\Repository\PaymentTypeRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Service\WhatsAppService;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use LogicException;
+use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Throwable;
 
 class CartController extends AbstractController
 {
-    public function __construct(private ProductRepository $productRepository, private AddressRepository $addressRepository, private WhatsAppService $whatsAppService, private UserRepository $userRepository, private CartManager $cartManager)
-    {
-    }
+    public function __construct(private ProductRepository $productRepository,
+                                private AddressRepository $addressRepository,
+                                private WhatsAppService $whatsAppService,
+                                private UserRepository $userRepository,
+                                private CartManager $cartManager,
+                                private PaymentTypeRepository $paymentTypeRepository,
+                                private OrderRepository $orderRepository,
+                                private EntityManagerInterface $entityManager,
+    ) {}
 
     #[Route('/cart', name: 'app_cart')]
     public function index(CartManager $cartManager, Request $request): Response
@@ -67,6 +76,57 @@ class CartController extends AbstractController
             'cart' => $cart,
             'user' => $user
         ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/cart/checkout/card', name: 'app_cart_checkout_card')]
+    public function cartCheckoutCard(CartManager $cartManager): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $currentCart = $cartManager->getCurrentCart();
+        $purchase = new Purchase();
+        $purchase->setAmount($cartManager->getCurrentCart()->getTotal());
+        $purchase->setCreatedAt(new DateTime());
+        $purchase->setUpdatedAt(new DateTime());
+        $purchase->setBuyer($user);
+        $purchase->setDeliverTo($user->getAddresses()->current());
+        $purchase->setPayment($this->paymentTypeRepository->findOneBy(['operatorName' => 'Card']));
+        $purchase->setStatus('INITIATED');
+        $stripe = new StripeClient('sk_test_51OvSpzBdR9JT1fZTBn1hM3FAA7jo9FKCfqz9jxkI5eivW3wL1MnMtV8UnxvgnhipQcyxc3uprNuXhLjD7ps5Wi6F007yOvkBLx');
+        $lineItems = [];
+        foreach ($currentCart->getItems() as $shoppingCartItem) {
+            $purchase->addProduct($shoppingCartItem->getProduct());
+            $stripeProduct = $stripe->products->create([
+                    'name' => $shoppingCartItem->getProduct()->getName()
+            ]);
+            $price = $stripe->prices->create([
+                'product' => $stripeProduct->id,
+                'unit_amount' => $shoppingCartItem->getProduct()->getPrice(),
+                'currency' => 'xof',
+            ]);
+            $lineItems[] = [
+                'price' => $price->id,
+                'quantity' => $shoppingCartItem->getQuantity(),
+            ];
+        }
+        $checkoutSuccess = $this->generateUrl('app_checkout_success', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $checkoutError = $this->generateUrl('app_checkout_error', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $session = $stripe->checkout->sessions->create([
+            'mode' => 'payment',
+            'line_items' => [
+                $lineItems
+            ],
+            'success_url' => $checkoutSuccess,
+            'cancel_url' => $checkoutError,
+        ]);
+        $this->entityManager->persist($purchase);
+        $this->entityManager->flush();
+
+
+        return $this->redirect($session->url);
     }
 
     /**
@@ -110,10 +170,6 @@ class CartController extends AbstractController
     }
 
     /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ClientExceptionInterface
      * @throws Exception
      */
     #[Route('/cart/checkout/ask-location', name: 'app_ask_location')]
@@ -178,5 +234,34 @@ class CartController extends AbstractController
                 $exception->getCode()
             );
         }
+    }
+
+    #[Route('/cart/checkout/success', name: 'app_checkout_success')]
+    public function checkoutValid(CartManager $cartManager): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $order = $this->orderRepository->findOneBy(['buyer' => $user]);
+        $order->setStatus('VALIDATED');
+        $order->setUpdatedAt(new DateTime('now'));
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+        $cartManager->getCurrentCart()->removeItems();
+        $cartManager->save($cartManager->getCurrentCart());
+        return $this->render('cart/checkout/success/index.html.twig');
+    }
+
+    #[Route('/cart/checkout/error', name: 'app_checkout_error')]
+    public function checkoutError(): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $order = $this->orderRepository->findOneBy(['buyer' => $user]);
+        $order->setStatus('CANCELLED');
+        $order->setUpdatedAt(new DateTime('now'));
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
+
+        return $this->render('cart/checkout/error/index.html.twig');
     }
 }

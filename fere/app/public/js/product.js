@@ -25,7 +25,7 @@ $(function () {
         }
     });
 
-    $container.find('button').click(function (e) {
+    $container.find('button').on('click', function (e) {
         let $productId = $(e.currentTarget)
         let $quantity = $('.quantity-value');
 
@@ -36,6 +36,7 @@ $(function () {
             dataType: 'json',
             success: function(data){
                 let cartCountSelector = $('.cart-count');
+                let imgCartSelector = $('.img-cart');
                 let cartCount = cartCountSelector.data('count');
                 let quantity = parseInt(cartCount) + parseInt(data.quantity);
                 cartCountSelector.text(quantity);
@@ -43,6 +44,18 @@ $(function () {
                 if (sessionStorage.getItem('cart-quantity')){
                     sessionStorage.removeItem('cart-quantity');
                 }
+                cartCountSelector.css('color', '#68d021 !important')
+                imgCartSelector.css('color', '#68d021 !important')
+                cartCountSelector.animate({ 'zoom': 1.3}, 400);
+                imgCartSelector.animate({ 'zoom': 1.8}, 400);
+                cartCountSelector.animate({ 'zoom': 1}, 400);
+                imgCartSelector.animate({ 'zoom': 1}, 400);
+                window.setTimeout(animateBackToBlackColor, 2000);
+                function animateBackToBlackColor() {
+                    cartCountSelector.css('color', '#000 !important')
+                    imgCartSelector.css('color', '#000 !important')
+                }
+
                 sessionStorage.setItem('cart-quantity', quantity.toString());
             },
             error: function (data) {

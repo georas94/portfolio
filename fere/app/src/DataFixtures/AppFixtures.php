@@ -118,7 +118,7 @@ class AppFixtures extends Fixture
             $product = new Product();
             $product->setName($this->faker->word());
             $product->setReference($this->faker->uuid());
-            $product->setPrice($this->faker->randomFloat(0, 30000, 650000));
+            $product->setPrice($this->faker->randomFloat(0, 3000, 45000));
             $product->setRated($this->faker->randomFloat(1, 2.5, 5));
             $product->setSize(self::getRandomSize());
             $product->setCategory(self::getRandomProductCategory($productCategories));
@@ -149,6 +149,10 @@ class AppFixtures extends Fixture
         $paymentType3->setIsActive(true);
         $paymentType3->setOperatorName('Cash');
         $manager->persist($paymentType3);
+        $paymentType4 = new PaymentType();
+        $paymentType4->setIsActive(true);
+        $paymentType4->setOperatorName('Card');
+        $manager->persist($paymentType4);
 
         $manager->flush();
     }

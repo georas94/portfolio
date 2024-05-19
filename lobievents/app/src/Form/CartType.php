@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Order;
+use App\Entity\ShoppingCart;
 use App\Form\EventListener\ClearCartListener;
 use App\Form\EventListener\RemoveCartItemListener;
 use Symfony\Component\Form\AbstractType;
@@ -30,7 +30,7 @@ class CartType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Order::class,
+            'data_class' => ShoppingCart::class,
         ]);
     }
 }

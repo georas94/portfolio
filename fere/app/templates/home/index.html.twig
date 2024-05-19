@@ -3,17 +3,79 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <section id="">
-        <div class="content text-center">
-            <div class="">
-                <a href="{{ path('app_products', {gender: 'women', category: 'clothes'}) }}"><img style="width: 100%; height: auto" src="{{ asset('img/woman-model.png') }}" alt="Modèle catégorie femme"></a>
+    <section>
+        <div id="carouselExampleIndicators" class="carousel slide carousel-dark">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active carouselSlide" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" class="carouselSlide" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" class="carouselSlide" aria-label="Slide 3"></button>
             </div>
-            <div class="">
-                <a href="{{ path('app_products', {gender: 'men', category: 'clothes'}) }}"><img style="width: 100%; height: auto" src="{{ asset('img/man-model.png') }}" alt="Modèle catégorie homme"></a>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a href="{{ path('app_products', {gender: 'women', category: 'clothes'}) }}">
+                        <img src="{{ asset('img/woman-model.png') }}" class="d-block w-100" alt="...">
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a href="{{ path('app_products', {gender: 'men', category: 'clothes'}) }}">
+                        <img src="{{ asset('img/man-model.png') }}" class="d-block w-100" alt="...">
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a href="{{ path('app_products', {gender: 'children', category: 'clothes'}) }}">
+                        <img src="{{ asset('img/children-model.png') }}" class="d-block w-100" alt="...">
+                    </a>
+                </div>
             </div>
-            <div class="">
-                <a href="{{ path('app_products', {gender: 'children', category: 'clothes'}) }}"><img style="width: 100%; height: auto" src="{{ asset('img/children-model.png') }}" alt="Modèle catégorie enfant"></a>
-            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" style="" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </section>
+    <section class="mt-5">
+        <div class="d-flex justify-content-center">
+            <h4>Nos meilleures offres</h4>
+        </div>
+        <div class="row m-0 pt-2 pb-2">
+            {% for key,product in products %}
+                    <div class="col-xs-3 col-sm-4 col-md-4 col-lg-3 d-flex justify-content-center" style="padding: 0">
+                    <a class="" href="{{ path('app_product_view', {id: product.id}) }}">
+                        <div class="card product-list-view">
+                            <img class="image-icon" alt="" src="{{ asset('img/icons/random_article.png') }}">
+                            <div class="information card-body">
+                                <div class="title">{{ product.name }}</div>
+                                <div class="price-and-sales">
+                                    <div class="price">
+                                        <div class="us-1234567-wrapper">
+                                            <div class="us-1234567">
+                                                Fcfa {{ product.price|number_format(2, '.', ' ') }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 quantity-available-div">
+                                    <p class="small text-muted mb-0">Quantité disponible : <span
+                                                {% for inventory in product.inventories %}
+                                                {% if loop.index == 1 %}
+                                                        class="fw-bold">{{ inventory.quantity }}</span></p>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="more-options-parent">
+                                    <div class="more-options">Acheter</div>
+                                    <img class="chevron-right-icon" alt=""
+                                         src="{{ asset('img/chevron-right.svg') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
         </div>
     </section>
 {% endblock %}

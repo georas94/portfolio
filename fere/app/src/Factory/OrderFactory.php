@@ -14,7 +14,7 @@ use DateTime;
 class OrderFactory
 {
     /**
-     * Creates an order.
+     * Creates a new cart.
      *
      * @return ShoppingCart
      */

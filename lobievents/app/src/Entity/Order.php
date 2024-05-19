@@ -91,7 +91,7 @@ class Order
         }
 
         $this->items[] = $item;
-        $item->setOrderRef($this);
+        $item->setShoppingCart($this);
 
         return $this;
     }
@@ -100,8 +100,8 @@ class Order
     {
         if ($this->items->removeElement($item)) {
             // set the owning side to null (unless already changed)
-            if ($item->getOrderRef() === $this) {
-                $item->setOrderRef(null);
+            if ($item->getShoppingCart() === $this) {
+                $item->setShoppingCart(null);
             }
         }
 
