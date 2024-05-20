@@ -13,21 +13,23 @@
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <a href="{{ path('app_products', {gender: 'women', category: 'clothes'}) }}">
-                        <img src="{{ asset('img/woman-model.png') }}" class="d-block w-100" alt="...">
+                        <img src="{{ asset('img/woman-model.png') }}" class="w-100 img-desktop" alt="...">
+                        <img src="{{ asset('img/woman-model-mobile.png') }}" class="w-100 img-mobile" alt="...">
                     </a>
                 </div>
                 <div class="carousel-item">
                     <a href="{{ path('app_products', {gender: 'men', category: 'clothes'}) }}">
-                        <img src="{{ asset('img/man-model.png') }}" class="d-block w-100" alt="...">
+                        <img src="{{ asset('img/man-model.png') }}" class="w-100 img-desktop" alt="...">
+                        <img src="{{ asset('img/man-model-mobile.png') }}" class="w-100 img-mobile" alt="...">
                     </a>
                 </div>
                 <div class="carousel-item">
                     <a href="{{ path('app_products', {gender: 'children', category: 'clothes'}) }}">
-                        <img src="{{ asset('img/children-model.png') }}" class="d-block w-100" alt="...">
+                        <img src="{{ asset('img/children-model.png') }}" class="w-100 img-desktop" alt="...">
+                        <img src="{{ asset('img/children-model-mobile.png') }}" class="w-100 img-mobile" alt="...">
                     </a>
                 </div>
             </div>
-
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" style="" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
