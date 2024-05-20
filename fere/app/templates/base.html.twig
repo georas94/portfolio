@@ -55,7 +55,19 @@
     <header id="header" class="header">
             <a href="{{ path('app_home') }}" class="logo">F E R E</a>
             <input class="menu-btn" type="checkbox" id="menu-btn" />
-            <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+            <div>
+                <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+                <div class="menu-cart-mobile">
+                    <a href="{{ path('app_cart') }}">
+                        <span class="span-menu-cart">
+                            <img class="img-cart" src="{{ asset('img/icons/cart.svg') }}" alt="Logo d'un panier">
+                            <strong>
+                                <small data-count="0" id="cart-count" class="cart-count"></small>
+                            </strong>
+                        </span>
+                    </a>
+                </div>
+            </div>
             <ul class="menu">
                 <li class="li-selection">
                     <div class="hidden selection" style="display: flex!important;overflow-x: scroll;margin-bottom: 1em">

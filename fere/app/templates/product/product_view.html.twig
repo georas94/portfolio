@@ -7,43 +7,23 @@
         <div class="container product-div">
             <section class="product-view-section">
                 <div class="container">
+                    <div style="display: flex;flex-direction: column;justify-content: center">
+                        <a class="a-back-to-products" href="javascript:history.back()" style="">
+                            <img class="icondrowdown-arrow" alt="Icône retour aux résultats" src="{{ asset('img/icons/back-arrow.svg') }}">
+                            <span class="span-back-to-result">Retour aux résultats</span>
+                        </a>
+                    </div>
                     <div class="row">
-                        <div class="product-seller-block">
-                            <div style="display: flex;">
-                                <div style="display: flex;flex-direction: column;justify-content: center">
-                                    <a class="a-back-to-products" href="javascript:history.back()" style="">
-                                        <img class="icondrowdown-arrow" alt="" src="{{ asset('img/icons/back-arrow.svg') }}">
-                                    </a>
-                                </div>
-                                <div style="display: flex;flex-direction: column;justify-content: center">
-                                    <img class="seller-logo" src="{{ asset('img/icons/random_seller_logo.png') }}" alt="Seller logo">
-                                </div>
-                                <div style="display: flex; flex-direction: column; justify-content: center">
-                                    <div style="height: 6em; display: flex; flex-direction: column; justify-content: center">
-                                        <div>
-                                            <span>{{ product.seller.name }}</span>
-                                        </div>
-                                        <div>
-                                            <span class="fa fa-star" id="seller-star-1" ></span>
-                                            <span class="fa fa-star" id="seller-star-2" ></span>
-                                            <span class="fa fa-star" id="seller-star-3" ></span>
-                                            <span class="fa fa-star" id="seller-star-4" ></span>
-                                            <span class="fa fa-star" id="seller-star-5" ></span>
-                                        </div>
-                                        <input class="seller-rating" type="hidden" value="{{ product.seller.rated }}">
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-md-6 col-lg-6 div-image-article">
+                            <img src="{{ asset('img/icons/random_article.png') }}" class="w-75" alt="">
                         </div>
-                        <div class="sub-wrapper-div sub-wrapper-div-product">
-                            <div class="product-img-div w-25">
-                                <img src="{{ asset('img/icons/random_article.png') }}" style="width: 100%;" alt="">
-                            </div>
-                            <div class="product-info w-50" style="justify-content: center;display: flex;flex-direction: column;align-items: center;">
+
+                        <div class="col-md-4 col-lg-4">
+                            <div class="product-info d-flex flex-column justify-content-center align-items-center">
                                 <div class="product-text">
-                                    <h2>{{ product.name }}</h2>
-                                    <h3 class="text-muted">{{ product.category }}</h3>
-                                    <h4 class="" style="margin: 0;"><span>{{ product.price|number_format(2, '.', ' ') }}</span> Cfa</h4>
+                                    <h3>{{ product.name }}</h3>
+                                    <h4 class="text-muted">{{ product.category }}</h4>
+                                    <h5 class="" style="margin: 0;"><span>{{ product.price|number_format(2, '.', ' ') }}</span> Cfa</h5>
                                     <br>
                                     <p>Mauris ut enim nisi. Class aptent taciti sociosqu ad litora torquent per conubia
                                         nostra, per inceptos himenaeos. Etiam fringilla, nunc id mattis fermentum.
@@ -56,7 +36,7 @@
                                                 <button type="button" id="sub" class="minus btn btn-light"><strong>-</strong></button>
                                                 {{ form_widget(form.quantity, {
                                                     'attr': {
-                                                        'class': 'rounded border uk-margin uk-card uk-card-hover form-control quantity-value w-25 text-center' ~ (form.quantity.vars.valid ? '' : 'is-invalid')
+                                                        'class': 'rounded border uk-margin uk-card uk-card-hover form-control quantity-value w-25' ~ (form.quantity.vars.valid ? '' : 'is-invalid')
                                                     }
                                                 }) }}
                                                 <button type="button" id="add" class="plus btn btn-light"><strong>+</strong></button>
@@ -65,15 +45,104 @@
                                                 {{ form_errors(form.quantity) }}
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center mt-4 div-btn-cart-add-container">
+                                        <div class="mt-4 div-btn-cart-add-container">
                                             <div class="d-flex justify-content-center btn-cart-add-container">
-                                                <button data-product-id="{{ product.id }}" class="w-100 btn" type="button"><strong>Ajouter au panier</strong></button>
+                                                <button data-product-id="{{ product.id }}" class="w-100 btn btn-secondary" type="button"><strong>Ajouter au panier</strong></button>
                                             </div>
                                         </div>
                                     {{ form_end(form) }}
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-2 col-lg-2">
+                            <div class="product-seller-block">
+                                <h4 class="text-center">Vendu par</h4>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <span>{{ product.seller.name }}</span>
+                                    <img class="seller-logo" src="{{ asset('img/icons/random_seller_logo.png') }}" alt="Seller logo">
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-center">
+                                    <div style="height: 6em;">
+                                        <div>
+                                            <span class="fa fa-star" id="seller-star-1" ></span>
+                                            <span class="fa fa-star" id="seller-star-2" ></span>
+                                            <span class="fa fa-star" id="seller-star-3" ></span>
+                                            <span class="fa fa-star" id="seller-star-4" ></span>
+                                            <span class="fa fa-star" id="seller-star-5" ></span>
+                                        </div>
+                                        <input class="seller-rating" type="hidden" value="{{ product.seller.rated }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+{#                        <div class="product-seller-block">#}
+{#                            <div style="display: flex;">#}
+{#                                <div style="display: flex;flex-direction: column;justify-content: center">#}
+{#                                    <a class="a-back-to-products" href="javascript:history.back()" style="">#}
+{#                                        <img class="icondrowdown-arrow" alt="" src="{{ asset('img/icons/back-arrow.svg') }}">#}
+{#                                    </a>#}
+{#                                </div>#}
+{#                                <div style="display: flex;flex-direction: column;justify-content: center">#}
+{#                                    <img class="seller-logo" src="{{ asset('img/icons/random_seller_logo.png') }}" alt="Seller logo">#}
+{#                                </div>#}
+{#                                <div style="display: flex; flex-direction: column; justify-content: center">#}
+{#                                    <div style="height: 6em; display: flex; flex-direction: column; justify-content: center">#}
+{#                                        <div>#}
+{#                                            <span>{{ product.seller.name }}</span>#}
+{#                                        </div>#}
+{#                                        <div>#}
+{#                                            <span class="fa fa-star" id="seller-star-1" ></span>#}
+{#                                            <span class="fa fa-star" id="seller-star-2" ></span>#}
+{#                                            <span class="fa fa-star" id="seller-star-3" ></span>#}
+{#                                            <span class="fa fa-star" id="seller-star-4" ></span>#}
+{#                                            <span class="fa fa-star" id="seller-star-5" ></span>#}
+{#                                        </div>#}
+{#                                        <input class="seller-rating" type="hidden" value="{{ product.seller.rated }}">#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div class="sub-wrapper-div sub-wrapper-div-product">#}
+{#                            <div class="product-img-div w-25">#}
+{#                                <img src="{{ asset('img/icons/random_article.png') }}" style="width: 100%;" alt="">#}
+{#                            </div>#}
+{#                            <div class="product-info w-50" style="justify-content: center;display: flex;flex-direction: column;align-items: center;">#}
+{#                                <div class="product-text">#}
+{#                                    <h2>{{ product.name }}</h2>#}
+{#                                    <h3 class="text-muted">{{ product.category }}</h3>#}
+{#                                    <h4 class="" style="margin: 0;"><span>{{ product.price|number_format(2, '.', ' ') }}</span> Cfa</h4>#}
+{#                                    <br>#}
+{#                                    <p>Mauris ut enim nisi. Class aptent taciti sociosqu ad litora torquent per conubia#}
+{#                                        nostra, per inceptos himenaeos. Etiam fringilla, nunc id mattis fermentum.#}
+{#                                    </p>#}
+{#                                </div>#}
+{#                                <div class="product-price-btn d-flex flex-column justify-content-center">#}
+{#                                    {{ form_start(form, {'attr': {'class': 'p-2'}}) }}#}
+{#                                        <div class="form-group">#}
+{#                                            <div class="div-product-quantity" style="display: flex">#}
+{#                                                <button type="button" id="sub" class="minus btn btn-light"><strong>-</strong></button>#}
+{#                                                {{ form_widget(form.quantity, {#}
+{#                                                    'attr': {#}
+{#                                                        'class': 'rounded border uk-margin uk-card uk-card-hover form-control quantity-value w-25 text-center' ~ (form.quantity.vars.valid ? '' : 'is-invalid')#}
+{#                                                    }#}
+{#                                                }) }}#}
+{#                                                <button type="button" id="add" class="plus btn btn-light"><strong>+</strong></button>#}
+{#                                            </div>#}
+{#                                            <div class="invalid-feedback">#}
+{#                                                {{ form_errors(form.quantity) }}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                        <div class="d-flex justify-content-center mt-4 div-btn-cart-add-container">#}
+{#                                            <div class="d-flex justify-content-center btn-cart-add-container">#}
+{#                                                <button data-product-id="{{ product.id }}" class="w-100 btn" type="button"><strong>Ajouter au panier</strong></button>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    {{ form_end(form) }}#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
                     </div>
                 </div>
             </section>

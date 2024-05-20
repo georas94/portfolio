@@ -73,7 +73,7 @@ main{
   cursor: pointer;
   display: inline-block;
   float: right;
-  padding: 28px 20px;
+  padding: 34px 20px;
   position: relative;
   user-select: none;
 }
@@ -233,6 +233,9 @@ a{
   justify-content: space-between;
 }
 
+.span-back-to-result{
+  margin-left: 0.5em;
+}
 
 /** Only on big screen**/
 @media (min-width: 48em) {
@@ -259,14 +262,6 @@ a{
     width: 60%;
   }
 
-  .div-btn-cart-add-container{
-    /*width: 60%;*/
-  }
-
-  .product-info{
-    width: 70%;
-  }
-
   .product-price-btn{
     width: 60%;
   }
@@ -279,6 +274,10 @@ a{
     position: absolute;
     top: 27%;
     left: 47%;
+  }
+
+  .menu-cart-mobile{
+    display: none;
   }
 }
 
@@ -386,11 +385,37 @@ and (max-device-width : 640px) {
   .carousel-item img{
     height: 15em;
   }
-}
 
-input:-internal-autofill-selected {
-  background-color: #fff !important;
+  .menu-cart{
+    display: none;
+  }
+
+  .img-cart{
+    left: 9.6em;
+    position: relative;
+    top: 1.1em;
+  }
+
+  .menu-cart-mobile{
+    display: inline-block;
+  }
+
+  .span-menu-cart strong{
+    position: relative;
+    left: 8.2em;
+    top: 0.7em;
+  }
+
+  .cart-count{
+    color: black;
+  }
+
+  .product-info{
+    margin-bottom: 3em;
+  }
 }
+/*End mobile screen*/
+
 #multistep_form {
   width: 550px;
   margin: 0 auto;
@@ -1015,4 +1040,13 @@ h3{
 
 .div-product{
   padding: 0 !important;
+}
+
+.div-image-article{
+  display: flex;
+  justify-content: center;
+}
+
+.quantity-value{
+  text-align: right;
 }
