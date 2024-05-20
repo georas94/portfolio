@@ -5,78 +5,81 @@
 {% block body %}
     <section>
         <div class="container mt-4">
-        <h1>Votre panier</h1>
-        {% if cart.items.count > 0 %}
-            <div class="row mt-4">
-                <div class="col-md-10">
-                    {{ form_start(form) }}
-                    <div class="card">
-                        <div class="card-header bg-secondary text-white d-flex align-items-center justify-content-between">
+        <h1>Panier</h1>
+            {% if cart.items.count > 0 %}
+                <div class="row mt-4">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-column">
+                                <div>
+                                    <span class="show-cart-summary">Afficher le résumé du panier</span>
+                                    <img src="{{ asset('img/icons/down-arrow.svg') }}" alt="Flêche allant vers le bas">
+                                </div>
+                                <span class="cart-total">Fcfa {{ cart.total|number_format(0, '.', ' ') }}</span>
+                            </div>
+                            <div class="div-cart-checkout text-white">
+                                <a href="{{ path('app_cart_checkout') }}">
+                                    <span>Payer</span>
+                                    <img class="w-50" src="{{ asset('img/icons/next-arrow.svg') }}" alt="Flêche allant vers la droite">
+                                </a>
+                            </div>
                         </div>
-                        <ul class="list-group list-group-flush">
+                        {{ form_start(form) }}
                             {% for item in form.items %}
-                                <li class="" style="list-style: none;">
-                                    <div class="" style="padding: 0.5em;">
-                                        <img src="{{ asset('img/icons/random_article.png') }}" class="img-fluid img-cart" alt="Article aléatoire" />
-                                    </div>
-                                    <div class="d-flex flex-column" style="padding: 0.5em;">
-                                        <strong><span class="span-product-price" style="width: 100%; color: #4f4f4f;">{{ item.vars.data.product.price|number_format(2, '.', ' ') }} Fcfa</span></strong>
-                                        <div style="display: flex;flex-direction: column;align-items: center;">
-                                            <h5 class="mt-0 mb-0 text-secondary">{{ item.vars.data.product.name }}</h5>
-                                            <small>{{ item.vars.data.product.category[:50] }}</small>
-                                            <div class="form-inline mt-2">
-                                                <div class="form-group mb-0 mr-2">
-                                                    {{ form_widget(item.quantity, {
-                                                        'attr': {
-                                                            'class': 'form-control form-control-sm quantity-value w-25 text-center' ~ (item.quantity.vars.valid ? '' : 'is-invalid'),
-                                                            'readonly': 'readonly',
-                                                            'style': 'width: 7em;',
-                                                        }
-                                                    }) }}
-                                                    <div class="invalid-feedback">
-                                                        {{ form_errors(item.quantity) }}
-                                                    </div>
-                                                </div>
+                                <div>
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <img src="{{ asset('img/icons/random_article.png') }}" alt="">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-around" style="height: 6em">
+                                            <span>{{ item.vars.data.product.name }}</span>
+                                            <div class="d-flex flex-column">
+                                                <span>
+                                                    <small>{{ item.vars.data.product.category[:50] }}</small>
+                                                </span>
+                                                <strong>
+                                                    <span class="span-product-price" style="width: 100%; color: #4f4f4f;">
+                                                        {{ item.vars.data.product.price|number_format(0, '.', ' ') }} Fcfa
+                                                    </span>
+                                                </strong>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex">
-                                        {{ form_widget(item.remove, {
-                                            'attr': {
-                                                'class': 'cart_items_remove btn',
-                                                'style': 'margin-left: 2.5em;'
-                                            }
-                                        }) }}
+                                    <div class="d-flex justify-content-around">
+                                        <div>
+                                            <div class="">
+                                                {{ form_widget(item.quantity, {
+                                                    'attr': {
+                                                        'class': 'form-control form-control-sm quantity-value w-25 text-center' ~ (item.quantity.vars.valid ? '' : 'is-invalid'),
+                                                        'readonly': 'readonly',
+                                                        'style': 'width: 7em;',
+                                                    }
+                                                }) }}
+                                                <div class="invalid-feedback">
+                                                    {{ form_errors(item.quantity) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {{ form_widget(item.remove, {
+                                                'attr': {
+                                                    'class': 'cart_items_remove btn',
+                                                    'style': 'margin-left: 2.5em;'
+                                                }
+                                            }) }}
+                                        </div>
                                     </div>
-                                </li>
+                                </div>
                                 {% if form.items|length > 1 and loop.last == false %}
-                                    <div class="d-flex justify-content-center">
-                                        <hr class="w-50">
+                                    <div class="d-flex justify-content-center mt-4">
+                                        <hr style="background: #E4E4EE" class="w-50">
                                     </div>
                                 {% endif %}
                             {% endfor %}
-                        </ul>
-                        <div class="btn-cart-save-and-clear">
-                            {{ form_widget(form.clear, {'attr': {'class': 'btn btn-light'}}) }}
-                        </div>
-                    </div>
-                    {{ form_rest(form) }}
-                    {{ form_end(form, {'render_rest': false}) }}
+                            <div class="mt-5 d-flex justify-content-center">
+                                {{ form_rest(form) }}
+                            </div>
+                        {{ form_end(form, {'render_rest': false}) }}
                 </div>
-                <div style="margin-top: 2em" class="col-md-12">
-                    <div class="card mt-4 mt-md-0">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div><b>Total</b></div>
-                                <span><b>{{ cart.total|number_format(2, '.', ' ') }} Fcfa</b></span>
-                            </li>
-                        </ul>
-                        <div class="card-body">
-                            <a href="{{ path('app_cart_checkout') }}" class="btn btn-secondary w-100 btn-checkout">Paiement</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
         {% else %}
             <div class="alert alert-info">
                 Votre panier est vide. Aller à la liste des <a href="{{ path('app_products', {gender: 'all', category: 'all'}) }}"><mark>produits</mark></a>.

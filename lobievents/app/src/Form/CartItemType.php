@@ -17,7 +17,6 @@ class CartItemType extends AbstractType
                 'label' => 'Quantité'
             ])
             ->add('remove', SubmitType::class, [
-                'label' => '<i class="fa-regular fa-trash-can"></i>',
                 'label_html' => true,
                 'attr' => [
                     'style' => 'border:none'
