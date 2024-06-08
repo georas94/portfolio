@@ -1,13 +1,20 @@
 $(function () {
     let cartCountSelector = $('.cart-count');
     let imgCartSelector = $('.img-cart');
+    let carousel = $(".carousel");
     let cartQuantity = JSON.parse($.ajax({
         url: '/cart/quantity', method: 'POST', dataType: 'json', async: false
     }).responseText).quantity;
     cartCountSelector.text(cartQuantity);
     cartCountSelector.data('count', cartQuantity);
 
-    $('.carousel').bcSwipe({ threshold: 50 });
+    carousel.swiperight(function() {
+        $(this).carousel('prev');
+    });
+    carousel.swipeleft(function() {
+        $(this).carousel('next');
+    });
+
     $('#cart_clear').on('click tap touchstart', function () {
         cartCountSelector.css('color', '#FF0000FF !important')
         imgCartSelector.css('color', '#FF0000FF !important')
