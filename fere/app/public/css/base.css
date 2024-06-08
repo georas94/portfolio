@@ -392,6 +392,10 @@ and (max-device-width : 960px) {
   .menu{
     overflow-y: scroll !important;
   }
+
+  .div-cart-item{
+    display: block;
+  }
 }
 /*End mobile screen*/
 
@@ -1065,7 +1069,7 @@ h3{
   align-items: center;
   flex-shrink: 0;
   border-radius: .4em;
-  background: #0072BC;
+  background: #999999;
   font-size: 1.3em;
 }
 
