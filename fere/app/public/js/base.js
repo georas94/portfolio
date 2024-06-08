@@ -7,6 +7,7 @@ $(function () {
     cartCountSelector.text(cartQuantity);
     cartCountSelector.data('count', cartQuantity);
 
+    $('.carousel').bcSwipe({ threshold: 50 });
     $('#cart_clear').on('click tap touchstart', function () {
         cartCountSelector.css('color', '#FF0000FF !important')
         imgCartSelector.css('color', '#FF0000FF !important')

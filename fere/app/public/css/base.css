@@ -237,6 +237,12 @@ a{
   margin-left: 0.5em;
 }
 
+.div-cart-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
 /** Only on big screen**/
 @media (min-width: 60em) {
   .header li {
@@ -478,7 +484,7 @@ and (max-device-width : 960px) {
 }
 #progress_header li.active:before,
 #progress_header li.active:after {
-  background-image: linear-gradient(to right top, #35e8c3, #36edbb, #3df2b2, #4af7a7, #59fb9b) !important;
+  background-image: linear-gradient(to right top, #222, #414040, #525252, #656565, #656565) !important;
   color: #fff !important;
   transition: all 0.5s;
 }
@@ -593,7 +599,7 @@ p.nxt-prev-button {
   cursor: pointer;
   padding: 10px 5px;
   margin: 0 5px;
-  background-image: linear-gradient(to right top, #35e8c3, #36edbb, #3df2b2, #4af7a7, #59fb9b);
+  background-image: linear-gradient(to right top, #222, #414040, #525252, #656565, #656565) !important;
   transition: all 0.5s;
 }
 
@@ -605,7 +611,7 @@ p.nxt-prev-button {
   cursor: pointer;
   padding: 10px 5px;
   margin: 0 5px;
-  background-image: linear-gradient(to right top, #70e4f5, #4addf3, #3ad8ef, #21d8f5);
+  background-image: linear-gradient(to right top, #424242, #5b5b5b, #6e6d6d, #838282, #838282) !important;
   transition: all 0.5s;
 }
 

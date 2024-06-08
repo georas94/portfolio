@@ -28,8 +28,8 @@
                         <span id="error-lname"></span>
                     </p>
                     <div class="form-group">
-                        <div class="input-group date" data-date-foarmat="dd.mm.yyyy">
-                            <input type="text" placeholder="Date naissance JJ/MM/AAAA">
+                        <div class="input-group" data-date-format="dd.mm.yyyy">
+                            <input type="text" id="date-shipping" placeholder="Date naissance JJ/MM/AAAA">
                             <div class="input-group-addon" >
                                 <span class="glyphicon glyphicon-th"></span>
                             </div>
@@ -124,66 +124,30 @@
         </div>
     </section>
     <script>
-        var current_slide, next_slide, previous_slide;
-        var left, opacity, scale;
+        let current_slide, next_slide, previous_slide;
+        let left, opacity, scale;
 
-        var error = false;
+        let error = false;
 
-        //Date picker
-        var bindDatePicker = function() {
-            $(".date").datetimepicker({
-                format:'DD/MM/YYYY',
-                language: 'fr',
-                autoclose: true,
-                defaultDate: new Date(),
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-arrow-up",
-                    down: "fa fa-arrow-down"
-                }
-            }).find('input:first').on("blur",function () {
-                // check if the date is correct. We can accept dd-mm-yyyy and yyyy-mm-dd.
-                // update the format if it's yyyy-mm-dd
-                var date = parseDate($(this).val());
+        $('#date-shipping').on('click', function () {
+            $(this).attr('type', 'date')
+            document.getElementById('date-shipping').showPicker();
+        });
 
-                if (! isValidDate(date)) {
-                    //create date based on momentjs (we have that)
-                    date = moment().format('DD/MM/YYYY');
-                }
-
-                $(this).val(date);
-            });
-        }
-
-        var isValidDate = function(value, format) {
-            format = format || false;
-            // let's parse the date to the best of our knowledge
-            if (format) {
-                value = parseDate(value);
-            }
-
-            var timestamp = Date.parse(value);
-
-            return isNaN(timestamp) == false;
-        }
-
-        var parseDate = function(value) {
-            var m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
+        let parseDate = function(value) {
+            let m = value.match(/^(\d{1,2})(\/|-)?(\d{1,2})(\/|-)?(\d{4})$/);
             if (m)
                 value = m[5] + '-' + ("00" + m[3]).slice(-2) + '-' + ("00" + m[1]).slice(-2);
 
             return value;
         }
 
-        bindDatePicker();
-
         $('form input').on('keypress', function(e) {
             return e.which !== 13;
         });
         // first name
         $("#fname").keyup(function() {
-            var fname = $("#fname").val();
+            let fname = $("#fname").val();
             if (fname != fname) {
                 $("#error-fname").text('Veuillez renseigner votre prénom.');
                 $("#fname").addClass("box_error");
@@ -206,7 +170,7 @@
         });
         //denomination
         $("#denomination").keyup(function() {
-            var denomination = $("#denomination").val();
+            let denomination = $("#denomination").val();
             if (denomination != denomination) {
                 $("#error-denomination").text('Veuillez renseigner une dénomination.');
                 $("#denomination").addClass("box_error");
@@ -229,7 +193,7 @@
         });
         //address
         $("#address").keyup(function() {
-            var address = $("#address").val();
+            let address = $("#address").val();
             if (address != address) {
                 $("#error-address").text('Veuillez renseigner l\'adresse de votre société.');
                 $("#address").addClass("box_error");
@@ -252,7 +216,7 @@
         });
         // last name
         $("#lname").keyup(function() {
-            var lname = $("#lname").val();
+            let lname = $("#lname").val();
             if (lname != lname) {
                 $("#error-lname").text('Veuillez renseigner votre nom de famille.');
                 $("#lname").addClass("box_error");
@@ -275,7 +239,7 @@
         });
         // address
         $("#address").keyup(function() {
-            var address = $("#address").val();
+            let address = $("#address").val();
             if (address != address) {
                 $("#error-address").text('Enter your Address.');
                 $("#address").addClass("box_error");
@@ -295,7 +259,7 @@
                 $("#fname").addClass("box_error");
                 error = true;
             } else {
-                var fname = $("#fname").val();
+                let fname = $("#fname").val();
                 if (fname != fname) {
                     $("#error-fname").text('Le prénom est requis.');
                     error = true;
@@ -321,7 +285,7 @@
                 $("#lname").addClass("box_error");
                 error = true;
             } else {
-                var lname = $("#lname").val();
+                let lname = $("#lname").val();
                 if (lname != lname) {
                     $("#error-lname").text('Le nom de famille est requis.');
                     error = true;
@@ -358,7 +322,7 @@
                     $("#denomination").addClass("box_error");
                     error = true;
                 } else {
-                    var denomination = $("#denomination").val();
+                    let denomination = $("#denomination").val();
                     if (denomination != denomination) {
                         $("#error-denomination").text('La dénomination est requise.');
                         error = true;
@@ -379,7 +343,7 @@
                     $("#address").addClass("box_error");
                     error = true;
                 } else {
-                    var address = $("#address").val();
+                    let address = $("#address").val();
                     if (address != address) {
                         $("#error-address").text('L\'adresse est requise.');
                         error = true;
@@ -415,7 +379,7 @@
                 $("#phone").addClass("box_error");
                 error = true;
             } else {
-                var phone = $("#phone").val();
+                let phone = $("#phone").val();
                 if (phone != phone) {
                     $("#error-phone").text('Phone number is required.');
                     error = true;
@@ -436,7 +400,7 @@
                 $("#address").addClass("box_error");
                 error = true;
             } else {
-                var address = $("#address").val();
+                let address = $("#address").val();
                 if (address != address) {
                     $("#error-address").text('Address is required.');
                     error = true;
