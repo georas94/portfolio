@@ -37,7 +37,7 @@ $(function () {
     });
 
     let spanPMenu = $('.span-principal-menu');
-    spanPMenu.on('click tap touchstart', function (event) {
+    spanPMenu.on('click tap', function (event) {
         event.preventDefault();
         manageNavbar($(this))
     });
