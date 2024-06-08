@@ -384,7 +384,7 @@ and (max-device-width : 960px) {
   }
 
   .menu{
-    overflow-y: scroll;
+    overflow-y: scroll !important;
   }
 }
 /*End mobile screen*/
