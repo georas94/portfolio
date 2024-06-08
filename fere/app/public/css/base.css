@@ -382,6 +382,10 @@ and (max-device-width : 960px) {
   .img-desktop{
     display: none;
   }
+
+  .menu{
+    overflow-y: scroll;
+  }
 }
 /*End mobile screen*/
 
