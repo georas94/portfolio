@@ -59,6 +59,22 @@ class CartController extends AbstractController
         ]);
     }
 
+    #[Route('/cart/quantity', name: 'app_cart_quantity')]
+    public function cartQuantity(CartManager $cartManager): JsonResponse
+    {
+        $quantity = 0;
+        foreach ($cartManager->getCurrentCart()->getItems() as $item) {
+            $quantity += $item->getQuantity();
+        }
+
+        return $this->json(
+            [
+                'quantity' => (int)$quantity,
+            ],
+            Response::HTTP_OK
+        );
+    }
+
     /**
      * @throws Exception
      */

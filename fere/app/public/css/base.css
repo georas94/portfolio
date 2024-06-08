@@ -238,7 +238,7 @@ a{
 }
 
 /** Only on big screen**/
-@media (min-width: 48em) {
+@media (min-width: 60em) {
   .header li {
     float: left;
   }
@@ -292,7 +292,7 @@ a{
 /**  Mobile screen **/
 @media only screen
 and (min-device-width : 12px)
-and (max-device-width : 640px) {
+and (max-device-width : 960px) {
   .frame-parent-side-filter {
     display: none !important;
   }
@@ -363,20 +363,8 @@ and (max-device-width : 640px) {
     display: none;
   }
 
-  .img-cart{
-    left: 9.6em;
-    position: relative;
-    top: 1.1em;
-  }
-
   .menu-cart-mobile{
     display: inline-block;
-  }
-
-  .span-menu-cart strong{
-    position: relative;
-    left: 8.2em;
-    top: 0.7em;
   }
 
   .cart-count{

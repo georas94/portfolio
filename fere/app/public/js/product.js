@@ -5,8 +5,8 @@ $(function () {
     let $container = $('.btn-cart-add-container');
 
     let rating = $('.seller-rating')
-    for(let i = 0; i < rating.val(); i++) {
-        $("#seller-star-" + (i+1) ).css('color', 'orange');
+    for (let i = 0; i < rating.val(); i++) {
+        $("#seller-star-" + (i + 1)).css('color', 'orange');
     }
 
     $('.plus').on('click', function () {
@@ -26,37 +26,33 @@ $(function () {
     });
 
     $container.find('button').on('click', function (e) {
-        let $productId = $(e.currentTarget)
+        let $productId = $(e.currentTarget);
         let $quantity = $('.quantity-value');
 
         $.ajax({
-            url: '/cart/product/'+$productId.data('product-id')+'/add-to-cart',
-            data: {quantity :  $quantity.val()},
+            url: '/cart/product/' + $productId.data('product-id') + '/add-to-cart',
+            data: {quantity: $quantity.val()},
             method: 'POST',
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 let cartCountSelector = $('.cart-count');
                 let imgCartSelector = $('.img-cart');
                 let cartCount = cartCountSelector.data('count');
                 let quantity = parseInt(cartCount) + parseInt(data.quantity);
                 cartCountSelector.text(quantity);
                 cartCountSelector.data('count', quantity);
-                if (sessionStorage.getItem('cart-quantity')){
-                    sessionStorage.removeItem('cart-quantity');
-                }
-                cartCountSelector.css('color', '#68d021 !important')
-                imgCartSelector.css('color', '#68d021 !important')
-                cartCountSelector.animate({ 'zoom': 1.3}, 400);
-                imgCartSelector.animate({ 'zoom': 1.8}, 400);
-                cartCountSelector.animate({ 'zoom': 1}, 400);
-                imgCartSelector.animate({ 'zoom': 1}, 400);
+                cartCountSelector.css('color', '#68d021 !important');
+                imgCartSelector.css('color', '#68d021 !important');
+                cartCountSelector.animate({'zoom': 1.3}, 400);
+                imgCartSelector.animate({'zoom': 1.8}, 400);
+                cartCountSelector.animate({'zoom': 1}, 400);
+                imgCartSelector.animate({'zoom': 1}, 400);
                 window.setTimeout(animateBackToBlackColor, 2000);
-                function animateBackToBlackColor() {
-                    cartCountSelector.css('color', '#000 !important')
-                    imgCartSelector.css('color', '#000 !important')
-                }
 
-                sessionStorage.setItem('cart-quantity', quantity.toString());
+                function animateBackToBlackColor() {
+                    cartCountSelector.css('color', '#000 !important');
+                    imgCartSelector.css('color', '#000 !important');
+                }
             },
             error: function (data) {
                 swal({
@@ -67,6 +63,6 @@ $(function () {
                 });
                 console.log(data);
             }
-        })
-    })
+        });
+    });
 });

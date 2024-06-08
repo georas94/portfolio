@@ -55,8 +55,7 @@
     <header id="header" class="header">
             <a href="{{ path('app_home') }}" class="logo">F E R E</a>
             <input class="menu-btn" type="checkbox" id="menu-btn" />
-            <div>
-                <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+            <div class="d-flex justify-content-end align-items-center">
                 <div class="menu-cart-mobile">
                     <a href="{{ path('app_cart') }}">
                         <span class="span-menu-cart">
@@ -67,6 +66,7 @@
                         </span>
                     </a>
                 </div>
+                <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
             </div>
             <ul class="menu">
                 <li class="li-selection">
