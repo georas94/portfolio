@@ -404,6 +404,10 @@ and (max-device-width : 960px) {
   .div-cart-item{
     display: block;
   }
+
+  .div-cart-checkout a{
+    height: 1.5em !important;
+  }
 }
 /*End mobile screen*/
 
