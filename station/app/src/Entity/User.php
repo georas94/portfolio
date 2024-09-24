@@ -46,9 +46,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $phoneNumber = null;
 
-    #[ORM\ManyToMany(targetEntity: Pump::class, mappedBy: 'users')]
-    private Collection $pumps;
-
     #[ORM\OneToMany(mappedBy: 'procesor', targetEntity: Order::class, orphanRemoval: true)]
     private Collection $orders;
 
@@ -60,7 +57,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->pumps = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->invoices = new ArrayCollection();
         $this->shifts = new ArrayCollection();
@@ -166,34 +162,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFirstname(?string $firstname): void
     {
         $this->firstname = $firstname;
-    }
-
-
-    /**
-     * @return Collection<int, Pump>
-     */
-    public function getPumps(): Collection
-    {
-        return $this->pumps;
-    }
-
-    public function addPump(Pump $pump): static
-    {
-        if (!$this->pumps->contains($pump)) {
-            $this->pumps->add($pump);
-            $pump->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removePump(Pump $pump): static
-    {
-        if ($this->pumps->removeElement($pump)) {
-            $pump->removeUser($this);
-        }
-
-        return $this;
     }
 
     /**

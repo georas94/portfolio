@@ -41,21 +41,6 @@ class PumpFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('users', EntityType::class, [
-                'class' => User::class,
-                'attr' => [
-                    'class' => 'form-control',
-                ],
-                'label' => 'Responsables de cette pompe',
-                'multiple' => true,
-                'choice_label' => function (User $user): string {
-                    return $user->getFirstname() . ' ' . $user->getLastname();
-                },
-                'query_builder' => function (EntityRepository $er): QueryBuilder {
-                    return $er->createQueryBuilder('u')
-                        ->orderBy('u.lastname', 'ASC');
-                },
-            ])
             ->add('save', SubmitType::class, [
                 'label' => 'Sauvegarder',
                 'attr' => [

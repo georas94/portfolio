@@ -26,15 +26,11 @@ class Pump
     #[ORM\Column]
     private ?float $essenceQuantity = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'pumps')]
-    private Collection $users;
-
     #[ORM\OneToMany(mappedBy: 'pump', targetEntity: Shift::class)]
     private Collection $shifts;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
         $this->shifts = new ArrayCollection();
     }
 
@@ -63,30 +59,6 @@ class Pump
     public function setEssenceQuantity(float $essenceQuantity): static
     {
         $this->essenceQuantity = $essenceQuantity;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): static
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        $this->users->removeElement($user);
 
         return $this;
     }
