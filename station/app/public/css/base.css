@@ -60,6 +60,13 @@ a {
     padding: 0;
 }
 
+.field-errors-login {
+    color: red;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
 .content-wrapper {
     padding: 1em 3em;
 }

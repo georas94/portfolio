@@ -3,7 +3,7 @@
 {% block title %}Connexion{% endblock %}
 {% block body %}
     {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="field-errors-login">{{ error.messageKey|trans }}</div>
     {% endif %}
     <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
