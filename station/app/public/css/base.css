@@ -94,6 +94,10 @@ and (max-device-width: 960px) {
     .row {
         --bs-gutter-x: 0;
     }
+
+    .shift-form-element-div div {
+        width: 50%;
+    }
 }
 
 /*End mobile screen*/

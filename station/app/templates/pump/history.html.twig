@@ -22,13 +22,15 @@
         <thead>
         <tr class="item">
             <th scope="col" class="p-3">Responsable</th>
-            <th scope="col" class="p-3">Date de création</th>
-            <th scope="col" class="p-3">Terminé le</th>
-            <th scope="col" class="p-3">Pompe affectée</th>
             <th scope="col" class="p-3">Qte gasoil départ</th>
             <th scope="col" class="p-3">Qte gasoil fin</th>
+            <th scope="col" class="p-3">Litres gasoil servi</th>
             <th scope="col" class="p-3">Qte essence départ</th>
             <th scope="col" class="p-3">Qte essence fin</th>
+            <th scope="col" class="p-3">Litres essence servi</th>
+            <th scope="col" class="p-3">Pompe affectée</th>
+            <th scope="col" class="p-3">Date de création</th>
+            <th scope="col" class="p-3">Terminé le</th>
             <th scope="col" class="p-3">Actions</th>
         </tr>
         </thead>
@@ -37,17 +39,19 @@
 {#            <tr onclick="document.location = '{{ path('app_managerial_expense_view', {'id': expenseResultSet.expense.id }) }}'">#}
             <tr class="item">
                 <td>{{ shift.employee.lastname ~ ' ' ~ shift.employee.firstname}}</td>
+                <td>{{ shift.gasoilQuantityAtStart }}</td>
+                <td>{{ shift.gasoilQuantityAtEnd ?? 0 }} L</td>
+                <td>{{ shift.gasoilQuantityAtEnd ? (shift.gasoilQuantityAtStart - shift.gasoilQuantityAtEnd) : 0 }} L</td>
+                <td>{{ shift.essenceQuantityAtStart }} L</td>
+                <td>{{ shift.essenceQuantityAtEnd ?? 0 }} L</td>
+                <td>{{ shift.essenceQuantityAtEnd ? (shift.essenceQuantityAtStart - shift.essenceQuantityAtEnd) : 0 }} L</td>
+                <td>{{ shift.pump.id }}</td>
                 <td>{{ shift.createdAt|date("d/m/Y") }}</td>
                 <td>{{ shift.endedAt ? shift.endedAt|date("d/m/Y H:i:s") : 'En cours'}}</td>
-                <td>{{ shift.pump.id }}</td>
-                <td>{{ shift.gasoilQuantityAtStart }}</td>
-                <td>{{ shift.gasoilQuantityAtEnd ?? 0 }}</td>
-                <td>{{ shift.essenceQuantityAtStart }}</td>
-                <td>{{ shift.essenceQuantityAtEnd ?? 0 }}</td>
                 <td>
                     {% if shift.status == statusInProcess %}
                         <div class="d-flex justify-content-center">
-                            <a class="mdc-button mdc-button--raised mdc-ripple-upgraded" href="{{ path('app_pump_end', {id: shift.id}) }}">Terminer la tournée</a>
+                            <a class="mdc-button mdc-button--raised mdc-ripple-upgraded w-75" href="{{ path('app_pump_end', {id: shift.id}) }}">Clôturer</a>
                         </div>
                     {% endif %}
                 </td>
