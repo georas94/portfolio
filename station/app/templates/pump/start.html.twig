@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Démarrer une tournée{% endblock %}
+
+{% block body %}
+    <div class="mt-5">
+        {{ form_start(shiftStartForm) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(shiftStartForm) }}
+        </div>
+
+        <div class="row">
+            <div style="display: flex;justify-content: center" class="mb-2 shift-form-element-div">
+                {{ form_row(shiftStartForm.gasoilQuantityAtStart) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-2 shift-form-element-div">
+                {{ form_row(shiftStartForm.essenceQuantityAtStart) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-2 shift-form-element-div">
+                {{ form_row(shiftStartForm.employee) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-2 shift-form-element-div">
+                {{ form_row(shiftStartForm.pump) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="col" id="some-custom-id">
+                {{ form_row(shiftStartForm.save) }}
+            </div>
+        </div>
+        {{ form_end(shiftStartForm) }}
+    </div>
+{% endblock %}

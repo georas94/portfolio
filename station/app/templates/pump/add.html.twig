@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une pompe{% endblock %}
+
+{% block body %}
+    <div class="mt-5">
+        {{ form_start(addPumpForm) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(addPumpForm) }}
+        </div>
+
+        <div class="row">
+            <div style="display: flex;justify-content: center" class="mb-2">
+                {{ form_row(addPumpForm.gasoilQuantity) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-2">
+                {{ form_row(addPumpForm.essenceQuantity) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-2">
+                {{ form_row(addPumpForm.users) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="col" id="some-custom-id">
+                {{ form_row(addPumpForm.save) }}
+            </div>
+        </div>
+        {{ form_end(addPumpForm) }}
+    </div>
+{% endblock %}

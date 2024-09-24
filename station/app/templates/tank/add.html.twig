@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une cuve{% endblock %}
+
+{% block body %}
+    <div class="mt-5">
+        {{ form_start(addTankForm) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(addTankForm) }}
+        </div>
+
+        <div class="row">
+            <div style="display: flex;justify-content: center" class="mb-2">
+                {{ form_row(addTankForm.name) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-2">
+                {{ form_row(addTankForm.volume) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-2">
+                {{ form_row(addTankForm.quantityAvailable) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="mb-4">
+                {{ form_row(addTankForm.fuelType) }}
+            </div>
+            <div style="display: flex;justify-content: center" class="col" id="some-custom-id">
+                {{ form_row(addTankForm.save) }}
+            </div>
+        </div>
+        {{ form_end(addTankForm) }}
+
+    </div>
+{% endblock %}

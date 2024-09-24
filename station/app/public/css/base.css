@@ -1,0 +1,78 @@
+a {
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+}
+
+.tank {
+    width: 40em;
+    height: 25em;
+    border: 2px solid #000;
+    position: relative;
+    background-color: #f0f0f0;
+}
+
+.fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #00aaff;
+    height: 0;
+}
+
+.div-quantity-available {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 3em;
+    margin-left: 3em;
+    height: auto;
+}
+
+.add-tank, .add-pump {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 3em;
+    align-items: center;
+}
+
+.add-tank svg {
+    margin-left: 1em;
+}
+
+.my-custom-class-for-errors {
+    display: flex;
+    justify-content: center;
+}
+
+#pump_form_users {
+    height: 15em;
+}
+
+.shift-form-element-div div,
+.tank-form-element-div div {
+    width: 25%;
+}
+
+/**  Mobile screen **/
+@media only screen
+and (min-device-width: 12px)
+and (max-device-width: 960px) {
+    .tank {
+        width: 10em;
+    }
+
+    .fill {
+        width: 100%;
+    }
+
+    .div-quantity-available {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .row {
+        --bs-gutter-x: 0;
+    }
+}
+
+/*End mobile screen*/
