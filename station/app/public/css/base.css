@@ -4,7 +4,7 @@ a {
 }
 
 .tank {
-    width: 40em;
+    width: 30em;
     height: 25em;
     border: 2px solid #000;
     position: relative;
@@ -22,7 +22,7 @@ a {
 .div-quantity-available {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-right: 3em;
     margin-left: 3em;
     height: auto;
@@ -53,6 +53,18 @@ a {
     width: 25%;
 }
 
+.field-errors {
+    list-style: none;
+    font-size: .7em;
+    color: red;
+    padding: 0;
+}
+
+.content-wrapper {
+    background: #e9eaef;
+    padding: 1em 3em;
+}
+
 /**  Mobile screen **/
 @media only screen
 and (min-device-width: 12px)
@@ -76,3 +88,14 @@ and (max-device-width: 960px) {
 }
 
 /*End mobile screen*/
+
+/** Only on big screen**/
+@media (min-width: 60em) {
+    .tank {
+        width: 25em;
+    }
+    .tanks-div {
+        margin-left: 10em;
+    }
+}
+/** End big screen**/

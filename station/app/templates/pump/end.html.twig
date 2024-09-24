@@ -43,3 +43,7 @@
 
     </div>
 {% endblock %}
+{% block javascripts %}
+{#    {{ parent() }}#}
+    <script src="{{ asset('js/pump/end.js') }}"></script>
+{% endblock %}

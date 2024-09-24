@@ -36,7 +36,7 @@ class PumpController extends AbstractController
     public function pumpHistory(Request $request): Response
     {
         return $this->render('pump/history.html.twig', [
-            'shifts' => $this->shiftRepository->findAll(),
+            'shifts' => $this->shiftRepository->findBy([], ['status' => 'ASC']),
             'statusInProcess' => StatusTypeString::STATUS_IN_PROCESS->value,
             'statusEnded' => StatusTypeString::STATUS_COMPLETED->value,
         ]);

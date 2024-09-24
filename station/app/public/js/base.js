@@ -3,10 +3,6 @@ $(function () {
     let tankSaveButton = $('#tank_form_save');
     let tankFormQuantityAvailable = $('#tank_form_quantityAvailable');
     let tankFormVolume = $('#tank_form_volume');
-    let menuList = $('.mdc-list .mdc-drawer-link');
-    menuList.on('click', function () {
-        $(this).removeClass('content--active');
-    });
 
     quantity.each( function () {
         let volume = $(this).parent().parent().parent().find('.volume').data('volume');

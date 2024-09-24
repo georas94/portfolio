@@ -7,6 +7,8 @@ use App\Repository\ShiftRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ShiftRepository::class)]
@@ -144,5 +146,20 @@ class Shift
         $this->status = $status;
 
         return $this;
+    }
+
+    #[Callback]
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->getEssenceQuantityAtEnd() > $this->getEssenceQuantityAtStart()) {
+            $context->buildViolation('La quantité d\'essence de clôture saisie ne peut être supérieur à sa quantité de départ')
+                ->atPath('essenceQuantityAtEnd')
+                ->addViolation();
+        }
+        if ($this->getGasoilQuantityAtEnd() > $this->getGasoilQuantityAtStart()) {
+            $context->buildViolation('La quantité de gasoil de clôture saisie ne peut être supérieur à sa quantité de départ')
+                ->atPath('gasoilQuantityAtEnd')
+                ->addViolation();
+        }
     }
 }

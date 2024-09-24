@@ -17,40 +17,43 @@
             </div>
         </div>
     {% endfor %}
-
-    {% for shift in shifts %}
-        <div style="display: flex; margin-bottom: 5em" class="col-md-5 col-xs-12">
-            <div style="display: flex;flex-direction: column;justify-content: space-between;">
-                <div class="fw-bolder">
-                    <div>
-                        <div class="card p-2 {{ shift.status == statusEnded ? 'bg-success' : 'bg-warning' }}" style="width: 25rem;height: 33em;">
-                            <div class="card-body">
-                                <span>Responsable</span>
-                                <p class="card-text fw-lighter">{{ shift.employee.lastname ~ ' ' ~ shift.employee.firstname}}</p>
-                                <span>Date de création</span>
-                                <p class="card-text fw-lighter">{{ shift.createdAt|date("d/m/Y")}}</p>
-                                <span>Terminé le</span>
-                                <p class="card-text fw-lighter">{{ shift.endedAt ? shift.endedAt|date("d/m/Y H:i:s") : 'En cours'}}</p>
-                                <span>Pompe affectée</span>
-                                <p class="card-text fw-lighter">{{ shift.pump.id }}</p>
-                                <span>Quantité de gasoil de départ</span>
-                                <p class="card-text fw-lighter">{{ shift.gasoilQuantityAtStart }}</p>
-                                <span>Quantité d'essence de départ</span>
-                                <p class="card-text fw-lighter">{{ shift.essenceQuantityAtStart }}</p>
-                                <span>Quantité de gasoil en fin de tournée</span>
-                                <p class="card-text fw-lighter">{{ shift.gasoilQuantityAtEnd ?? 0 }}</p>
-                                <span>Quantité d'essence en fin de tournée</span>
-                                <p class="card-text fw-lighter">{{ shift.essenceQuantityAtEnd ?? 0 }}</p>
-                            </div>
+<div class="table-responsive w-100">
+    <table class="table text-center table-striped table-hover sortable">
+        <thead>
+        <tr class="item">
+            <th scope="col" class="p-3">Responsable</th>
+            <th scope="col" class="p-3">Date de création</th>
+            <th scope="col" class="p-3">Terminé le</th>
+            <th scope="col" class="p-3">Pompe affectée</th>
+            <th scope="col" class="p-3">Qte de gasoil de départ</th>
+            <th scope="col" class="p-3">Qte de gasoil de fin</th>
+            <th scope="col" class="p-3">Qte d'essence de départ</th>
+            <th scope="col" class="p-3">Qte d'essence de fin</th>
+            <th scope="col" class="p-3">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for shift in shifts %}
+{#            <tr onclick="document.location = '{{ path('app_managerial_expense_view', {'id': expenseResultSet.expense.id }) }}'">#}
+            <tr class="item">
+                <td>{{ shift.employee.lastname ~ ' ' ~ shift.employee.firstname}}</td>
+                <td>{{ shift.createdAt|date("d/m/Y") }}</td>
+                <td>{{ shift.endedAt ? shift.endedAt|date("d/m/Y H:i:s") : 'En cours'}}</td>
+                <td>{{ shift.pump.id }}</td>
+                <td>{{ shift.gasoilQuantityAtStart }}</td>
+                <td>{{ shift.gasoilQuantityAtEnd ?? 0 }}</td>
+                <td>{{ shift.essenceQuantityAtStart }}</td>
+                <td>{{ shift.essenceQuantityAtEnd ?? 0 }}</td>
+                <td>
+                    {% if shift.status == statusInProcess %}
+                        <div class="d-flex justify-content-center">
+                            <a class="mdc-button mdc-button--raised mdc-ripple-upgraded" href="{{ path('app_pump_end', {id: shift.id}) }}">Terminer la tournée</a>
                         </div>
-                        {% if shift.status == statusInProcess %}
-                            <div class="d-flex justify-content-center">
-                                <a class="mdc-button mdc-button--raised mdc-ripple-upgraded" href="{{ path('app_pump_end', {id: shift.id}) }}">Terminer la tournée</a>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

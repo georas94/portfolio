@@ -17,7 +17,7 @@
         </a>
     </div>
     {% for tank in tanks %}
-        <div style="display: flex; margin-bottom: 5em" class="col-md-12 col-xs-12">
+        <div style="display: flex; margin-bottom: 5em" class="col-md-12 col-xs-12 tanks-div">
             <div class="">
                 <div class="tank">
                     <div class="fill">
@@ -48,7 +48,7 @@
                         L</h5>
                 </div>
             </div>
-            <div style="display: flex;flex-direction: column;justify-content: space-between;">
+            <div style="display: flex;flex-direction: column;justify-content: space-around;">
                 <div class="fw-bolder">
                     <a href="{{ path('app_edit_tank', {id: tank.id }) }}">
                         Modifier cette cuve
