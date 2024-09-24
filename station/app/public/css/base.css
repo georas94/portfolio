@@ -110,5 +110,9 @@ and (max-device-width: 960px) {
     .tanks-div {
         margin-left: 10em;
     }
+
+    .table-responsive {
+        overflow-x: hidden;
+    }
 }
 /** End big screen**/
