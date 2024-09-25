@@ -105,8 +105,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRolesForFormatted(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = RoleString::ROLE_EMPLOYEE->name;
 
         $rolesFormatted = [];
         foreach ($roles as $role) {

@@ -58,7 +58,8 @@ class ShiftStartFormType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->orderBy('u.lastname', 'ASC');
                 },
-            ])->add('pump', EntityType::class, [
+            ])
+            ->add('pump', EntityType::class, [
                 'class' => Pump::class,
                 'attr' => [
                     'class' => 'form-select',

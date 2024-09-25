@@ -11,13 +11,11 @@
             <th scope="col" class="p-3 text-center">Prénom</th>
             <th scope="col" class="p-3 text-center">Email</th>
             <th scope="col" class="p-3 text-center">Roles</th>
-            <th scope="col" class="p-3 text-center">Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for employee in employees %}
-            {#            <tr onclick="document.location = '{{ path('app_managerial_expense_view', {'id': expenseResultSet.expense.id }) }}'">#}
-            <tr class="item">
+            <tr class="item" onclick="document.location = '{{ path('app_view_employee', {'id': employee.id }) }}'">
                 <td class="text-center">{{ employee.lastname|upper }}</td>
                 <td class="text-center">{{ employee.firstname }}</td>
                 <td class="text-center">{{ employee.email }}</td>
@@ -29,11 +27,6 @@
                         {% set i = key + 1 %}
                     {% endfor %}
                     <div>{{ roles|join(' | ') }}</div>
-                </td>
-                <td class="text-center">
-{#                    <div class="d-flex justify-content-center">#}
-{#                        <a class="mdc-button mdc-button--raised mdc-ripple-upgraded w-75" href="{{ path('app_pump_end', {id: shift.id}) }}">Clôturer</a>#}
-{#                    </div>#}
                 </td>
             </tr>
         {% endfor %}
