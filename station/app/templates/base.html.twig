@@ -85,6 +85,22 @@
                                     </nav>
                                 </div>
                             </div>
+                            <div class="mdc-list-item mdc-drawer-item">
+                                <a class="mdc-expansion-panel-link" data-toggle="expansionPanel" data-target="employee-sub-menu">
+                                    <i class="material-icons mdc-list-item__start-detail mdc-drawer-item-icon" aria-hidden="true">person</i>
+                                    Employés
+                                    <i class="mdc-drawer-arrow material-icons">chevron_right</i>
+                                </a>
+                                <div class="mdc-expansion-panel" id="employee-sub-menu">
+                                    <nav class="mdc-list mdc-drawer-submenu">
+                                        <div class="mdc-list-item mdc-drawer-item">
+                                            <a class="mdc-drawer-link" href="{{ path('app_list_employee') }}">
+                                                Liste des employés
+                                            </a>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
                         </nav>
                     </div>
                     {% endif %}

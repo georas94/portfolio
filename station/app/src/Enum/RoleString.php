@@ -4,12 +4,12 @@ namespace App\Enum;
 
 enum RoleString: string
 {
-    //Role utilisateur
+    //Role employé
     case ROLE_EMPLOYEE = 'Employé';
-    //Role trésorerie
-    case ROLE_TREASURER = 'Trésorier';
-    //Role comptable
-    case ROLE_ACCOUNTANT = 'Comptable';
-    //Role manager (DAF)
-    case ROLE_MANAGER = 'Financier';
+    //Role gérant
+    case ROLE_MANAGER = 'Gérant';
+    //Role pompiste
+    case ROLE_GAS_STATION_ATTENDANT = 'Pompiste';
+    //Role pompiste
+    case ROLE_ADMIN = 'Admin';
 }

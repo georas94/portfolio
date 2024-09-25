@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampTrait;
+use App\Enum\RoleString;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -96,9 +97,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = RoleString::ROLE_EMPLOYEE->name;
 
         return array_unique($roles);
+    }
+
+    public function getRolesForFormatted(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = RoleString::ROLE_EMPLOYEE->name;
+
+        $rolesFormatted = [];
+        foreach ($roles as $role) {
+            if($role === RoleString::ROLE_GAS_STATION_ATTENDANT->name){
+                $role = RoleString::ROLE_GAS_STATION_ATTENDANT->value;
+            }
+            if($role === RoleString::ROLE_EMPLOYEE->name){
+                $role = RoleString::ROLE_EMPLOYEE->value;
+            }
+            if($role === RoleString::ROLE_MANAGER->name){
+                $role = RoleString::ROLE_MANAGER->value;
+            }
+            if($role === RoleString::ROLE_ADMIN->name){
+                $role = RoleString::ROLE_ADMIN->value;
+            }
+            $rolesFormatted[] = $role;
+        }
+        return $rolesFormatted;
     }
 
     public function setRoles(array $roles): static

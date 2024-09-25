@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des employés{% endblock %}
+
+{% block body %}
+    <div class="table-responsive w-100">
+    <table class="table table-employee-list text-center table-striped table-hover sortable">
+        <thead>
+        <tr class="item">
+            <th scope="col" class="p-3 text-center">Nom</th>
+            <th scope="col" class="p-3 text-center">Prénom</th>
+            <th scope="col" class="p-3 text-center">Email</th>
+            <th scope="col" class="p-3 text-center">Roles</th>
+            <th scope="col" class="p-3 text-center">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            {#            <tr onclick="document.location = '{{ path('app_managerial_expense_view', {'id': expenseResultSet.expense.id }) }}'">#}
+            <tr class="item">
+                <td class="text-center">{{ employee.lastname|upper }}</td>
+                <td class="text-center">{{ employee.firstname }}</td>
+                <td class="text-center">{{ employee.email }}</td>
+                <td class="text-center">
+                    {% set roles = [] %}
+                    {% set i = 0 %}
+                    {% for key, role in employee.getRolesForFormatted %}
+                        {% set roles = roles|merge([role]) %}
+                        {% set i = key + 1 %}
+                    {% endfor %}
+                    <div>{{ roles|join(' | ') }}</div>
+                </td>
+                <td class="text-center">
+{#                    <div class="d-flex justify-content-center">#}
+{#                        <a class="mdc-button mdc-button--raised mdc-ripple-upgraded w-75" href="{{ path('app_pump_end', {id: shift.id}) }}">Clôturer</a>#}
+{#                    </div>#}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
