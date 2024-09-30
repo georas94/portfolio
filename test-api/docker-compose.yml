@@ -1,0 +1,39 @@
+services:
+  fpm:
+    restart: always
+    external_links:
+      - infra-services-db-1:db
+    build:
+      context: ./app
+      dockerfile: docker/php-fpm/Dockerfile
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "9006:9000"
+    networks:
+      - tools
+
+  nginx-test-api:
+    container_name: nginx-test-api
+    build:
+      context: ./app
+      dockerfile: docker/nginx/Dockerfile-nginx
+    restart: always
+    links:
+      - fpm
+    depends_on:
+      - fpm
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "8085:80"
+    networks:
+      - tools
+
+volumes:
+  db-data-test-api: {}
+
+networks:
+    tools:
+        external: true
+        name: infra-services_tools
