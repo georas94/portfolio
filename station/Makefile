@@ -30,7 +30,7 @@ docker-clean:
 
 ## PHP bash
 bash:
-	docker compose exec php bash
+	docker compose exec fpm bash
 
 ############
 # Database #
