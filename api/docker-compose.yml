@@ -1,5 +1,6 @@
 services:
   fpm:
+    container_name: fpm-api
     restart: always
     external_links:
       - infra-services-db-1:db
@@ -13,8 +14,8 @@ services:
     networks:
       - tools
 
-  nginx-test-api:
-    container_name: nginx-test-api
+  nginx-api:
+    container_name: nginx-api
     build:
       context: ./app
       dockerfile: docker/nginx/Dockerfile-nginx
@@ -31,7 +32,7 @@ services:
       - tools
 
 volumes:
-  db-data-test-api: {}
+  db-data-api: {}
 
 networks:
     tools:

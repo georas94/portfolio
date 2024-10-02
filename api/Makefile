@@ -32,6 +32,10 @@ docker-clean:
 bash:
 	docker compose exec fpm bash
 
+## Nginx reload
+reload-nginx:
+	docker exec nginx-api nginx -s reload
+
 ############
 # Database #
 ############
