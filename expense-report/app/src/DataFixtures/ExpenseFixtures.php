@@ -13,7 +13,6 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
 use Faker;
-use Symfony\Component\Workflow\WorkflowInterface;
 
 class ExpenseFixtures extends Fixture implements DependentFixtureInterface
 {
