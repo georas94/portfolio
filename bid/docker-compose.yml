@@ -1,0 +1,39 @@
+services:
+  fpm:
+    restart: always
+    external_links:
+      - infra-services-db-1:db
+    build:
+      context: ./app
+      dockerfile: docker/php-fpm/Dockerfile
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "9007:9000"
+    networks:
+      - tools
+
+  nginx-bid:
+    container_name: nginx-bid
+    build:
+      context: ./app
+      dockerfile: docker/nginx/Dockerfile-nginx
+    restart: always
+    links:
+      - fpm
+    depends_on:
+      - fpm
+    volumes:
+      - ./app:/app:rw,cached
+    ports:
+      - "8086:80"
+    networks:
+      - tools
+
+volumes:
+  db-data-bid: {}
+
+networks:
+    tools:
+        external: true
+        name: infra-services_tools
