@@ -64,4 +64,24 @@ fixtures: db-drop db-create db-schema
 cc: cache-clear
 
 cache-clear:
+	$(docker_compose_exec) fpm rm -rf var/cache/*
 	$(php_console) cache:clear
+
+logs-clear:
+	$(docker_compose_exec) fpm rm -rf var/log/*
+
+## Corriger les permissions
+fix-perms:
+	$(docker_compose_exec) fpm chown -R www-data:www-data var
+	$(docker_compose_exec) fpm chmod -R 775 var
+
+## Tout nettoyer (commande principale)
+clean: fix-perms cache-clear
+	@echo "✅ Cache complètement nettoyé et réchauffé"
+
+## Aide (liste les commandes disponibles)
+help:
+	@echo "Commandes disponibles:"
+	@echo "make clean      - Nettoie complètement le cache"
+	@echo "make cache-clean - Supprime le cache sans réchauffement"
+	@echo "make fix-perms  - Corrige les permissions"
