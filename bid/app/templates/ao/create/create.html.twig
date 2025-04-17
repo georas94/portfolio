@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="max-w-3xl mx-auto my-8">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+            <h1 class="text-2xl font-bold mb-6">Publier un nouvel AO</h1>
+
+            {{ form_start(form) }}
+            <div class="space-y-6">
+                <!-- Champs de base -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    {{ form_row(form.reference, {
+                        attr: { class: 'input-field' }
+                    }) }}
+                    {{ form_row(form.budget, {
+                        attr: { class: 'input-field' }
+                    }) }}
+                </div>
+
+                {{ form_row(form.titre, {
+                    attr: { class: 'input-field' }
+                }) }}
+
+                {{ form_row(form.entreprise, {
+                    attr: { class: 'input-field' }
+                }) }}
+
+                {{ form_row(form.description, {
+                    attr: {
+                        class: 'input-field min-h-[200px]',
+                        'data-controller': 'markdown-editor'
+                    }
+                }) }}
+
+                <!-- Upload de fichiers -->
+                <div x-data="{ files: [] }">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Pièces jointes</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <input type="file" multiple
+                               @change="files = Array.from($event.target.files)"
+                               class="hidden" id="file-upload">
+                        <label for="file-upload" class="cursor-pointer">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                            <p class="mt-1 text-sm text-gray-600">Glissez-déposez ou cliquez pour uploader</p>
+                        </label>
+                        <template x-if="files.length > 0">
+                            <div class="mt-4 space-y-2">
+                                <template x-for="file in files" :key="file.name">
+                                    <div class="flex items-center text-sm text-gray-700">
+                                        <span x-text="file.name" class="truncate"></span>
+                                        <span x-text="' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)'" class="text-gray-500 ml-1"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <!-- Submit -->
+                <button type="submit" class="btn-primary">
+                    Publier l'annonce
+                </button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

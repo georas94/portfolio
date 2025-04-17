@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions d'Utilisation - AO Burkina{% endblock %}
+
+{% block body %}
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 max-w-3xl">
+            <h1 class="text-3xl font-bold mb-8 text-center">Conditions Générales d'Utilisation</h1>
+
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold mb-4">1. Objet</h2>
+                <p class="mb-6">
+                    Les présentes CGU régissent l'utilisation de la plateforme AO Burkina, service de publication et consultation d'appels d'offres publics.
+                </p>
+
+                <h2 class="text-xl font-semibold mb-4">2. Accès au service</h2>
+                <p class="mb-6">
+                    La plateforme est accessible gratuitement à tout utilisateur disposant d'un accès à internet. Les coûts d'accès sont à la charge de l'utilisateur.
+                </p>
+
+                <h2 class="text-xl font-semibold mb-4">3. Responsabilités</h2>
+                <p class="mb-6">
+                    Les informations publiées sont fournies à titre indicatif. AO Burkina ne garantit pas l'exhaustivité ou l'exactitude des appels d'offres publiés.
+                </p>
+
+                <h2 class="text-xl font-semibold mb-4">4. Modification des CGU</h2>
+                <p class="mb-6">
+                    AO Burkina se réserve le droit de modifier ces conditions à tout moment. Les utilisateurs seront informés par email ou via la plateforme.
+                </p>
+
+                <h2 class="text-xl font-semibold mb-4">5. Loi applicable</h2>
+                <p>
+                    Les présentes conditions sont régies par la loi burkinabè et tout litige relèvera des tribunaux compétents de [Ville].
+                </p>
+            </div>
+
+            <p class="text-center mt-8 text-gray-500">
+                Version en vigueur au {{ "now"|date("d/m/Y") }}
+            </p>
+        </div>
+    </section>
+{% endblock %}

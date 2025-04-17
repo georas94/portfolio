@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+{% block title %}Plateforme des Marchés Publics - Burkina Faso{% endblock %}
+
+{% block body %}
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-r from-green-700 to-yellow-300 text-white pt-2 pb-2 md:pt-5 md:pb-2 overflow-hidden">
+        <!-- Effet gradiant -->
+        <section class="bg-gradient-to-r from-green-700 to-yellow-300 text-white py-20 md:py-28">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Opportunités d'Affaires Publiques</h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Découvrez tous les appels d'offres gouvernementaux en un seul endroit</p>
+                <a href="#appels-offres" class="inline-block bg-red-600 text-white-700 font-semibold px-8 py-3 rounded-lg hover:bg-red-500 transition duration-300 shadow-lg transform hover:scale-105"> Explorer les AO </a>
+            </div>
+        </section>
+    </section>
+
+    <section id="appels-offres" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Appels d'offres disponibles</h2>
+                <div class="w-20 h-1 bg-green-600 mx-auto"></div>
+            </div>
+
+            <div x-data="{ searchTerm: '' }" class="container mx-auto px-4 py-8">
+                <!-- Barre de recherche -->
+                <div class="mb-8">
+                    <input x-model="searchTerm" type="text" placeholder="Rechercher par référence, titre..."
+                           class="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+
+                <!-- Cartes responsive -->
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {% for ao in aos %}
+                        <div x-show="searchTerm === '' ||
+                            '{{ ao.reference|lower }}'.includes(searchTerm.toLowerCase()) ||
+                            '{{ ao.titre|lower }}'.includes(searchTerm.toLowerCase())"
+                             class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                            {% include 'ao/component/_card.html.twig' with {'ao': ao} %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-white border-t border-gray-200">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6">Restez informé</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Abonnez-vous à notre newsletter pour recevoir les nouveaux appels d'offres</p>
+            <form class="max-w-md mx-auto flex">
+                <input type="email" placeholder="Votre email" class="border border-gray-300 p-3 rounded-l-lg flex-grow focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-r-lg font-medium hover:bg-green-700 transition"> S'abonner </button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function appelsOffresComponent() {
+            return {
+                search: '',
+                appelsOffres: [],
+                init() {
+                    const raw = this.$el.dataset.appelsOffres;
+                    try {
+                        this.appelsOffres = JSON.parse(raw);
+                        console.log("Appels d'offres chargés :", this.appelsOffres);
+                    } catch (e) {
+                        console.error("Erreur de parsing JSON :", e, raw);
+                    }
+                },
+                get filteredAppels() {
+                    if (!this.search) return this.appelsOffres;
+                    const query = this.normalize(this.search);
+                    return this.appelsOffres.filter(a => this.normalize(a.titre).includes(query) ||
+                        this.normalize(a.description).includes(query) ||
+                        this.normalize(a.organisation).includes(query));
+                },
+                normalize(str) {
+                    return str
+                        .toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "");
+                }
+            };
+        }
+    </script>
+{% endblock %}

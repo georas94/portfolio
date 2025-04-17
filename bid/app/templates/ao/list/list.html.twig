@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div x-data="{ searchTerm: '' }" class="container mx-auto px-4 py-8">
+        <!-- Barre de recherche -->
+        <div class="mb-8">
+            <input x-model="searchTerm" type="text" placeholder="Rechercher par référence, titre..."
+                   class="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+
+        <!-- Cartes responsive -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {% for ao in aos %}
+                <div x-show="searchTerm === '' ||
+                    '{{ ao.reference|lower }}'.includes(searchTerm.toLowerCase()) ||
+                    '{{ ao.titre|lower }}'.includes(searchTerm.toLowerCase())"
+                     class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                    {% include 'ao/component/_card.html.twig' with {'ao': ao} %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

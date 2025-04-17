@@ -1,0 +1,43 @@
+/* Styles de base pour les formulaires */
+.input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent;
+}
+.btn-primary {
+    @apply px-6 py-3 bg-primary text-white rounded-lg hover:bg-secondary transition-colors font-medium;
+}
+/* Markdown preview */
+.markdown-preview {
+    @apply prose max-w-none p-4 border rounded-lg bg-gray-50;
+}
+.btn-download {
+    @apply inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg transition-colors;
+    &:hover {
+        @apply bg-green-700 shadow-md;
+    }
+    svg {
+        @apply w-5 h-5 mr-2;
+    }
+}
+input[data-phone-format="bf"] {
+    letter-spacing: 0.05em;
+    font-family: monospace;
+}
+input, select, textarea {
+    transition: all 0.2s ease-in-out;
+}
+select.uppercase-options option {
+    text-transform: uppercase;
+    font-family: monospace;
+    font-weight: bold;
+}
+.break-words {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+details[open] summary {
+    margin-bottom: 0.5rem;
+}
+details summary {
+    cursor: pointer;
+    transition: margin 0.2s ease;
+}

@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div
+            x-data="appelsOffresComponent()"
+            x-init="init()"
+            data-appels-offres='{{ appels_offres|json_encode|e('html_attr') }}'
+    >
+        <div class="mb-4">
+            <input
+                    type="text"
+                    x-model="search"
+                    placeholder="Rechercher un appel d'offre..."
+                    class="border px-4 py-2 w-full rounded"
+            />
+        </div>
+
+        <template x-for="appel in filteredAppels" :key="appel.id">
+            <div class="border rounded p-4 mb-2">
+                <h2 class="text-xl font-bold" x-text="appel.titre"></h2>
+                <p class="text-gray-600" x-text="appel.description"></p>
+                <p class="text-sm text-gray-500">
+                    Organisation : <span x-text="appel.organisation"></span>
+                </p>
+            </div>
+        </template>
+
+        <div x-show="filteredAppels.length === 0" class="text-gray-500">
+            Aucun appel d'offre trouvé.
+        </div>
+    </div>
+
+    <script>
+        function appelsOffresComponent() {
+            return {
+                search: '',
+                appelsOffres: [],
+                init() {
+                    const raw = this.$el.dataset.appelsOffres;
+                    try {
+                        this.appelsOffres = JSON.parse(raw);
+                        console.log("Appels d'offres chargés :", this.appelsOffres);
+                    } catch (e) {
+                        console.error("Erreur de parsing JSON :", e, raw);
+                    }
+                },
+                get filteredAppels() {
+                    if (!this.search) return this.appelsOffres;
+                    const query = this.normalize(this.search);
+                    return this.appelsOffres.filter(a =>
+                        this.normalize(a.titre).includes(query)
+                        || this.normalize(a.description).includes(query)
+                        || this.normalize(a.organisation).includes(query)
+                    );
+                },
+                normalize(str) {
+                    return str
+                        .toLowerCase()
+                        .normalize("NFD") // décompose les accents
+                        .replace(/[\u0300-\u036f]/g, ""); // supprime les accents
+                }
+            };
+        }
+    </script>
+{% endblock %}

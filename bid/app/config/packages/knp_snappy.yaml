@@ -1,0 +1,8 @@
+knp_snappy:
+    pdf:
+        enabled: true
+        binary: '%env(WKHTMLTOPDF_PATH)%'
+        options:
+            'enable-local-file-access': true  # Option correcte avec tirets
+            'header-spacing': 10             # Espace pour le header en mm
+            'margin-top': 20mm               # Marge supérieure

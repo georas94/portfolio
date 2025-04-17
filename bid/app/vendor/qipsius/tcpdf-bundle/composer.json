@@ -1,0 +1,27 @@
+{
+    "name": "qipsius/tcpdf-bundle",
+    "version": "3.0.5",
+    "type": "symfony-bundle",
+    "description": "A bundle to easily integrate TCPDF into Symfony",
+    "keywords": ["pdf", "tcpdf"],
+    "homepage": "https://github.com/qipsius/QipsiusTCPDFBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rich Sage",
+            "email": "rich.sage@gmail.com"
+        },
+        {
+            "name": "David Navarro",
+            "email": "info@qipsius.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/framework-bundle": ">=6.1",
+        "tecnickcom/tcpdf": "*"
+    },
+    "autoload": {
+        "psr-4": { "Qipsius\\TCPDFBundle\\": "src/" }
+    }
+}
