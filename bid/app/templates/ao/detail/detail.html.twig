@@ -53,15 +53,15 @@
                 <div class="mt-8">
                     <h3 class="text-lg font-medium mb-4">Documents joints</h3>
                     <div class="space-y-2">
-                        {% for file in ao.files %}
-                            <a href="{{ asset('uploads/ao/' ~ file.filename) }}"
+                        {% for document in ao.documents %}
+                            <a href="{{ asset('uploads/ao/' ~ document.filename) }}"
                                class="flex items-center p-3 border rounded-lg hover:bg-gray-50 transition-colors">
                                 <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor"
                                      viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                 </svg>
-                                <span>{{ file.originalFilename }}</span>
+                                <span>{{ document.originalFilename }}</span>
                             </a>
                         {% endfor %}
                     </div>
