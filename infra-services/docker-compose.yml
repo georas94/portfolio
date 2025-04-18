@@ -8,8 +8,10 @@ services:
             - "3306:3306"
         volumes:
             - "./docker/shared/mysql:/var/lib/mysql"
+            - ./docker/entrypoint.sh:/entrypoint.sh
         networks:
             - tools
+        entrypoint: ["/entrypoint.sh"]
 
     mailcatcher:
         container_name: mailcatcher
@@ -20,9 +22,12 @@ services:
         environment:
             - MAIL_LIMIT=70
             - TIMEZONE=Europe/Paris
+        volumes:
+            - ./docker/entrypoint.sh:/entrypoint.sh
         ports:
             - '1080:1080'
             - '1025:1025'
+        entrypoint: ["/entrypoint.sh"]
 
     nginx-proxy:
         image: 'jc21/nginx-proxy-manager:latest'
@@ -35,9 +40,9 @@ services:
             - /var/run/docker.sock:/tmp/docker.sock:ro
             - ./data:/data
             - ./letsencrypt:/etc/letsencrypt
+            - ./docker/entrypoint.sh:/entrypoint.sh
         networks:
             - tools
-            - ./docker/entrypoint.sh:/entrypoint.sh
         entrypoint: ["/entrypoint.sh"]
 
     portainer:
@@ -47,22 +52,25 @@ services:
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - portainer_data:/data
+            - ./docker/entrypoint.sh:/entrypoint.sh
         ports:
             - '9003:9000'
         networks:
             - tools
+        entrypoint: ["/entrypoint.sh"]
 
-    ngrok:
-        image: wernight/ngrok
-        container_name: ngrok
-        restart: unless-stopped
-        volumes:
-            - ./ngrok/ngrok.yml:/home/ngrok/.ngrok2/ngrok.yml
-        ports:
-            - "4040:4040"
-        command: ["ngrok", "http", "8083"]
-        networks:
-            - tools
+#    ngrok:
+#        image: wernight/ngrok
+#        container_name: ngrok
+#        restart: unless-stopped
+#        volumes:
+#            - ./ngrok/ngrok.yml:/home/ngrok/.ngrok2/ngrok.yml
+#        ports:
+#            - "4040:4040"
+#        command: ["ngrok", "http", "8083"]
+#        networks:
+#            - tools
+#        entrypoint: ["/entrypoint.sh"]
 
     phpmyadmin:
         image: phpmyadmin
@@ -73,6 +81,9 @@ services:
             - PMA_ARBITRARY=1
         networks:
             - tools
+        volumes:
+            - ./docker/entrypoint.sh:/entrypoint.sh
+        entrypoint: ["/entrypoint.sh"]
 
 networks:
     tools:
