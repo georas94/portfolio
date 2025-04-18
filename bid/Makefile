@@ -85,8 +85,9 @@ logs-delete:
 
 ## Corriger les permissions
 fix-perms:
-	$(docker_compose_exec) fpm chown -R www-data:www-data var
-	$(docker_compose_exec) fpm chmod -R 775 var
+	$(docker_compose_exec) fpm chmod 777 app/var/log
+	$(docker_compose_exec) fpm chmod -R 777 app/var/cache
+	$(docker_compose_exec) fpm chmod -R 777 app/var/cache/prod/tcpdf
 
 ## Tout nettoyer (commande principale)
 clean: fix-perms cache-clear
