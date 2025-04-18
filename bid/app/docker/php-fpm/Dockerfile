@@ -35,7 +35,7 @@ COPY . /app/
 
 RUN mkdir -p /tmp/cache /tmp/log /var/tmp/nginx /app/public/uploads/pdf \
     && rm -rf /tmp/cache/* /tmp/log/* /var/tmp/nginx/* \
-    && chown -R www-data:www-data /tmp/cache /tmp/log /var/tmp/nginx /app/symfony /var/cache /app/var/log \
+    && chown -R www-data:www-data /tmp/cache /tmp/log /var/tmp/nginx /app/symfony /var/cache /app/var/log app/public/uploads \
     && chmod -R 1777 /tmp \
     && chmod -R 777 /app/public/uploads /app/var/cache /app/var/log
 
