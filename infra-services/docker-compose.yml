@@ -46,6 +46,8 @@ services:
             - portainer_data:/data
         ports:
             - '9003:9000'
+        networks:
+            - tools
 
     ngrok:
         image: wernight/ngrok
