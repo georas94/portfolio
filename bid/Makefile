@@ -57,8 +57,13 @@ migrations-apply:
 migrations-make:
 	$(php_console) make:migration
 
-fixtures: db-drop db-create db-schema
+dev-fixtures: db-drop db-create db-schema
 	$(php_console) doctrine:fixtures:load -n
+
+prod-fixtures: db-drop db-create db-schema
+	@read -p " Charger les fixtures en PROD ? (y/N) " ans && \
+	[ $${ans:-N} = y ] && \
+	$(php_console) doctrine:fixtures:load -n --group=prod --env=prod
 
 ## Clear cache
 cc: cache-clear
