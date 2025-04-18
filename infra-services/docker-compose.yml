@@ -71,6 +71,7 @@ services:
 
 networks:
     tools:
+        name: tools
 
 volumes:
     portainer_data: {}
