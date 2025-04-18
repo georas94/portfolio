@@ -33,8 +33,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 WORKDIR /app
 COPY . /app/
 
-RUN mkdir -p /app/public/uploads/pdf && \
-    chmod -R 777 /app/public/uploads
+RUN mkdir -p /tmp/cache /tmp/log /var/tmp/nginx /app/public/uploads/pdf \
+    && rm -rf /tmp/cache/* /tmp/log/* /var/tmp/nginx/* /app/var/cache/* /app/var/log/* \
+    && chown -R www-data:www-data /tmp/cache /tmp/log /var/tmp/nginx /app/symfony /var/cache /app/var/log \
+    && chmod -R 1777 /tmp \
+    && chmod -R 777 /app/public/uploads /app/var/cache /app/var/log
 
 CMD ["sh", "-c", "composer install --optimize-autoloader && php bin/console doctrine:schema:update --force && php-fpm"]
 
