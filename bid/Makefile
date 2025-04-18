@@ -64,11 +64,13 @@ fixtures: db-drop db-create db-schema
 cc: cache-clear
 
 cache-clear:
+	$(php_console) cache:clear
+
+cache-delete:
 	$(docker_compose_exec) fpm rm -rf var/cache/*
-	$(docker_compose_exec) fpm mkdir -p var/cache/prod/tcpdf
 	$(docker_compose_exec) fpm chown -R www-data:www-data var/cache
 	$(docker_compose_exec) fpm chmod -R 775 var/cache
-	$(php_console) cache:clear
+	$(docker_compose_exec) fpm mkdir -p var/cache/prod/tcpdf
 
 logs-clear:
 	$(docker_compose_exec) fpm rm -rf var/log/*
