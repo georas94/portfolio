@@ -92,6 +92,9 @@ fix-perms:
 clean: fix-perms cache-clear
 	@echo "✅ Cache complètement nettoyé et réchauffé"
 
+## Permissions de fichiers
+permissions-fix: logs-delete cache-delete cache-clear
+
 ## Aide (liste les commandes disponibles)
 help:
 	@echo "Commandes disponibles:"
