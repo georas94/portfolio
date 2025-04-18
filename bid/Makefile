@@ -32,6 +32,9 @@ clean-all:
 bash:
 	docker compose exec fpm bash
 
+## Create admin
+create-admin:
+	$(php_console) app:create-admin "$ADMIN_EMAIL" "$ADMIN_PASSWORD" --env=prod
 
 ## Nginx reload
 reload-nginx:
@@ -77,8 +80,8 @@ cache-delete:
 	$(docker_compose_exec) fpm chmod -R 775 var/cache
 	$(docker_compose_exec) fpm mkdir -p var/cache/prod/tcpdf
 
-logs-clear:
-	$(docker_compose_exec) fpm rm -rf var/log/*
+logs-delete:
+	$(docker_compose_exec) fpm rm -rf app/var/log/*
 
 ## Corriger les permissions
 fix-perms:
