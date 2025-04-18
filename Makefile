@@ -3,14 +3,14 @@
 #########
 
 start-all:
-	(cd infra-services && make start) && (cd lobievents && make start) && (cd resume && make start) && (cd expense-report && make start) && (cd fere && make start) && (cd partners && make start) && (cd station && make start)
+	(cd infra-services && make start) && (cd lobievents && make start) && (cd resume && make start) && (cd expense-report && make start) && (cd fere && make start) && (cd partners && make start) && (cd station && make start) && (cd bid && make start)
 
 stop-all:
-	(cd infra-services && make stop) && (cd lobievents && make stop) && (cd resume && make stop) && (cd expense-report && make stop) && (cd fere && make stop) && (cd partners && make stop) && (cd station && make stop)
+	(cd infra-services && make stop) && (cd lobievents && make stop) && (cd resume && make stop) && (cd expense-report && make stop) && (cd fere && make stop) && (cd partners && make stop) && (cd station && make stop) && (cd bid && make stop) && docker ps
 
 
 restart-all:
-	(cd infra-services && make restart) && (cd lobievents && make restart) && (cd resume && make restart) && (cd expense-report && make restart) && (cd fere && make restart) && (cd partners && make restart) && (cd station && make restart)
+	(cd infra-services && make restart) && (cd lobievents && make restart) && (cd resume && make restart) && (cd expense-report && make restart) && (cd fere && make restart) && (cd partners && make restart) && (cd station && make restart) && (cd bid && make restart)
 
 start-infra-services:
 	(cd infra-services && make start)
@@ -19,7 +19,7 @@ stop-infra-services:
 	(cd infra-services && make stop) && docker ps
 
 cache-clean-all:
-	(cd lobievents && make cache-clear) && (cd expense-report && make cache-clear) && (cd fere && make cache-clear) && (cd partners && make cache-clear) && (cd station && make cache-clear)
+	(cd lobievents && make cache-clear) && (cd expense-report && make cache-clear) && (cd fere && make cache-clear) && (cd partners && make cache-clear) && (cd station && make cache-clear) && (cd bid && make cache-clear)
 
 docker-clean:
 	docker system prune --all --force && docker system prune --all --force --volumes
@@ -42,3 +42,6 @@ bash-partners:
 
 bash-station:
 	cd station && make bash
+
+bash-bid:
+	cd bid && make bash
