@@ -16,7 +16,7 @@ start-infra-services:
 	(cd infra-services && make start)
 
 stop-infra-services:
-	(cd infra-services && make stop)
+	(cd infra-services && make stop) && docker ps
 
 cache-clean-all:
 	(cd lobievents && make cache-clear) && (cd expense-report && make cache-clear) && (cd fere && make cache-clear) && (cd partners && make cache-clear) && (cd station && make cache-clear)
