@@ -74,6 +74,7 @@ services:
 
 networks:
     tools:
+        external: true
         name: tools
 
 volumes:
