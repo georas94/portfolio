@@ -1,8 +1,6 @@
 services:
   fpm:
     restart: always
-#    external_links:
-#      - infra-services-db-1:db
     build:
       context: ./app
       dockerfile: docker/php-fpm/Dockerfile
