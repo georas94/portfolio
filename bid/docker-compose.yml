@@ -17,7 +17,6 @@ services:
       retries: 3
     networks:
       - tools
-    entrypoint: ["bash", "-c", "docker network inspect tools || docker network create tools && exec php-fpm"]
 
   nginx-bid:
     container_name: nginx-bid
