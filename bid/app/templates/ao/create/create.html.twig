@@ -4,6 +4,14 @@
 
 {% block body %}
     <div class="container mx-auto px-4 py-8">
+        <!-- Affichage des succès/erreurs -->
+        {% for message in app.flashes('registration_success') %}
+            <div class="inset-0 flex items-center justify-center text-center">
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-5 w-1/2">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
         <div class="max-w-3xl mx-auto">
             <div class="bg-white rounded-xl shadow-md overflow-hidden">
                 <div class="p-8">
@@ -179,6 +187,38 @@
                 setTimeout(() => {
                     input.classList.remove('animate-pulse');
                 }, 1000);
+            });
+        });
+
+        // Dans votre block javascripts
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-upload');
+            const dropZone = document.querySelector('[x-data="{ files: [] }"]');
+
+            // Gestion du drag and drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('border-blue-500', 'bg-blue-50');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    Alpine.store('files', Array.from(e.dataTransfer.files));
+                }
+            });
+
+            // Gestion du click sur l'input file
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    Alpine.store('files', Array.from(e.target.files));
+                }
             });
         });
     </script>

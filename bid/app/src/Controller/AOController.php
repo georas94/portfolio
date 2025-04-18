@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use AODocument;
 use App\Entity\AO;
 use App\Entity\Soumission;
 use App\Form\AOType;
@@ -19,6 +20,16 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/ao', name: 'app_ao_')]
 class AOController extends AbstractController
 {
+    private const ALLOWED_DOCUMENT_TYPES = [
+        'application/pdf',
+        'image/jpeg',
+        'image/png',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ];
+
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly DocumentManager        $docManager
@@ -52,6 +63,27 @@ class AOController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion des fichiers uploadés
+            $uploadedFiles = $request->files->get('ao_form')['documents'] ?? [];
+            foreach ($uploadedFiles as $uploadedFile) {
+                if (!in_array($uploadedFile->getMimeType(), self::ALLOWED_DOCUMENT_TYPES)) {
+                    $this->addFlash('error', 'Type de fichier non autorisé: ' . $uploadedFile->getClientOriginalName());
+                    continue;
+                }
+
+                if ($uploadedFile->getSize() > 10 * 1024 * 1024) { // 10MB max
+                    $this->addFlash('error', 'Fichier trop volumineux: ' . $uploadedFile->getClientOriginalName());
+                    continue;
+                }
+                $document = new AODocument();
+                $document->setFile($uploadedFile);
+                $document->setOriginalName($uploadedFile->getClientOriginalName());
+                $document->setMimeType($uploadedFile->getMimeType());
+                $document->setUploadedAt(new \DateTimeImmutable());
+
+                $ao->addDocument($document);
+            }
+
             $pdfPath = $this->docManager->generateDossier($ao, $this->getUser());
             $ao->setPdfPath($pdfPath);
             $this->em->persist($ao);

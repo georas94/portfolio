@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use AODocument;
 use App\Repository\AORepository;
 use App\Service\AO\StatutAOUtils;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,8 +50,8 @@ class AO
     #[Assert\NotBlank]
     private ?string $statut = StatutAOUtils::DEFAULT_STATUS;
 
-    #[ORM\OneToMany(targetEntity: AOFile::class, mappedBy: 'ao')]
-    private Collection $files;
+    #[ORM\OneToMany(targetEntity: AODocument::class, mappedBy: 'ao', cascade: ['persist', 'remove'])]
+    private Collection $documents;
 
     #[ORM\OneToMany(targetEntity: Soumission::class, mappedBy: 'ao')]
     private Collection $soumissions;
@@ -63,7 +64,7 @@ class AO
 
     public function __construct()
     {
-        $this->files = new ArrayCollection();
+        $this->documents = new ArrayCollection();
         $this->logs = new ArrayCollection();
     }
 
@@ -142,25 +143,26 @@ class AO
         $this->statut = $statut;
     }
 
-    public function getFiles(): Collection
+    public function getDocuments(): Collection
     {
-        return $this->files;
+        return $this->documents;
     }
 
-    public function addFile(AOFile $file): self
+    public function addDocument(AODocument $document): self
     {
-        if (!$this->files->contains($file)) {
-            $this->files[] = $file;
-            $file->setAo($this);
+        if (!$this->documents->contains($document)) {
+            $this->documents[] = $document;
+            $document->setAo($this);
         }
         return $this;
     }
 
-    public function removeFile(AOFile $file): self
+    public function removeDocument(AODocument $document): self
     {
-        if ($this->files->removeElement($file)) {
-            if ($file->getAo() === $this) {
-                $file->setAo(null);
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getAo() === $this) {
+                $document->setAo(null);
             }
         }
         return $this;

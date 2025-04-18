@@ -7,6 +7,7 @@ use App\Service\AO\StatutAOUtils;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,6 +29,16 @@ class AOType extends AbstractType
                 'label' => 'Statut',
                 'attr' => [
                     'class' => 'h-8 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
+                ]
+            ])
+            ->add('documents', FileType::class, [
+                'label' => 'Pièces jointes',
+                'multiple' => true,
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'hidden', // On garde le champ caché, upload se fait via le dropzone
+                    'id' => 'file-upload'
                 ]
             ]);
         // Ajouter le champ regenerate_pdf seulement si l'entité existe déjà (modification)
