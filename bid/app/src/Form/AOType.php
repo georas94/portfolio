@@ -29,13 +29,16 @@ class AOType extends AbstractType
                 'attr' => [
                     'class' => 'h-8 mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md'
                 ]
-            ])
-            ->add('regenerate_pdf', CheckboxType::class, [
+            ]);
+        // Ajouter le champ regenerate_pdf seulement si l'entité existe déjà (modification)
+        if ($options['data'] && $options['data']->getPdfPath() !== null) {
+            $builder->add('regenerate_pdf', CheckboxType::class, [
                 'label' => 'Re-générer le PDF',
                 'required' => false,
                 'mapped' => false,
                 'help' => 'Cocher pour re-générer le document PDF après modification'
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
