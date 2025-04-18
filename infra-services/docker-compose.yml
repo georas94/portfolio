@@ -37,6 +37,8 @@ services:
             - ./letsencrypt:/etc/letsencrypt
         networks:
             - tools
+            - ./docker/entrypoint.sh:/entrypoint.sh
+        entrypoint: ["/entrypoint.sh"]
 
     portainer:
         image: portainer/portainer-ce:latest
