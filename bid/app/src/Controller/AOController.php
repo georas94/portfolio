@@ -52,9 +52,6 @@ class AOController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($ao);
-            $this->em->flush();
-
             $pdfPath = $this->docManager->generateDossier($ao, $this->getUser());
             $ao->setPdfPath($pdfPath);
             $this->em->persist($ao);
