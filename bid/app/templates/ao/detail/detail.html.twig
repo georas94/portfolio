@@ -83,7 +83,7 @@
                         </a>
                     {% endif %}
                     {% if ao.getDocuments() %}
-                        <a href="{{ path('app_ao_download_pdf', {id: ao.id}) }}"
+                        <a target="_blank" href="{{ path('app_ao_download_pdf', {id: ao.id}) }}"
                            class="block w-full text-center px-4 py-3 text-black flex items-center justify-center">
                             <svg class="w-5 h-5 mr-2 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -109,7 +109,7 @@
                                     <div class="text-sm font-medium text-gray-900 truncate">{{ document.originalName }}</div>
                                     <div class="text-sm text-gray-500">{{ (document.fileSize / 1024)|round(2) }} KB</div>
                                 </div>
-                                <a href="{{ asset('uploads/ao_documents/' ~ document.fileName) }}"
+                                <a target="_blank" href="{{ asset('uploads/ao_documents/' ~ document.fileName) }}"
                                    download="{{ document.originalName }}"
                                    class="ml-2 flex-shrink-0 p-2 text-gray-400 hover:text-gray-500">
                                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
