@@ -33,12 +33,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 WORKDIR /app
 COPY . /app/
 
-RUN mkdir -p /tmp/cache /tmp/log /var/tmp/nginx \
-    && rm -rf /tmp/cache/* /tmp/log/* /var/tmp/nginx/* \
-    && chown -R www-data:www-data /tmp/cache /tmp/log /var/tmp/nginx \
-    && chmod -R 1777 /tmp \
-    && chmod -R 777 /app/public/uploads /app/var/cache /app/var/log
-
 CMD ["sh", "-c", "composer install --optimize-autoloader && php bin/console doctrine:schema:update --force && php-fpm"]
 
 EXPOSE 9000
