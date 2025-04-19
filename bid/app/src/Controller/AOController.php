@@ -14,9 +14,10 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -227,5 +228,20 @@ class AOController extends AbstractController
     public function downloadPdf(AO $ao): Response
     {
         return $this->file($this->getParameter('kernel.project_dir') . '/public' . $ao->getPdfPath());
+    }
+
+    #[Route('/document/{id}/view', name: 'document_view')]
+    public function viewDocument(AODocument $document, KernelInterface $kernelInterface): Response
+    {
+        $filePath = $kernelInterface->getProjectDir() .'/public/uploads/ao_documents/'.$document->getFileName();
+
+        return new BinaryFileResponse(
+            $filePath,
+            200,
+            [
+                'Content-Type' => $document->getMimeType(),
+                'Content-Disposition' => 'inline; filename="'.$document->getOriginalName().'"'
+            ]
+        );
     }
 }
