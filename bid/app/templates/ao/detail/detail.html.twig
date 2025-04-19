@@ -109,7 +109,7 @@
                                     <div class="text-sm font-medium text-gray-900 truncate">{{ document.originalName }}</div>
                                     <div class="text-sm text-gray-500">{{ (document.fileSize / 1024)|round(2) }} KB</div>
                                 </div>
-                                <a href="https://docs.google.com/viewer?url={{ absolute_url(path('app_ao_document_view', {'id': document.id})) }}"
+                                <a href="https://docs.google.com/viewer?url={{ absolute_url(path('app_ao_document_view', {'id': document.id})) }}&embedded=true"
                                    class="ml-2 flex-shrink-0 p-2 text-gray-400 hover:text-gray-500">
                                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
