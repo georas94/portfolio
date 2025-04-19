@@ -48,6 +48,8 @@ reload-nginx:
 db-drop:
 	$(php_console) doctrine:database:drop --force --if-exists
 
+db-reset: db-drop db-create db-schema
+
 db-create:
 	$(php_console) doctrine:database:create --if-not-exists
 
