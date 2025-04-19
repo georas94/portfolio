@@ -152,12 +152,12 @@ class DocumentManager
             ['Référence', $ao->getReference()],
             ['Budget', number_format($ao->getBudget(), 0, ',', ' ') . ' XOF'],
             ['Date limite', $ao->getDateLimite()->format('d/m/Y H:i')],
-            ['Secteur', $ao->getEntreprise()]
+            ['Secteur', strtoupper($ao->getEntreprise())]
         ]);
 
         // Section 2 : Informations sur le soumissionnaire (version compacte)
         $this->addCompactContentSection($pdf, 'INFORMATIONS SUR LE SOUMISSIONNAIRE', [
-            ['Entreprise', $user->getEntrepriseNom()],
+            ['Entreprise', strtoupper($user->getEntrepriseNom())],
             ['Représentant', $user->getFirstname()],
             ['Email', $user->getEmail()],
             ['Téléphone', $user->getPhoneNumber()]

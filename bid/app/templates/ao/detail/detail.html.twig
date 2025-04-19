@@ -42,29 +42,11 @@
         </div>
 
         <!-- Content -->
-        <div class="p-6 grid md:grid-cols-3 gap-8">
+        <div class="p-6 md:grid md:grid-cols-3 md:gap-8">
             <!-- Main -->
-            <div class="md:col-span-2">
+            <div class="md:col-span-2 h-80 md:h-2">
                 <div class="prose max-w-none">
                     {{ ao.description|markdown_to_html }}
-                </div>
-
-                <!-- Fichiers -->
-                <div class="mt-8">
-                    <h3 class="text-lg font-medium mb-4">Documents joints</h3>
-                    <div class="space-y-2">
-                        {% for document in ao.documents %}
-                            <a href="{{ asset('uploads/ao/' ~ document.filename) }}"
-                               class="flex items-center p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                                <svg class="h-5 w-5 text-gray-400 mr-3" fill="none" stroke="currentColor"
-                                     viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                </svg>
-                                <span>{{ document.originalFilename }}</span>
-                            </a>
-                        {% endfor %}
-                    </div>
                 </div>
             </div>
 
@@ -72,7 +54,7 @@
             <div class="space-y-6">
                 <!-- Stats -->
                 <div class="bg-gray-50 p-4 rounded-lg">
-                    <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="md:grid md:grid-cols-2 md:gap-4 sm:text-left md:text-center">
                         <div>
                             <p class="text-sm text-gray-500">Budget</p>
                             <p class="font-bold">{{ ao.budget|format_currency('XOF') }}</p>
@@ -99,10 +81,10 @@
                             Soumettre une offre
                         </a>
                     {% endif %}
-                    {% if ao.getFiles() %}
+                    {% if ao.getDocuments() %}
                         <a href="{{ path('app_ao_download_pdf', {id: ao.id}) }}"
-                           class="block w-full text-center px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           class="block w-full text-center px-4 py-3 text-white bg-gradient-to-r from-green-600 to-yellow-500 shadow-sm hover:from-green-700 hover:to-yellow-600 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                             </svg>
@@ -114,21 +96,21 @@
             {% if ao.documents|length > 0 %}
                 <div class="mt-8">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Pièces jointes</h3>
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="md:flex sm:grid-cols-2 gap-4">
                         {% for document in ao.documents %}
-                            <div class="flex items-center p-3 border border-gray-200 rounded-lg">
+                            <div class="md:w-60 flex items-center p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
                                 <div class="flex-shrink-0">
                                     <svg class="h-10 w-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                     </svg>
                                 </div>
-                                <div class="ml-4 overflow-hidden">
+                                <div class="ml-4 min-w-0 flex-1">
                                     <div class="text-sm font-medium text-gray-900 truncate">{{ document.originalName }}</div>
                                     <div class="text-sm text-gray-500">{{ (document.fileSize / 1024)|round(2) }} KB</div>
                                 </div>
                                 <a href="{{ asset('uploads/ao_documents/' ~ document.fileName) }}"
                                    download="{{ document.originalName }}"
-                                   class="ml-auto flex-shrink-0 p-2 text-gray-400 hover:text-gray-500">
+                                   class="ml-2 flex-shrink-0 p-2 text-gray-400 hover:text-gray-500">
                                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                     </svg>

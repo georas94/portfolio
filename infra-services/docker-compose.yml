@@ -26,6 +26,7 @@ services:
 
     nginx-proxy:
         image: 'jc21/nginx-proxy-manager:latest'
+        container_name: nginx-proxy-manager
         restart: unless-stopped
         ports:
             - '80:80'
@@ -50,20 +51,9 @@ services:
         networks:
             - tools
 
-#    ngrok:
-#        image: wernight/ngrok
-#        container_name: ngrok
-#        restart: unless-stopped
-#        volumes:
-#            - ./ngrok/ngrok.yml:/home/ngrok/.ngrok2/ngrok.yml
-#        ports:
-#            - "4040:4040"
-#        command: ["ngrok", "http", "8083"]
-#        networks:
-#            - tools
-
     phpmyadmin:
         image: phpmyadmin
+        container_name: phpmyadmin
         restart: always
         ports:
             - "8888:80"

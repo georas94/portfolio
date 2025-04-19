@@ -12,9 +12,14 @@ class StatutAOUtils
         'ATTRIBUE' => 'Attribué'
     ];
 
-    public static function getChoices(): array
+    public static function getChoices(bool $isCreation): array
     {
-        return array_flip(self::STATUTS);
+        $choices = self::STATUTS;
+        if ($isCreation) {
+            unset($choices['CLOTURE']);
+            unset($choices['ATTRIBUE']);
+        }
+        return array_flip($choices);
     }
 
     public static function getValues(): array

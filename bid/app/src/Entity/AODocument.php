@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -35,7 +36,7 @@ class AODocument
     private ?string $mimeType = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $uploadedAt = null;
+    private ?DateTimeImmutable $uploadedAt = null;
 
     public function getId(): ?int
     {

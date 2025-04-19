@@ -2,20 +2,24 @@
 
 namespace App\Controller;
 
-use AODocument;
 use App\Entity\AO;
+use App\Entity\AODocument;
 use App\Entity\Soumission;
 use App\Form\AOType;
 use App\Form\SoumissionType;
 use App\Service\AO\AOUtils;
 use App\Service\DocumentManager;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/ao', name: 'app_ao_')]
 class AOController extends AbstractController
@@ -56,7 +60,11 @@ class AOController extends AbstractController
     // 1. Création d'un nouvel AO
     #[Route('/nouveau', name: 'create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(Request $request): Response
+    public function create(
+        Request $request,
+        SluggerInterface $slugger,
+        #[Autowire('%kernel.project_dir%/public/uploads/ao_documents')] string $documentsDirectory
+    ): Response
     {
         $ao = new AO();
         $form = $this->createForm(AOType::class, $ao);
@@ -64,24 +72,44 @@ class AOController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // Gestion des fichiers uploadés
-            $uploadedFiles = $request->files->get('ao_form')['documents'] ?? [];
+            $uploadedFiles = $form->get('documents')->getData() ?? [];
             foreach ($uploadedFiles as $uploadedFile) {
-                if (!in_array($uploadedFile->getMimeType(), self::ALLOWED_DOCUMENT_TYPES)) {
-                    $this->addFlash('error', 'Type de fichier non autorisé: ' . $uploadedFile->getClientOriginalName());
+                // Vérifiez d'abord si le fichier est valide
+                if (!$uploadedFile->isValid()) {
+                    $this->addFlash('error', 'Fichier invalide: '.$uploadedFile->getClientOriginalName());
                     continue;
                 }
 
-                if ($uploadedFile->getSize() > 10 * 1024 * 1024) { // 10MB max
-                    $this->addFlash('error', 'Fichier trop volumineux: ' . $uploadedFile->getClientOriginalName());
+                // Vérifiez que le fichier temporaire existe
+                if (!file_exists($uploadedFile->getPathname())) {
+                    $this->addFlash('error', 'Erreur technique avec le fichier: '.$uploadedFile->getClientOriginalName());
                     continue;
                 }
-                $document = new AODocument();
-                $document->setFile($uploadedFile);
-                $document->setOriginalName($uploadedFile->getClientOriginalName());
-                $document->setMimeType($uploadedFile->getMimeType());
-                $document->setUploadedAt(new \DateTimeImmutable());
 
-                $ao->addDocument($document);
+                // Déplacez le fichier immédiatement
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
+                try {
+
+                    $document = new AODocument();
+                    $document->setFileName($newFilename); // Stockez le nom du fichier
+                    $document->setOriginalName($uploadedFile->getClientOriginalName()); // Conservez le nom original
+                    $document->setMimeType($uploadedFile->getMimeType());
+                    $document->setUploadedAt(new DateTimeImmutable());
+                    $document->setFileSize($uploadedFile->getSize());
+                    $ao->addDocument($document);
+
+                    $uploadedFile->move(
+                        $documentsDirectory,
+                        $newFilename
+                    );
+
+                    $this->em->persist($document);
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'enregistrement: '.$e->getMessage());
+                }
             }
 
             $pdfPath = $this->docManager->generateDossier($ao, $this->getUser());
