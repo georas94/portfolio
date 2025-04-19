@@ -109,28 +109,57 @@
                                     <div class="text-sm font-medium text-gray-900 truncate">{{ document.originalName }}</div>
                                     <div class="text-sm text-gray-500">{{ (document.fileSize / 1024)|round(2) }} KB</div>
                                 </div>
-                                {% if document.mimeType == 'application/pdf' %}
-                                    {# Lien de visualisation pour les PDF #}
-                                    <a href="https://docs.google.com/viewer?url={{ absolute_url(path('app_ao_document_view', {'id': document.id})) }}&embedded=true"
-                                       target="_blank"
-                                       class="ml-2 flex-shrink-0 p-2 text-blue-500 hover:text-blue-700"
-                                       title="Visualiser">
+
+                                {# Boutons d'action #}
+                                <div class="flex items-center">
+                                    {% if document.mimeType in ['image/jpeg', 'image/png', 'image/gif'] %}
+                                        {# Lightbox pour les images #}
+                                        <div x-data="{ open: false }" class="relative">
+                                            <button @click="open = true" class="ml-2 p-2 text-blue-500 hover:text-blue-700" title="Visualiser">
+                                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                </svg>
+                                            </button>
+
+                                            {# Lightbox Overlay #}
+                                            <div x-show="open"
+                                                 @click.away="open = false"
+                                                 class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+                                                <button @click="open = false"
+                                                        class="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none"
+                                                        aria-label="Fermer">
+                                                    <svg class="h-8 w-8 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                    </svg>
+                                                </button>
+                                                <img src="{{ asset('uploads/ao_documents/' ~ document.fileName) }}"
+                                                     alt="{{ document.originalName }}"
+                                                     class="max-w-full max-h-full object-contain">
+                                            </div>
+                                        </div>
+                                    {% elseif document.mimeType == 'application/pdf' %}
+                                        {# Nouvel onglet pour les PDF #}
+                                        <a href="{{ path('app_ao_document_preview', {'id': document.id}) }}"
+                                           target="_blank"
+                                           class="ml-2 p-2 text-blue-500 hover:text-blue-700"
+                                           title="Visualiser PDF">
+                                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
+
+                                    {# Téléchargement pour tous les formats #}
+                                    <a href="{{ asset('uploads/ao_documents/' ~ document.fileName) }}"
+                                       download="{{ document.originalName }}"
+                                       class="ml-2 p-2 text-gray-500 hover:text-gray-700"
+                                       title="Télécharger">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                         </svg>
                                     </a>
-                                {% endif %}
-
-                                {# Lien de téléchargement pour tous les formats #}
-                                <a target="_blank" href="{{ asset('uploads/ao_documents/' ~ document.fileName) }}"
-                                   download="{{ document.originalName }}"
-                                   class="ml-2 flex-shrink-0 p-2 text-gray-500 hover:text-gray-700"
-                                   title="Télécharger">
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                    </svg>
-                                </a>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>

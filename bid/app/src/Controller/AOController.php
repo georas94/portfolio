@@ -230,18 +230,36 @@ class AOController extends AbstractController
         return $this->file($this->getParameter('kernel.project_dir') . '/public' . $ao->getPdfPath());
     }
 
-    #[Route('/document/{id}/view', name: 'document_view')]
-    public function viewDocument(AODocument $document, KernelInterface $kernelInterface): Response
+    #[Route('/document/{id}/preview', name: 'document_preview')]
+    public function previewDocument(AODocument $document, KernelInterface $kernelInterface): Response
     {
-        $filePath = $kernelInterface->getProjectDir() .'/public/uploads/ao_documents/'.$document->getFileName();
+        $filePath = $kernelInterface->getProjectDir() .'/public/uploads/ao_documents/' . $document->getFileName();
+        $mimeType = $document->getMimeType();
 
-        return new BinaryFileResponse(
-            $filePath,
-            200,
-            [
-                'Content-Type' => $document->getMimeType(),
-                'Content-Disposition' => 'inline; filename="'.$document->getOriginalName().'"'
-            ]
-        );
+        if (!file_exists($filePath)) {
+            throw $this->createNotFoundException('Fichier introuvable');
+        }
+
+        // PDF - Stream avec en-têtes spécifiques
+        if ($mimeType === 'application/pdf') {
+            return new Response(
+                file_get_contents($filePath),
+                Response::HTTP_OK,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="'.$document->getOriginalName().'"'
+                ]
+            );
+        }
+
+        // Images - BinaryFileResponse standard
+        if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+            return new BinaryFileResponse($filePath, 200, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline'
+            ]);
+        }
+
+        throw $this->createNotFoundException('Type de fichier non supporté');
     }
 }
