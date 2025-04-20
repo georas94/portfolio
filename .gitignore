@@ -3,6 +3,8 @@
 **/var/
 **/node_modules/
 **/.idea/
+**/public/uploads/
+**/public/bundles/
 infra-services/data/*
 infra-services/docker/shared
 
@@ -13,4 +15,9 @@ infra-services/docker/shared
 *.DS_Store
 
 # Fichiers d'environnement
-*.env
+.env.*.local
+
+# Fichiers liés à phpunit
+**/phpunit.xml
+**/phpunit.xml.dist
+*.phpunit.result.cache

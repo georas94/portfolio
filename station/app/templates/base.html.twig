@@ -314,6 +314,7 @@
         <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
         <!-- End custom js for this page-->
         {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </body>
 </html>
