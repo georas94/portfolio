@@ -45,3 +45,6 @@ bash-station:
 
 bash-bid:
 	cd bid && make bash
+
+ps:
+	 docker ps

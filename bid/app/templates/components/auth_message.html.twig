@@ -1,0 +1,8 @@
+{% if error %}
+        <div class="max-w-md mx-auto mb-8">
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+                        <h1>{{ 'auth.error.title'|trans }}</h1>
+                        <p>{{ 'auth.error.description'|trans }}</p>
+                </div>
+        </div>
+{% endif %}

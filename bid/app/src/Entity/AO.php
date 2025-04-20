@@ -6,6 +6,7 @@ use App\Repository\AORepository;
 use App\Service\AO\StatutAOUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -31,12 +32,13 @@ class AO
     #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
-    #[Assert\NotBlank]
-    #[ORM\Column(length: 255)]
-    private ?string $entreprise = null;
+    #[Assert\NotNull]
+    #[ORM\ManyToOne(targetEntity: Entreprise::class, inversedBy: 'appelsOffre')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Entreprise $entreprise = null;
 
     #[Assert\NotBlank]
-    #[Assert\GreaterThan('today')]
+    #[Assert\GreaterThan('now')]
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $dateLimite = null;
 
@@ -45,8 +47,8 @@ class AO
     #[Assert\Positive]
     private ?float $budget = null;
 
-    #[ORM\Column(length: 20)]
     #[Assert\NotBlank]
+    #[ORM\Column(length: 20)]
     private ?string $statut = StatutAOUtils::STATUS_DRAFT;
 
     #[ORM\OneToMany(targetEntity: AODocument::class, mappedBy: 'ao', cascade: ['persist', 'remove'])]
@@ -60,6 +62,21 @@ class AO
 
     #[ORM\OneToMany(targetEntity: AOLog::class, mappedBy: 'ao')]
     private Collection $logs;
+
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::JSON)]
+    private array $location = []; // [latitude, longitude]
+
+    #[Assert\NotNull]
+    #[Assert\Type('array')]
+    #[Assert\Collection(
+        fields: [
+            'rayon' => new Assert\Required([new Assert\Positive()]),
+            'secteurs' => new Assert\Required([new Assert\Type('array')])
+        ]
+    )]
+    #[ORM\Column(type: 'json')]
+    private array $zoneImpact = ['rayon' => 10, 'secteurs' => []];
 
     public function __construct()
     {
@@ -192,13 +209,47 @@ class AO
         $this->pdfPath = $pdfPath;
     }
 
-    public function getEntreprise(): ?string
+    public function getEntreprise(): ?Entreprise
     {
         return $this->entreprise;
     }
 
-    public function setEntreprise(?string $entreprise): void
+    public function setEntreprise(?Entreprise $entreprise): self
     {
         $this->entreprise = $entreprise;
+        return $this;
+    }
+
+    public function getLocation(): array
+    {
+        return $this->location;
+    }
+
+    public function setLocation(float $latitude, float $longitude): void
+    {
+        $this->location = [
+            'lat' => $latitude,
+            'lng' => $longitude
+        ];
+    }
+
+    public function getZoneImpact(): array
+    {
+        return $this->zoneImpact;
+    }
+
+    public function setZoneImpact(array $zoneImpact): void
+    {
+        $this->zoneImpact = $zoneImpact;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->coordinates['lat'] ?? null;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->coordinates['lng'] ?? null;
     }
 }

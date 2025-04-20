@@ -1,0 +1,12 @@
+/* assets/styles/map.css */
+.leaflet-control-layers {
+    @apply bg-white p-2 rounded shadow;
+}
+.leaflet-popup-content {
+    @apply min-w-[200px] !important;
+}
+@media (max-width: 640px) {
+    #map {
+        height: 400px;
+    }
+}

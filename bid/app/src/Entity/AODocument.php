@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\AODocumentRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AODocumentRepository::class)]
 #[Vich\Uploadable]
 class AODocument
 {

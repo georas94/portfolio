@@ -1,0 +1,12 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@geoapify/leaflet-address-search-plugin": "^1.0.2",
+    "chart.js": "^4.4.9",
+    "leaflet": "^1.9.4",
+    "openlayers": "^4.6.5"
+  }
+}

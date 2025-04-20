@@ -40,7 +40,7 @@ class DocumentManager
         );
 
         $pdf->SetCreator('AO Burkina');
-        $pdf->SetAuthor($user->getEntrepriseNom());
+        $pdf->SetAuthor($user->getEmail());
         $pdf->SetTitle('Soumission ' . $ao->getReference());
         $pdf->SetAutoPageBreak(true, 25);
 
@@ -57,7 +57,7 @@ class DocumentManager
         $this->addModernHeader($pdf, $ao);
 
         // 4. Watermark discret
-        $this->addDiscreteWatermark($pdf, $user);
+        $this->addDiscreteWatermark($pdf, $user, $ao);
 
         // 5. Contenu principal structuré
         $this->addStructuredContent($pdf, $ao, $user);
@@ -74,7 +74,7 @@ class DocumentManager
             'ao' => $ao->getId()
         ];
         $ao->setPdfPath('/uploads/pdf/soumission_' . $ao->getId() . '.pdf');
-        $this->AOUtils->logDocument($ao, $this->getUser(), $documentData, 'DOCUMENT_DELETE');
+        $this->AOUtils->logDocument($ao, $user, $documentData, 'DOCUMENT_DELETE');
 
         return $ao;
     }
@@ -108,9 +108,9 @@ class DocumentManager
         $pdf->Line(20, 30, 190, 30);
     }
 
-    private function addDiscreteWatermark(TCPDF $pdf, User $user): void
+    private function addDiscreteWatermark(TCPDF $pdf, User $user, AO $ao): void
     {
-        $text = 'CONFIDENTIEL - ' . $user->getEntrepriseNom();
+        $text = 'CONFIDENTIEL - ' . $ao->getEntreprise()->getNom();
         $tempImage = tempnam(sys_get_temp_dir(), 'watermark') . '.png';
 
         // Création d'une image watermark
@@ -159,12 +159,12 @@ class DocumentManager
             ['Référence', $ao->getReference()],
             ['Budget', number_format($ao->getBudget(), 0, ',', ' ') . ' XOF'],
             ['Date de clôture', $ao->getDateLimite()->format('d/m/Y H:i')],
-            ['Secteur', strtoupper($ao->getEntreprise())]
+            ['Secteur', strtoupper($ao->getEntreprise()->getSector()->getLabel())]
         ]);
 
         // Section 2 : Informations sur le soumissionnaire (version compacte)
         $this->addCompactContentSection($pdf, 'INFORMATIONS SUR LE SOUMISSIONNAIRE', [
-            ['Entreprise', strtoupper($user->getEntrepriseNom())],
+            ['Entreprise', strtoupper($ao->getEntreprise()->getNom())],
             ['Représentant', $user->getFirstname()],
             ['Email', $user->getEmail()],
             ['Téléphone', $user->getPhoneNumber()]
@@ -247,7 +247,7 @@ class DocumentManager
         $footerText = sprintf(
             "Généré le %s par %s | %s | %s",
             date('d/m/Y H:i'),
-            $user->getEntrepriseNom(),
+            $user->getLastname(),
             $user->getEmail(),
             $user->getPhoneNumber()
         );

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\AO;
 use App\Entity\AODocument;
 use App\Entity\Soumission;
+use App\Enum\SectorEnum;
 use App\Form\AOType;
 use App\Form\SoumissionType;
 use App\Service\AO\AOUtils;
@@ -38,7 +39,7 @@ class AOController extends AbstractController
     ];
 
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly EntityManagerInterface $entityManager,
         private readonly DocumentManager        $docManager,
         private readonly AOUtils                $AOUtils
     )
@@ -50,23 +51,24 @@ class AOController extends AbstractController
     public function list(): Response
     {
         $status = [
-            StatutAOUtils::STATUS_PUBLISHED
+            StatutAOUtils::STATUS_ACTIVE
         ];
         if ($this->isGranted('ROLE_ADMIN')) {
             $status[] = StatutAOUtils::STATUS_DRAFT;
-            $status[] = StatutAOUtils::STATUS_PUBLISHED;
-            $status[] = StatutAOUtils::STATUS_ASSIGNED;
+            $status[] = StatutAOUtils::STATUS_ACTIVE;
+            $status[] = StatutAOUtils::STATUS_IN_PROGRESS;
             $status[] = StatutAOUtils::STATUS_CANCELLED;
         }
-        $aos = $this->em->getRepository(AO::class)
+        $aos = $this->entityManager->getRepository(AO::class)
             ->findBy(['statut' => $status], ['dateLimite' => 'ASC']);
 
         return $this->render('ao/list/list.html.twig', [
             'aos' => $aos,
             'cancelledStatus' => StatutAOUtils::STATUS_CANCELLED,
-            'publishedStatus' => StatutAOUtils::STATUS_PUBLISHED,
+            'publishedStatus' => StatutAOUtils::STATUS_ACTIVE,
             'draftStatus' => StatutAOUtils::STATUS_DRAFT,
-            'assignedStatus' => StatutAOUtils::STATUS_ASSIGNED
+            'assignedStatus' => StatutAOUtils::STATUS_IN_PROGRESS,
+            'SectorEnumCategories' => SectorEnum::getByCategory()
         ]);
     }
 
@@ -119,15 +121,15 @@ class AOController extends AbstractController
                         $newFilename
                     );
 
-                    $this->em->persist($document);
+                    $this->entityManager->persist($document);
                 } catch (\Exception $e) {
                     $this->addFlash('error', 'Erreur lors de l\'enregistrement: ' . $e->getMessage());
                 }
             }
 
             $ao = $this->docManager->generateDossier($ao, $this->getUser());
-            $this->em->persist($ao);
-            $this->em->flush();
+            $this->entityManager->persist($ao);
+            $this->entityManager->flush();
             $this->AOUtils->logChanges($ao, $this->getUser(), 'CREATE');
 
             $this->addFlash('create_ao_success', 'AO créé avec succès');
@@ -160,7 +162,7 @@ class AOController extends AbstractController
                 $this->AOUtils->logChanges($ao, $this->getUser(), 'PDF_REGENERATE');
             }
 
-            $this->em->flush();
+            $this->entityManager->flush();
 
             $this->addFlash('edit_ao_success', 'AO modifié avec succès');
             return $this->redirectToRoute('app_ao_detail', ['id' => $ao->getId()]);
@@ -189,14 +191,14 @@ class AOController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Génération du PDF
             $ao = $this->docManager->generateDossier($ao, $this->getUser());
-            $this->em->persist($ao);
-            $this->em->flush();
+            $this->entityManager->persist($ao);
+            $this->entityManager->flush();
 
             $soumission->setEntreprise($this->getUser());
             $soumission->setAo($ao);
             $soumission->setDateSoumission(new DateTime());
-            $this->em->persist($soumission);
-            $this->em->flush();
+            $this->entityManager->persist($soumission);
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Soumission enregistrée');
             return $this->redirectToRoute('app_ao_list');
@@ -215,9 +217,9 @@ class AOController extends AbstractController
         return $this->render('ao/detail/detail.html.twig', [
             'ao' => $ao,
             'cancelledStatus' => StatutAOUtils::STATUS_CANCELLED,
-            'publishedStatus' => StatutAOUtils::STATUS_PUBLISHED,
+            'publishedStatus' => StatutAOUtils::STATUS_ACTIVE,
             'draftStatus' => StatutAOUtils::STATUS_DRAFT,
-            'assignedStatus' => StatutAOUtils::STATUS_ASSIGNED,
+            'assignedStatus' => StatutAOUtils::STATUS_IN_PROGRESS,
             'canSubmit' => $this->isGranted('ROLE_ENTREPRISE')
                 && $ao->getDateLimite() > new DateTime()
         ]);
@@ -229,7 +231,7 @@ class AOController extends AbstractController
     public function close(AO $ao): Response
     {
         $ao->setStatut(StatutAOUtils::STATUS_CANCELLED);
-        $this->em->flush();
+        $this->entityManager->flush();
 
         // TODO: Notifier les participants
         $this->addFlash('success', 'AO clôturé');
@@ -245,9 +247,8 @@ class AOController extends AbstractController
     #[Route('/document/{id}/preview', name: 'document_preview')]
     public function previewDocument(AODocument $document, KernelInterface $kernelInterface): Response
     {
-        $filePath = $kernelInterface->getProjectDir() . '/public/uploads/ao_documents/' . $document->getFileName();
+        $filePath = $kernelInterface->getProjectDir() . '/public/uploads/ao_documents/test_pdf.pdf';// . $document->getFileName();
         $mimeType = $document->getMimeType();
-
         if (!file_exists($filePath)) {
             throw $this->createNotFoundException('Fichier introuvable');
         }
@@ -266,7 +267,7 @@ class AOController extends AbstractController
 
         // Images - BinaryFileResponse standard
         if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
-            return new BinaryFileResponse($filePath, 200, [
+            return new BinaryFileResponse($document->getFileName(), 200, [
                 'Content-Type' => $mimeType,
                 'Content-Disposition' => 'inline'
             ]);
@@ -295,8 +296,8 @@ class AOController extends AbstractController
                 unlink($filePath);
             }
 
-            $this->em->remove($document);
-            $this->em->flush();
+            $this->entityManager->remove($document);
+            $this->entityManager->flush();
 
             // 3. Logger la suppression spécifique
             $this->AOUtils->logDocument($ao, $this->getUser(), $documentData, 'DOCUMENT_DELETE');

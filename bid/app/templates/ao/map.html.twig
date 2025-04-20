@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Map{% endblock %}
+
 {% block body %}
     <div class="bg-white p-4 rounded-lg shadow-md mb-4">
         <h3 class="font-bold mb-3">Filtres Avancés</h3>
@@ -22,25 +24,9 @@
             <span id="budget-value" class="text-green-600 font-medium">Tous budgets</span>
         </div>
     </div>
-    <div id="map" class="h-[500px] border-2 border-green-600 rounded-xl shadow-xl"></div>
-    <div x-data="{ searchTerm: '' }" class="container mx-auto px-4 py-8">
-        <!-- Barre de recherche -->
-        <div class="mb-8">
-            <input x-model="searchTerm" type="text" placeholder="Rechercher par référence, titre..."
-                   class="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent">
-        </div>
 
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {% for ao in aos %}
-                <div x-show="searchTerm === '' ||
-                    '{{ ao.reference|lower }}'.includes(searchTerm.toLowerCase()) ||
-                    '{{ ao.titre|lower }}'.includes(searchTerm.toLowerCase())"
-                     class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                    {% include 'ao/component/_card.html.twig' with {'ao': ao, 'draftStatus': draftStatus} %}
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+    <div id="map" class="h-[500px] border-2 border-green-600 rounded-xl shadow-xl"></div>
+
     {% block javascripts %}
         <script>
             document.addEventListener('DOMContentLoaded', function () {

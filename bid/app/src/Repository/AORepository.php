@@ -20,20 +20,4 @@ class AORepository extends ServiceEntityRepository
     {
         parent::__construct($registry, AO::class);
     }
-
-
-//    /**
-//     * @return AO[] Returns an array of AO objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 }

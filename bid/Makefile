@@ -28,6 +28,9 @@ restart:
 clean-all:
 	docker system prune --all --force && docker system prune --all --force --volumes
 
+ps:
+	 docker compose ps
+
 ## PHP bash
 bash:
 	docker compose exec fpm bash

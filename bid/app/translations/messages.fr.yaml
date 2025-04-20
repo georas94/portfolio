@@ -1,0 +1,4 @@
+auth:
+  error:
+    title: "Problème de connexion"
+    description: "Vos identifiants ne correspondent pas à nos enregistrements"

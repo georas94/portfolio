@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\AO;
+use App\Entity\Entreprise;
 use App\Service\AO\StatutAOUtils;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,7 +21,11 @@ class AOType extends AbstractType
         $builder
             ->add('reference')
             ->add('titre')
-            ->add('entreprise')
+            ->add('entreprise', EntityType::class, [
+                'class' => Entreprise::class,
+                'choice_label' => 'nom',
+                'placeholder' => 'Choisir une entreprise'
+            ])
             ->add('description')
             ->add('dateLimite', null, [
                 'widget' => 'single_text',

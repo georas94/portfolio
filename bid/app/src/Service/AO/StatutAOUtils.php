@@ -5,14 +5,17 @@ namespace App\Service\AO;
 class StatutAOUtils
 {
     public const STATUS_DRAFT = 'DRAFT';
-    public const STATUS_PUBLISHED = 'PUBLISHED';
+    public const STATUS_ACTIVE = 'PUBLISHED';
     public const STATUS_CANCELLED = 'CANCELLED';
-    public const STATUS_ASSIGNED = 'ASSIGNED';
+    public const STATUS_IN_PROGRESS = 'IN_PROGRESS';
+    public const STATUS_EVALUATION = 'EVALUATION';
+    public const STATUS_ATTRIBUTED = 'ATTRIBUTED';
     public const STATUTS = [
         self::STATUS_DRAFT => 'Brouillon',
-        self::STATUS_PUBLISHED => 'Publié',
+        self::STATUS_ACTIVE => 'Actif',
         self::STATUS_CANCELLED => 'Clôturé',
-        self::STATUS_ASSIGNED => 'Attribué'
+        self::STATUS_IN_PROGRESS => 'En cours de traitement',
+        self::STATUS_ATTRIBUTED => "STATUS_ATTRIBUTED",
     ];
 
     public static function getChoices(bool $isCreation): array
@@ -20,7 +23,7 @@ class StatutAOUtils
         $choices = self::STATUTS;
         if ($isCreation) {
             unset($choices[self::STATUS_CANCELLED]);
-            unset($choices[self::STATUS_ASSIGNED]);
+            unset($choices[self::STATUS_IN_PROGRESS]);
         }
         return array_flip($choices);
     }

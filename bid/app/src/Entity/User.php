@@ -14,7 +14,7 @@ use App\Validator\Constraints as AppAssert;
 #[HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Il y a déjà un utilisateur possédant le même email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampTrait;
@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var ?string The hashed password
+     * @var ?string
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -82,7 +82,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -114,8 +113,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     public function getPhoneNumber(): ?string
@@ -157,10 +154,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsValid(?bool $isValid): void
     {
         $this->isValid = $isValid;
-    }
-
-    public function getEntrepriseNom(): ?string
-    {
-        return 'Pas encore de nom d\'entreprise';
     }
 }
