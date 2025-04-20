@@ -8,10 +8,12 @@ use App\Entity\Soumission;
 use App\Form\AOType;
 use App\Form\SoumissionType;
 use App\Service\AO\AOUtils;
+use App\Service\AO\StatutAOUtils;
 use App\Service\DocumentManager;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -37,24 +39,31 @@ class AOController extends AbstractController
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly DocumentManager        $docManager
-    ) {}
+        private readonly DocumentManager        $docManager,
+        private readonly AOUtils                $AOUtils
+    )
+    {
+    }
 
     // 3. Liste des AO
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(): Response
     {
         $status = [
-            'Publié'
+            StatutAOUtils::STATUS_PUBLISHED
         ];
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            $status[] = 'Brouillon';
+            $status[] = StatutAOUtils::STATUS_DRAFT;
         }
         $aos = $this->em->getRepository(AO::class)
             ->findBy(['statut' => $status], ['dateLimite' => 'ASC']);
 
         return $this->render('ao/list/list.html.twig', [
-            'aos' => $aos
+            'aos' => $aos,
+            'cancelledStatus' => StatutAOUtils::STATUS_CANCELLED,
+            'publishedStatus' => StatutAOUtils::STATUS_PUBLISHED,
+            'draftStatus' => StatutAOUtils::STATUS_DRAFT,
+            'assignedStatus' => StatutAOUtils::STATUS_ASSIGNED
         ]);
     }
 
@@ -62,8 +71,8 @@ class AOController extends AbstractController
     #[Route('/nouveau', name: 'create', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function create(
-        Request $request,
-        SluggerInterface $slugger,
+        Request                                                                $request,
+        SluggerInterface                                                       $slugger,
         #[Autowire('%kernel.project_dir%/public/uploads/ao_documents')] string $documentsDirectory
     ): Response
     {
@@ -77,13 +86,13 @@ class AOController extends AbstractController
             foreach ($uploadedFiles as $uploadedFile) {
                 // Vérifiez d'abord si le fichier est valide
                 if (!$uploadedFile->isValid()) {
-                    $this->addFlash('error', 'Fichier invalide: '.$uploadedFile->getClientOriginalName());
+                    $this->addFlash('error', 'Fichier invalide: ' . $uploadedFile->getClientOriginalName());
                     continue;
                 }
 
                 // Vérifiez que le fichier temporaire existe
                 if (!file_exists($uploadedFile->getPathname())) {
-                    $this->addFlash('error', 'Erreur technique avec le fichier: '.$uploadedFile->getClientOriginalName());
+                    $this->addFlash('error', 'Erreur technique avec le fichier: ' . $uploadedFile->getClientOriginalName());
                     continue;
                 }
 
@@ -91,7 +100,7 @@ class AOController extends AbstractController
                 $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
                 try {
 
                     $document = new AODocument();
@@ -109,15 +118,14 @@ class AOController extends AbstractController
 
                     $this->em->persist($document);
                 } catch (\Exception $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'enregistrement: '.$e->getMessage());
+                    $this->addFlash('error', 'Erreur lors de l\'enregistrement: ' . $e->getMessage());
                 }
             }
 
-            $pdfPath = $this->docManager->generateDossier($ao, $this->getUser());
-            $ao->setPdfPath($pdfPath);
+            $ao = $this->docManager->generateDossier($ao, $this->getUser());
             $this->em->persist($ao);
             $this->em->flush();
-            AOUtils::logChanges($ao, $this->getUser(), $this->em, 'CREATE');
+            $this->AOUtils->logChanges($ao, $this->getUser(), 'CREATE');
 
             $this->addFlash('create_ao_success', 'AO créé avec succès');
             return $this->redirectToRoute('app_ao_detail', ['id' => $ao->getId()]);
@@ -140,14 +148,13 @@ class AOController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $changes = AOUtils::getEntityChanges($originalAo, $ao);
             if (!empty($changes)) {
-                AOUtils::logChanges($ao, $this->getUser(), $this->em, 'UPDATE', $changes);
+                $this->AOUtils->logChanges($ao, $this->getUser(), 'UPDATE', $changes);
             }
 
             // Re-générer le PDF si nécessaire
             if ($form->get('regenerate_pdf')->getData()) {
-                $pdfPath = $this->docManager->generateDossier($ao, $this->getUser());
-                $ao->setPdfPath($pdfPath);
-                AOUtils::logChanges($ao, $this->getUser(), $this->em, 'PDF_REGENERATE');
+                $ao = $this->docManager->generateDossier($ao, $this->getUser());
+                $this->AOUtils->logChanges($ao, $this->getUser(), 'PDF_REGENERATE');
             }
 
             $this->em->flush();
@@ -167,9 +174,9 @@ class AOController extends AbstractController
     #[IsGranted('ROLE_ENTREPRISE')]
     public function submit(AO $ao, Request $request, DocumentManager $docManager): Response
     {
-        // Vérification date limite
+        // Vérification date de clôture
         if ($ao->getDateLimite() < new DateTime()) {
-            throw $this->createAccessDeniedException('La date limite est dépassée');
+            throw $this->createAccessDeniedException('La date de clôture est dépassée');
         }
 
         $soumission = new Soumission();
@@ -177,10 +184,8 @@ class AOController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
             // Génération du PDF
-            $pdfPath = $docManager->generateDossier($ao, $this->getUser());
-            $ao->setPdfPath($pdfPath);
+            $ao = $this->docManager->generateDossier($ao, $this->getUser());
             $this->em->persist($ao);
             $this->em->flush();
 
@@ -206,6 +211,10 @@ class AOController extends AbstractController
     {
         return $this->render('ao/detail/detail.html.twig', [
             'ao' => $ao,
+            'cancelledStatus' => StatutAOUtils::STATUS_CANCELLED,
+            'publishedStatus' => StatutAOUtils::STATUS_PUBLISHED,
+            'draftStatus' => StatutAOUtils::STATUS_DRAFT,
+            'assignedStatus' => StatutAOUtils::STATUS_ASSIGNED,
             'canSubmit' => $this->isGranted('ROLE_ENTREPRISE')
                 && $ao->getDateLimite() > new DateTime()
         ]);
@@ -216,7 +225,7 @@ class AOController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function close(AO $ao): Response
     {
-        $ao->setStatut('Clôturé');
+        $ao->setStatut(StatutAOUtils::STATUS_CANCELLED);
         $this->em->flush();
 
         // TODO: Notifier les participants
@@ -233,7 +242,7 @@ class AOController extends AbstractController
     #[Route('/document/{id}/preview', name: 'document_preview')]
     public function previewDocument(AODocument $document, KernelInterface $kernelInterface): Response
     {
-        $filePath = $kernelInterface->getProjectDir() .'/public/uploads/ao_documents/' . $document->getFileName();
+        $filePath = $kernelInterface->getProjectDir() . '/public/uploads/ao_documents/' . $document->getFileName();
         $mimeType = $document->getMimeType();
 
         if (!file_exists($filePath)) {
@@ -247,7 +256,7 @@ class AOController extends AbstractController
                 Response::HTTP_OK,
                 [
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="'.$document->getOriginalName().'"'
+                    'Content-Disposition' => 'inline; filename="' . $document->getOriginalName() . '"'
                 ]
             );
         }
@@ -261,5 +270,41 @@ class AOController extends AbstractController
         }
 
         throw $this->createNotFoundException('Type de fichier non supporté');
+    }
+
+    #[Route('/document/{id}/delete', name: 'delete_document', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteDocument(AODocument $document): Response
+    {
+        try {
+            // 1. Préparer les données avant suppression
+            $ao = $document->getAo();
+            $documentData = [
+                'id' => $document->getId(),
+                'fileName' => $document->getFileName(),
+                'originalName' => $document->getOriginalName(),
+                'ao' => $ao->getId()
+            ];
+
+            // 2. Supprimer le document
+            $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/ao_documents/' . $document->getFileName();
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+
+            $this->em->remove($document);
+            $this->em->flush();
+
+            // 3. Logger la suppression spécifique
+            $this->AOUtils->logDocument($ao, $this->getUser(), $documentData, 'DOCUMENT_DELETE');
+
+            return new Response(null, Response::HTTP_NO_CONTENT);
+
+        } catch (Exception $e) {
+            return new Response(
+                $e->getMessage(),
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }

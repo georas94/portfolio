@@ -47,7 +47,7 @@ class AO
 
     #[ORM\Column(length: 20)]
     #[Assert\NotBlank]
-    private ?string $statut = StatutAOUtils::DEFAULT_STATUS;
+    private ?string $statut = StatutAOUtils::STATUS_DRAFT;
 
     #[ORM\OneToMany(targetEntity: AODocument::class, mappedBy: 'ao', cascade: ['persist', 'remove'])]
     private Collection $documents;
@@ -135,6 +135,11 @@ class AO
     public function getStatut(): ?string
     {
         return $this->statut;
+    }
+
+    public function getStatutToPrint(): ?string
+    {
+        return StatutAOUtils::STATUTS[$this->statut] ?? null;
     }
 
     public function setStatut(string $statut): void

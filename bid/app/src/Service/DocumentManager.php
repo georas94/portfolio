@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\AO;
 use App\Entity\User;
+use App\Service\AO\AOUtils;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Component\Filesystem\Filesystem;
@@ -12,18 +13,16 @@ use TCPDF;
 
 class DocumentManager
 {
-    private readonly ParameterBagInterface $params;
-    private Filesystem $filesystem;
 
     public function __construct(
-        ParameterBagInterface $params,
-        Filesystem $filesystem,
-    ) {
-        $this->params = $params;
-        $this->filesystem = $filesystem;
+        readonly ParameterBagInterface $params,
+        readonly Filesystem            $filesystem,
+        readonly AOUtils               $AOUtils,
+    )
+    {
     }
 
-    public function generateDossier(AO $ao, User $user): string
+    public function generateDossier(AO $ao, User $user): AO
     {
         $projectDir = $this->params->get('kernel.project_dir');
         $outputDir = $projectDir . '/public/uploads/pdf/';
@@ -69,7 +68,15 @@ class DocumentManager
         // Sauvegarde
         $pdf->Output($outputPath, 'F');
 
-        return '/uploads/pdf/soumission_' . $ao->getId() . '.pdf';
+        $documentData = [
+            'id' => null,
+            'Nom Fichier' => 'soumission_' . $ao->getId() . '.pdf',
+            'ao' => $ao->getId()
+        ];
+        $ao->setPdfPath('/uploads/pdf/soumission_' . $ao->getId() . '.pdf');
+        $this->AOUtils->logDocument($ao, $this->getUser(), $documentData, 'DOCUMENT_DELETE');
+
+        return $ao;
     }
 
     private function addModernHeader(TCPDF $pdf, AO $ao): void
@@ -79,7 +86,7 @@ class DocumentManager
         $pdf->Rect(0, 0, 210, 30, 'F');
 
         // Logo (à adapter avec votre chemin)
-        $logoPath = $this->params->get('kernel.project_dir').'/public/images/logo.png';
+        $logoPath = $this->params->get('kernel.project_dir') . '/public/images/logo.png';
         if (file_exists($logoPath)) {
             $pdf->Image($logoPath, 20, 10, 30, 0, 'PNG');
         }
@@ -151,7 +158,7 @@ class DocumentManager
             ['Titre', $ao->getTitre()],
             ['Référence', $ao->getReference()],
             ['Budget', number_format($ao->getBudget(), 0, ',', ' ') . ' XOF'],
-            ['Date limite', $ao->getDateLimite()->format('d/m/Y H:i')],
+            ['Date de clôture', $ao->getDateLimite()->format('d/m/Y H:i')],
             ['Secteur', strtoupper($ao->getEntreprise())]
         ]);
 

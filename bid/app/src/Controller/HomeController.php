@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\AO;
 use App\Repository\AORepository;
+use App\Service\AO\StatutAOUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,7 @@ class HomeController extends AbstractController
     {
 
         $aos = $this->entityManager->getRepository(AO::class)
-            ->findBy(['statut' => 'PUBLIE'], ['dateLimite' => 'ASC'],  6);
+            ->findBy(['statut' => StatutAOUtils::STATUS_PUBLISHED], ['dateLimite' => 'ASC'], 6);
 
         return $this->render('home/index.html.twig', [
             'aos' => $aos,
