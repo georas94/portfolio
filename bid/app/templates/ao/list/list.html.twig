@@ -1,23 +1,200 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div x-data="{ searchTerm: '' }" class="container mx-auto px-4 py-8">
-        <!-- Barre de recherche -->
-        <div class="mb-8">
-            <input x-model="searchTerm" type="text" placeholder="Rechercher par référence, titre..."
-                   class="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent">
-        </div>
+    <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+        <h3 class="font-bold mb-3">Filtres Avancés</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Secteur filter -->
+            <select id="secteur-filter" class="border rounded p-2 text-sm">
+                <option value="">Tous secteurs</option>
+                <!-- Option dynamique plus fiable -->
+                {% set uniqueSectors = {} %}
+                {% for ao in aos %}
+                    {% set uniqueSectors = uniqueSectors|merge({(ao.entreprise.sector.code): ao.entreprise.sector.label}) %}
+                {% endfor %}
 
-        <!-- Cartes responsive -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {% for ao in aos %}
-                <div x-show="searchTerm === '' ||
-                    '{{ ao.reference|lower }}'.includes(searchTerm.toLowerCase()) ||
-                    '{{ ao.titre|lower }}'.includes(searchTerm.toLowerCase())"
-                     class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-                    {% include 'ao/component/_card.html.twig' with {'ao': ao} %}
-                </div>
-            {% endfor %}
+                {% for code, label in uniqueSectors %}
+                    <option value="{{ code }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+            <!-- Budget filter -->
+            <input type="range" id="budget-filter" min="0" max="1000000000" step="1000000" class="w-full">
+            <span id="budget-value" class="text-green-600 font-medium">Tous budgets</span>
         </div>
     </div>
+    <div id="map" class="h-[500px] border-2 border-green-600 rounded-xl shadow-xl"></div>
+    {% if aos|length > 0 %}
+        <div x-data="{ searchTerm: '' }" class="container mx-auto px-4 py-8">
+            <!-- Barre de recherche -->
+            <div class="mb-8">
+                <input x-model="searchTerm" type="text" placeholder="Rechercher par référence, titre..."
+                       class="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {% for ao in aos %}
+                    <div x-show="searchTerm === '' ||
+                        '{{ ao.reference|lower }}'.includes(searchTerm.toLowerCase()) ||
+                        '{{ ao.titre|lower }}'.includes(searchTerm.toLowerCase())"
+                         class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                        {% include 'ao/component/_card.html.twig' with {'ao': ao, 'draftStatus': draftStatus} %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    <div x-data="{ aos: {{ aos|json_encode|raw }} }">
+        <div x-show="aos.length === 0" class="text-gray-500">
+            Aucun appel d'offre trouvé.
+        </div>
+    </div>
+    {% block javascripts %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Initialisation de la carte
+                const map = L.map('map').setView([12.2383, -1.5616], 7);
+                L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+                // Configuration avancée du cluster
+                const markersCluster = L.markerClusterGroup({
+                    maxClusterRadius: 45,
+                    spiderfyOnMaxZoom: true,
+                    showCoverageOnHover: false,
+                    zoomToBoundsOnClick: true,
+                    iconCreateFunction: function (cluster) {
+                        const count = cluster.getChildCount();
+                        let size = 'small';
+
+                        if (count > 50) size = 'large';
+                        else if (count > 10) size = 'medium';
+
+                        // Icône SVG personnalisée avec votre palette
+                        const svgIcon = `
+                        <svg width="44" height="44" viewBox="0 0 44 44">
+                            <circle cx="22" cy="22" r="18" fill="${size === 'large' ? '#E63946' : size === 'medium' ? '#E9C46A' : '#529D58'}" opacity="0.7"/>
+                            <circle cx="22" cy="22" r="14" fill="${size === 'large' ? '#E63946' : size === 'medium' ? '#E9C46A' : '#529D58'}"/>
+                            <text x="22" y="26" font-size="14" fill="white" text-anchor="middle" font-weight="bold" font-family="Inter">
+                                ${count}
+                            </text>
+                        </svg>`;
+
+                        return L.divIcon({
+                            html: svgIcon,
+                            className: 'marker-cluster-custom',
+                            iconSize: L.point(44, 44)
+                        });
+                    }
+                });
+
+                // Données des projets
+                const projets = [
+                    {% for ao in aos %}
+                    {
+                        id: {{ ao.id }},
+                        lat: {{ ao.location['lat'] }},
+                        lng: {{ ao.location['lng'] }},
+                        secteurCode: "{{ ao.entreprise.sector.code }}",
+                        budget: {{ ao.budget }},
+                        popup: `<div class="popup-content">
+                        <h3 class="font-bold">{{ ao.titre }}</h3>
+                        <p><span class="font-semibold">Secteur:</span> {{ ao.entreprise.sector.label }}</p>
+                        <p><span class="font-semibold">Budget:</span> {{ ao.budget|number_format(0, ',', ' ') }} XOF</p>
+                        <div class="mt-2">
+                            <a href="{{ path('app_ao_detail', {id: ao.id}) }}" class="inline-block px-3 py-1 bg-primary text-white text-sm rounded hover:bg-green-600 transition-colors">
+                                Voir détails
+                            </a>
+                        </div>
+                    </div>`
+                    }{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ];
+
+                // Création des marqueurs
+                // Configuration des icônes par type de secteur (à placer avant la boucle forEach)
+                const secteurIcons = {
+                    'BTP': '🏗️',    // Bâtiment/Travaux Publics
+                    'INF': '💻',     // Informatique
+                    'ENV': '🌳',     // Environnement
+                    'SANT': '🏥',    // Santé
+                    'AGR': '🚜',     // Agriculture
+                    'EDU': '🏫',     // Éducation
+                    'ENE': '💡',     // Énergie
+                    'EAU': '💧'      // Eau
+                };
+
+                // Stockage des marqueurs dans un tableau
+                const markers = [];
+
+                // Création des marqueurs
+                projets.forEach(projet => {
+                    const secteurKey = projet.secteurCode.substring(0, 3);
+                    const customIcon = L.divIcon({
+                        html: `
+                            <div class="relative">
+                                <svg width="36" height="36" viewBox="0 0 36 36">
+                                    <circle cx="18" cy="18" r="16" fill="#529D58" stroke="#FFF" stroke-width="2"/>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center text-white text-xl">
+                                    ${secteurIcons[secteurKey] || '📍'}
+                                </div>
+                            </div>
+                        `,
+                        className: '',
+                        iconSize: [36, 36],
+                        popupAnchor: [0, -18]
+                    });
+
+                    const marker = L.marker([projet.lat, projet.lng], {
+                        icon: customIcon
+                    }).bindPopup(projet.popup);
+
+                    marker.projetData = projet;
+                    markers.push(marker); // Stocke le marqueur dans le tableau
+                    markersCluster.addLayer(marker);
+                });
+
+                // Fonction de filtrage corrigée
+                function updateMapFilters() {
+                    const secteur = document.getElementById('secteur-filter').value;
+                    const budget = parseInt(document.getElementById('budget-filter').value) || 0;
+
+                    markersCluster.clearLayers();
+
+                    let visibleCount = 0;
+
+                    // Utilise le tableau markers défini plus haut
+                    markers.forEach(marker => {
+                        const projet = marker.projetData;
+                        const secteurMatch = secteur === "" || projet.secteurCode === secteur;
+                        const budgetMatch = budget === 0 || projet.budget <= budget;
+
+                        if (secteurMatch && budgetMatch) {
+                            markersCluster.addLayer(marker);
+                            visibleCount++;
+                        }
+                    });
+
+                    document.getElementById('budget-value').innerText = formatXOF(budget);
+                }
+
+                // Initialisation du filtre de budget
+                document.getElementById('budget-filter').value = 0;
+                document.getElementById('budget-value').innerText = "Tous budgets";
+
+                map.addLayer(markersCluster);
+
+                // Format XOF
+                function formatXOF(val) {
+                    return val === 0 ? "Tous budgets" : val.toLocaleString('fr-FR') + ' XOF';
+                }
+
+                // Événements de mise à jour des filtres
+                document.getElementById('secteur-filter').addEventListener('change', updateMapFilters);
+                document.getElementById('budget-filter').addEventListener('input', function () {
+                    updateMapFilters();
+                });
+            });
+        </script>
+    {% endblock %}
 {% endblock %}
