@@ -10,6 +10,7 @@ infra-services/docker/shared
 *.log
 *.cache
 *.tmp
+*.DS_Store
 
 # Fichiers d'environnement
 *.env

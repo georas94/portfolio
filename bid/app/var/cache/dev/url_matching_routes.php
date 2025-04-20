@@ -58,7 +58,10 @@ return [
                         .')'
                         .'|(*:274)'
                     .')'
-                    .'|download/([^/]++)(*:300)'
+                    .'|do(?'
+                        .'|wnload/([^/]++)(*:303)'
+                        .'|cument/([^/]++)/preview(*:334)'
+                    .')'
                 .')'
             .')/?$}sDu',
     ],
@@ -75,8 +78,9 @@ return [
         249 => [[['_route' => 'app_ao_submit', '_controller' => 'App\\Controller\\AOController::submit'], ['id'], ['GET' => 0, 'POST' => 1], null, false, false, null]],
         265 => [[['_route' => 'app_ao_close', '_controller' => 'App\\Controller\\AOController::close'], ['id'], ['POST' => 0], null, false, false, null]],
         274 => [[['_route' => 'app_ao_detail', '_controller' => 'App\\Controller\\AOController::detail'], ['id'], ['GET' => 0], null, false, true, null]],
-        300 => [
-            [['_route' => 'app_ao_download_pdf', '_controller' => 'App\\Controller\\AOController::downloadPdf'], ['id'], null, null, false, true, null],
+        303 => [[['_route' => 'app_ao_download_pdf', '_controller' => 'App\\Controller\\AOController::downloadPdf'], ['id'], null, null, false, true, null]],
+        334 => [
+            [['_route' => 'app_ao_document_preview', '_controller' => 'App\\Controller\\AOController::previewDocument'], ['id'], null, null, false, false, null],
             [null, null, null, null, false, false, 0],
         ],
     ],
