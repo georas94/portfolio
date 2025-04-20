@@ -52,8 +52,11 @@ class AOController extends AbstractController
         $status = [
             StatutAOUtils::STATUS_PUBLISHED
         ];
-        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+        if ($this->isGranted('ROLE_ADMIN')) {
             $status[] = StatutAOUtils::STATUS_DRAFT;
+            $status[] = StatutAOUtils::STATUS_PUBLISHED;
+            $status[] = StatutAOUtils::STATUS_ASSIGNED;
+            $status[] = StatutAOUtils::STATUS_CANCELLED;
         }
         $aos = $this->em->getRepository(AO::class)
             ->findBy(['statut' => $status], ['dateLimite' => 'ASC']);
