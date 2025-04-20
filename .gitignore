@@ -16,6 +16,7 @@ infra-services/docker/shared
 
 # Fichiers d'environnement
 .env.*.local
+*.env.local
 
 # Fichiers liés à phpunit
 **/phpunit.xml

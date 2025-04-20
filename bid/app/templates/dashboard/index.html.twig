@@ -29,37 +29,38 @@
             Aucun appel d'offre trouvé.
         </div>
     </div>
-
-    <script>
-        function appelsOffresComponent() {
-            return {
-                search: '',
-                appelsOffres: [],
-                init() {
-                    const raw = this.$el.dataset.appelsOffres;
-                    try {
-                        this.appelsOffres = JSON.parse(raw);
-                        console.log("Appels d'offres chargés :", this.appelsOffres);
-                    } catch (e) {
-                        console.error("Erreur de parsing JSON :", e, raw);
+    {% block javascripts %}
+        <script>
+            function appelsOffresComponent() {
+                return {
+                    search: '',
+                    appelsOffres: [],
+                    init() {
+                        const raw = this.$el.dataset.appelsOffres;
+                        try {
+                            this.appelsOffres = JSON.parse(raw);
+                            console.log("Appels d'offres chargés :", this.appelsOffres);
+                        } catch (e) {
+                            console.error("Erreur de parsing JSON :", e, raw);
+                        }
+                    },
+                    get filteredAppels() {
+                        if (!this.search) return this.appelsOffres;
+                        const query = this.normalize(this.search);
+                        return this.appelsOffres.filter(a =>
+                            this.normalize(a.titre).includes(query)
+                            || this.normalize(a.description).includes(query)
+                            || this.normalize(a.organisation).includes(query)
+                        );
+                    },
+                    normalize(str) {
+                        return str
+                            .toLowerCase()
+                            .normalize("NFD") // décompose les accents
+                            .replace(/[\u0300-\u036f]/g, ""); // supprime les accents
                     }
-                },
-                get filteredAppels() {
-                    if (!this.search) return this.appelsOffres;
-                    const query = this.normalize(this.search);
-                    return this.appelsOffres.filter(a =>
-                        this.normalize(a.titre).includes(query)
-                        || this.normalize(a.description).includes(query)
-                        || this.normalize(a.organisation).includes(query)
-                    );
-                },
-                normalize(str) {
-                    return str
-                        .toLowerCase()
-                        .normalize("NFD") // décompose les accents
-                        .replace(/[\u0300-\u036f]/g, ""); // supprime les accents
-                }
-            };
-        }
-    </script>
+                };
+            }
+        </script>
+    {% endblock %}
 {% endblock %}

@@ -92,14 +92,16 @@
             </div>
         </div>
     </section>
-    <script>
-        document.querySelectorAll('.toggle-password').forEach(button => {
-            button.addEventListener('click', function() {
-                const input = this.parentElement.querySelector('input');
-                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                input.setAttribute('type', type);
-                this.querySelector('svg').classList.toggle('text-blue-500');
+    {% block javascripts %}
+        <script>
+            document.querySelectorAll('.toggle-password').forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.parentElement.querySelector('input');
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.querySelector('svg').classList.toggle('text-blue-500');
+                });
             });
-        });
-    </script>
+        </script>
+    {% endblock %}
 {% endblock %}

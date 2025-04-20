@@ -155,44 +155,46 @@
         </div>
     </section>
     <!-- Script pour basculer la visibilité du mot de passe -->
-    <script>
-        document.querySelector('.toggle-password').addEventListener('click', function () {
-            const input = this.parentElement.querySelector('input');
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            this.querySelector('svg').classList.toggle('text-blue-500');
-        });
+    {% block javascripts %}
+        <script>
+            document.querySelector('.toggle-password').addEventListener('click', function () {
+                const input = this.parentElement.querySelector('input');
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                this.querySelector('svg').classList.toggle('text-blue-500');
+            });
 
-        document.querySelector('input[name="registration_form[phoneNumber]"]').addEventListener('input', function(e) {
-            // Sauvegarde la position du curseur
-            const cursorPosition = e.target.selectionStart;
-            const originalLength = e.target.value.length;
+            document.querySelector('input[name="registration_form[phoneNumber]"]').addEventListener('input', function(e) {
+                // Sauvegarde la position du curseur
+                const cursorPosition = e.target.selectionStart;
+                const originalLength = e.target.value.length;
 
-            // Nettoyage
-            let value = e.target.value.replace(/\D/g, '');
+                // Nettoyage
+                let value = e.target.value.replace(/\D/g, '');
 
-            // Formatage automatique
-            if (value.length > 0) {
-                // Conversion +226/00226 en format local
-                if (value.startsWith('226')) {
-                    value = '0' + value.substring(3);
-                }
-
-                // Formatage avec espaces
-                let formatted = '';
-                for (let i = 0; i < value.length; i++) {
-                    if (i === 2 || i === 4 || i === 6) {
-                        formatted += ' ';
+                // Formatage automatique
+                if (value.length > 0) {
+                    // Conversion +226/00226 en format local
+                    if (value.startsWith('226')) {
+                        value = '0' + value.substring(3);
                     }
-                    formatted += value[i];
+
+                    // Formatage avec espaces
+                    let formatted = '';
+                    for (let i = 0; i < value.length; i++) {
+                        if (i === 2 || i === 4 || i === 6) {
+                            formatted += ' ';
+                        }
+                        formatted += value[i];
+                    }
+
+                    e.target.value = formatted.substring(0, 11); // 0X XX XX XX
                 }
 
-                e.target.value = formatted.substring(0, 11); // 0X XX XX XX
-            }
-
-            // Réajuste la position du curseur
-            const diff = e.target.value.length - originalLength;
-            e.target.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
-        });
-    </script>
+                // Réajuste la position du curseur
+                const diff = e.target.value.length - originalLength;
+                e.target.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+            });
+        </script>
+    {% endblock %}
 {% endblock %}
