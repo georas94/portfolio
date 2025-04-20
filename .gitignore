@@ -1,2 +1,15 @@
-/infra-services/docker/shared/mysql/
-/infra-services/data/
+# Dossiers à ignorer
+**/vendor/
+**/var/
+**/node_modules/
+**/.idea/
+infra-services/data/*
+infra-services/docker/shared
+
+# Fichiers temporaires/caches
+*.log
+*.cache
+*.tmp
+
+# Fichiers d'environnement
+*.env
