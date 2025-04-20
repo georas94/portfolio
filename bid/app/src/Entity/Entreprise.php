@@ -30,7 +30,7 @@ class Entreprise
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $logo = null;
 
-    #[ORM\OneToMany(targetEntity: "App\Entity\Ao", mappedBy: "entreprise")]
+    #[ORM\OneToMany(targetEntity: AO::class, mappedBy: "entreprise")]
     private Collection $aos;
 
     #[ORM\OneToMany(targetEntity: AO::class, mappedBy: 'entreprise')]
