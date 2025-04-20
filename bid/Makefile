@@ -23,7 +23,7 @@ stop:
 	docker compose down
 
 restart:
-	docker compose down && docker compose up -d --remove-orphans
+	docker compose down && docker compose up -d --remove-orphans --build
 
 clean-all:
 	docker system prune --all --force && docker system prune --all --force --volumes
