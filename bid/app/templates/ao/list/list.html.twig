@@ -41,12 +41,12 @@
                 {% endfor %}
             </div>
         </div>
-        <div x-data="{ aos: {{ aos|json_encode|raw }} }">
-            <div x-show="aos.length === 0" class="text-gray-500">
-                Aucun appel d'offre trouvé.
-            </div>
-        </div>
     {% endif %}
+    <div x-data="{ aos: {{ aos|json_encode|raw }} }">
+        <div x-show="aos.length === 0" class="text-gray-500">
+            Aucun appel d'offre trouvé.
+        </div>
+    </div>
     {% block javascripts %}
         <script>
             document.addEventListener('DOMContentLoaded', function () {
