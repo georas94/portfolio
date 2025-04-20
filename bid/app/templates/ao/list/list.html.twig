@@ -30,7 +30,6 @@
                 <input x-model="searchTerm" type="text" placeholder="Rechercher par référence, titre..."
                        class="w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-transparent">
             </div>
-
             <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {% for ao in aos %}
                     <div x-show="searchTerm === '' ||
@@ -40,6 +39,11 @@
                         {% include 'ao/component/_card.html.twig' with {'ao': ao, 'draftStatus': draftStatus} %}
                     </div>
                 {% endfor %}
+            </div>
+        </div>
+        <div x-data="{ aos: {{ aos|json_encode|raw }} }">
+            <div x-show="aos.length === 0" class="text-gray-500">
+                Aucun appel d'offre trouvé.
             </div>
         </div>
     {% endif %}
