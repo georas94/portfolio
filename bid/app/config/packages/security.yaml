@@ -32,9 +32,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/ao, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/ao/nouveau, roles: ROLE_ADMIN }
         - { path: ^/ao/\d+/soumettre, roles: ROLE_ENTREPRISE }
         - { path: ^/api/notifications, roles: IS_AUTHENTICATED_FULLY }
+        - { path: '^/connexion', roles: [IS_AUTHENTICATED_FULLY] }
 
 when@test:
     security:
