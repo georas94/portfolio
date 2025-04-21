@@ -11,23 +11,30 @@ use App\Form\SoumissionType;
 use App\Service\AO\AOUtils;
 use App\Service\AO\StatutAOUtils;
 use App\Service\DocumentManager;
+use App\Service\GeoService;
+use App\Service\MapHelper;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/ao', name: 'app_ao_')]
 class AOController extends AbstractController
 {
+    //Par défaut 700 000 000 millions Xof
+    private const FILTER_MAX_VALUE = 700000000;
     private const ALLOWED_DOCUMENT_TYPES = [
         'application/pdf',
         'image/jpeg',
@@ -41,14 +48,15 @@ class AOController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly DocumentManager        $docManager,
-        private readonly AOUtils                $AOUtils
+        private readonly AOUtils                $AOUtils,
+        private readonly geoService                $geoService
     )
     {
     }
 
     // 3. Liste des AO
     #[Route('/', name: 'list', methods: ['GET'])]
-    public function list(): Response
+    public function list(SerializerInterface $serializer, Request $request): Response
     {
         $status = [
             StatutAOUtils::STATUS_ACTIVE
@@ -59,11 +67,50 @@ class AOController extends AbstractController
             $status[] = StatutAOUtils::STATUS_IN_PROGRESS;
             $status[] = StatutAOUtils::STATUS_CANCELLED;
         }
-        $aos = $this->entityManager->getRepository(AO::class)
-            ->findBy(['statut' => $status], ['dateLimite' => 'ASC']);
 
+        $q = $request->query->get('q', '');
+        $min = $request->query->get('min' , '');
+        $max = $request->query->get('max', '');
+
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('ao')
+            ->from(AO::class, 'ao')
+            ->leftJoin('ao.entreprise', 'e')->addSelect('e');
+
+        $qb->andWhere('ao.statut IN (:statuts)')->setParameter('statuts', $status);
+        if ($q) {
+            $qb->andWhere('ao.titre LIKE :q OR e.nom LIKE :q')->setParameter('q', "%{$q}%");
+        }
+        if ($min) {
+            $qb->andWhere('ao.budget >= :min')->setParameter('min', $min);
+        }
+        if ($max) {
+            $qb->andWhere('ao.budget <= :max')->setParameter('max', $max);
+        }
+
+        $aos = $qb->orderBy('ao.dateLimite', 'ASC')->getQuery()->getResult();
+
+        // Si requête AJAX, on renvoie JSON
+        if ($request->isXmlHttpRequest()) {
+            // Formatage des données pour AJAX
+            $data = [
+                'html' => $this->renderView('ao/component/_results.html.twig', ['aos' => $aos]),
+                'markers' => $this->formatMarkers($aos), // Données pour la carte,
+                'count' => count($aos),
+                'sample' => array_slice($aos, 0, 5), // Affiche max 5 éléments en preview
+                'bounds' => MapHelper::calculateBounds($aos) // Calcul des coordonnées du cluster
+            ];
+
+            return new JsonResponse($data);
+        }
+
+        // Sinon page normale
         return $this->render('ao/list/list.html.twig', [
             'aos' => $aos,
+            'q' => $q,
+            'min' => $min,
+            'max' => $max,
+            'filterMaxValue' => self::FILTER_MAX_VALUE,
             'cancelledStatus' => StatutAOUtils::STATUS_CANCELLED,
             'publishedStatus' => StatutAOUtils::STATUS_ACTIVE,
             'draftStatus' => StatutAOUtils::STATUS_DRAFT,
@@ -310,5 +357,19 @@ class AOController extends AbstractController
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    private function formatMarkers(array $aos): array
+    {
+        return array_map(function(AO $ao) {
+            $address = $this->geoService->getLocation($ao->getLocation()['lat'], $ao->getLocation()['lng']);
+            $label = $this->geoService->getCityLabel($address);
+            return [
+                'lat' => $ao->getLocation()['lat'],
+                'lng' => $ao->getLocation()['lng'],
+                'popup' => $this->renderView('ao/component/_popup.html.twig', ['ao' => $ao]),
+                'city' => $label,
+            ];
+        }, $aos);
     }
 }

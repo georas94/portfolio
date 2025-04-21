@@ -1,0 +1,8 @@
+{% for ao in aos %}
+    <div class="p-4 bg-white shadow rounded border">
+        <h3 class="font-semibold">{{ ao.titre }}</h3>
+        <p class="text-sm text-gray-600">{{ ao.entreprise.nom }} – {{ ao.budget|number_format(0,'',' ') }} FCFA</p>
+    </div>
+{% else %}
+    <p class="text-gray-500">Aucun résultat.</p>
+{% endfor %}

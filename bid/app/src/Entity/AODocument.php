@@ -6,6 +6,7 @@ use App\Repository\AODocumentRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: AODocumentRepository::class)]
@@ -15,28 +16,36 @@ class AODocument
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'documents')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?AO $ao = null;
 
     #[Vich\UploadableField(mapping: 'ao_documents', fileNameProperty: 'fileName', size: 'fileSize')]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?File $file = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $fileName = null;
 
     #[ORM\Column]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?int $fileSize = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $originalName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $mimeType = null;
 
     #[ORM\Column]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?DateTimeImmutable $uploadedAt = null;
 
     public function getId(): ?int

@@ -12,7 +12,7 @@
                 <!-- Option dynamique plus fiable -->
                 {% set uniqueSectors = {} %}
                 {% for ao in aos %}
-                    {% set uniqueSectors = uniqueSectors|merge({(ao.entreprise.sector.code): ao.entreprise.sector.label}) %}
+                    {% set uniqueSectors = uniqueSectors|merge({(ao.entreprise.sectorData.code): ao.entreprise.sectorData.label}) %}
                 {% endfor %}
 
                 {% for code, label in uniqueSectors %}
@@ -74,11 +74,11 @@
                         id: {{ ao.id }},
                         lat: {{ ao.location['lat'] }},
                         lng: {{ ao.location['lng'] }},
-                        secteurCode: "{{ ao.entreprise.sector.code }}",
+                        secteurCode: "{{ ao.entreprise.sectorData.code }}",
                         budget: {{ ao.budget }},
                         popup: `<div class="popup-content">
                         <h3 class="font-bold">{{ ao.titre }}</h3>
-                        <p><span class="font-semibold">Secteur:</span> {{ ao.entreprise.sector.label }}</p>
+                        <p><span class="font-semibold">Secteur:</span> {{ ao.entreprise.sectorData.label }}</p>
                         <p><span class="font-semibold">Budget:</span> {{ ao.budget|number_format(0, ',', ' ') }} XOF</p>
                         <div class="mt-2">
                             <a href="{{ path('app_ao_detail', {id: ao.id}) }}" class="inline-block px-3 py-1 bg-primary text-white text-sm rounded hover:bg-green-600 transition-colors">

@@ -9,46 +9,56 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AORepository::class)]
+#[ORM\Table(name: "ao")]
 class AO
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 50)]
     #[ORM\Column(length: 50)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $reference = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $titre = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: 'text')]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $description = null;
 
     #[Assert\NotNull]
     #[ORM\ManyToOne(targetEntity: Entreprise::class, inversedBy: 'appelsOffre')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?Entreprise $entreprise = null;
 
     #[Assert\NotBlank]
     #[Assert\GreaterThan('now')]
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?\DateTimeInterface $dateLimite = null;
 
     #[ORM\Column(type: 'float')]
     #[Assert\NotBlank]
     #[Assert\Positive]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?float $budget = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 20)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $statut = StatutAOUtils::STATUS_DRAFT;
 
     #[ORM\OneToMany(targetEntity: AODocument::class, mappedBy: 'ao', cascade: ['persist', 'remove'])]
@@ -58,6 +68,7 @@ class AO
     private Collection $soumissions;
 
     #[ORM\Column(length: 255, options: ['nullable' => true])]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $pdfPath = null;
 
     #[ORM\OneToMany(targetEntity: AOLog::class, mappedBy: 'ao')]
@@ -65,6 +76,7 @@ class AO
 
     #[Assert\NotNull]
     #[ORM\Column(type: Types::JSON)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private array $location = []; // [latitude, longitude]
 
     #[Assert\NotNull]

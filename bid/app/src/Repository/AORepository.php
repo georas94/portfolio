@@ -20,4 +20,28 @@ class AORepository extends ServiceEntityRepository
     {
         parent::__construct($registry, AO::class);
     }
+
+    public function searchFiltered(string $term, ?float $budgetMin, ?float $budgetMax): array
+    {
+        $qb = $this->createQueryBuilder('ao')
+            ->join('ao.entreprise', 'e')
+            ->addSelect('e');
+
+        if ($term) {
+            $qb->andWhere('ao.nom LIKE :term OR e.nom LIKE :term')
+                ->setParameter('term', "%$term%");
+        }
+
+        if ($budgetMin) {
+            $qb->andWhere('ao.budget >= :budgetMin')
+                ->setParameter('budgetMin', $budgetMin);
+        }
+
+        if ($budgetMax) {
+            $qb->andWhere('ao.budget <= :budgetMax')
+                ->setParameter('budgetMax', $budgetMax);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

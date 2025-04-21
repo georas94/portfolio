@@ -14,7 +14,7 @@ class SectorEnum
     public const WATER = 'ENV01';
     public const SANITATION = 'ENV02';
     public const HEALTH = 'SOC01';
-    public const EDUCATION = 'SOC02';
+    public const EDUCATION = 'EDU02';
     public const AGRICULTURE = 'AGR01';
     public const LIVESTOCK = 'AGR02';
     public const TRANSPORT = 'INF01';

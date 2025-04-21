@@ -8,6 +8,7 @@ use App\ValueObject\Sector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EntrepriseRepository::class)]
 #[ORM\Table(name: "entreprise")]
@@ -16,18 +17,23 @@ class Entreprise
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?int $id = null;
 
     #[ORM\Column(type: "string", length: 255)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private string $nom;
 
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     #[ORM\Column(type: "string", length: 20)]
     private string $sectorCode;
 
     #[ORM\Column(type: "text", nullable: true)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $description = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $logo = null;
 
     #[ORM\OneToMany(targetEntity: AO::class, mappedBy: "entreprise")]
@@ -59,16 +65,25 @@ class Entreprise
         return $this;
     }
 
-    public function getSector(): Sector
+    public function getSectorCode(): Sector
     {
         return SectorEnum::getSector($this->sectorCode);
     }
 
-    public function setSector(Sector $sector): void
+    public function setSectorCode(Sector $sectorCode): void
     {
-        $this->sectorCode = $sector->getCode();
+        $this->sectorCode = $sectorCode->getCode();
     }
 
+    #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
+    public function getSectorCodeData(): array
+    {
+        return [
+            'code' => $this->sectorCode,
+            'label' => $this->getSectorCode()->getLabel(),
+            'category' => $this->getSectorCode()->getCategory(),
+        ];
+    }
 
     public function getDescription(): ?string
     {

@@ -159,7 +159,7 @@ class DocumentManager
             ['Référence', $ao->getReference()],
             ['Budget', number_format($ao->getBudget(), 0, ',', ' ') . ' XOF'],
             ['Date de clôture', $ao->getDateLimite()->format('d/m/Y H:i')],
-            ['Secteur', strtoupper($ao->getEntreprise()->getSector()->getLabel())]
+            ['Secteur', strtoupper($ao->getEntreprise()->getSectorCode()->getLabel())]
         ]);
 
         // Section 2 : Informations sur le soumissionnaire (version compacte)

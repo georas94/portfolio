@@ -6,6 +6,7 @@ use App\Entity\AO;
 use App\Entity\AODocument;
 use App\Entity\Entreprise;
 use App\Enum\SectorEnum;
+use App\Repository\AORepository;
 use App\Service\AO\StatutAOUtils;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -81,7 +82,7 @@ class TestDataController extends AbstractController
             foreach ($nomsEntreprises as $nom) {
                 $entreprise = new Entreprise();
                 $entreprise->setNom($nom);
-                $entreprise->setSector(SectorEnum::getSector(SectorEnum::getRandomCodes(rand(1, 3))[0])); // codes des secteurs
+                $entreprise->setSectorCode(SectorEnum::getSector(SectorEnum::getRandomCodes(rand(1, 6))[0])); // codes des secteurs
                 $em->persist($entreprise);
                 $entreprises[] = $entreprise;
             }

@@ -7,6 +7,11 @@ framework:
 
     trusted_proxies: '%env(TRUSTED_PROXIES)%'
     trusted_headers: [ 'x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-host' ]
+    rate_limiter:
+        popup_limits:
+            policy: 'fixed_window'
+            limit: 100
+            interval: '1 minute'
 
 when@test:
     framework:

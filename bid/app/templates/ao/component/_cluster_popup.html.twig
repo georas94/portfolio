@@ -1,0 +1,19 @@
+<div class="cluster-popup">
+    <h4 class="font-bold text-lg">{{ count }} projets</h4>
+
+    <div class="mt-2 max-h-[200px] overflow-y-auto">
+        <ul class="space-y-1">
+            {% for ao in sample %}
+                <li class="text-sm p-1 hover:bg-gray-100 rounded">
+                    <a href="{{ path('app_ao_detail', {id: ao.id}) }}" class="block">
+                        {{ ao.titre }} ({{ ao.budget|number_format(0, ',', ' ') }} XOF)
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <button onclick="map.fitBounds([[{{ bounds._southWest.lat }}, {{ bounds._southWest.lng }}],
+            [{{ bounds._northEast.lat }}, {{ bounds._northEast.lng }}]])">
+        Zoom sur zone
+    </button>
+</div>
