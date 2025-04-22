@@ -41,3 +41,11 @@ details summary {
     cursor: pointer;
     transition: margin 0.2s ease;
 }
+#clear-search {
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+#clear-search:hover {
+    opacity: 0.8;
+}

@@ -1,5 +1,5 @@
 {% for ao in aos %}
-    <div class="p-4 bg-white shadow rounded border">
+    <div class="p-4 bg-white shadow rounded border cursor-pointer" data-ao-id="{{ ao.id }}">
         <h3 class="font-semibold">{{ ao.titre }}</h3>
         <p class="text-sm text-gray-600">{{ ao.entreprise.nom }} – {{ ao.budget|number_format(0,'',' ') }} FCFA</p>
     </div>

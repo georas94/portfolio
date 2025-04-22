@@ -2,15 +2,16 @@
 {% block body %}
     <div class="md:max-w-6xl mx-auto p-4 space-y-6">
         <form id="filter-form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <input type="text" name="q" value="{{ q }}" placeholder="Recherche..." class="border p-2 rounded" />
+            <input type="text" id="search-input" name="q" value="{{ q }}" placeholder="Recherche..." class="border p-2 rounded" />
             <div>
                 <label for="min" class="block text-sm text-gray-600">Min</label>
                 <input type="number"
                        id="min"
                        name="min"
-                       value="{{ min is not empty ? min : '' }}"
+                       value="{{ min is not empty ? min|number_format(0, '', ' ') : '' }}"
                        placeholder="Budget min"
-                       class="border p-2 rounded w-full" />
+                       class="border p-2 rounded w-full number-input"
+                       data-original-value="{{ min }}" />
             </div>
 
             <div>
@@ -23,11 +24,12 @@
                 <input type="number"
                        id="max"
                        name="max"
-                       value="{{ max is not empty ? max|number_format(0, '', ' ') : filterMaxValue|number_format(0, '', ' ') }}"
+                       value="{{ max is not empty ? max|number_format(0, '', ' ') : (filterMaxValue ? filterMaxValue|number_format(0, '', ' ') : '') }}"
                        placeholder="Budget max"
-                       class="border p-2 rounded w-full" />
+                       class="border p-2 rounded w-full number-input"
+                       data-original-value="{{ max }}" />
             </div>
-            <button id="filter-btn" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            <button id="filter-btn" type="button" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 h-fit self-end">
                 Filtrer
             </button>
         </form>
@@ -150,7 +152,6 @@
                     return marker;
                 }
 
-
                 // Initialisation des marqueurs
                 const initialData = {{ aos|map(ao => {
                     id: ao.id,
@@ -180,30 +181,67 @@
                 });
 
                 // Gestion des filtres
-                document.getElementById('filter-btn').addEventListener('click', async function() {
+                document.getElementById('filter-btn').addEventListener('click', async function(e) {
                     const spinner = document.getElementById('spinner');
                     spinner.classList.remove('hidden');
 
                     try {
-                        const response = await fetch('{{ path("app_ao_list") }}?' + new URLSearchParams(new FormData(document.getElementById('filter-form'))));
+                        const form = document.getElementById('filter-form');
+                        const params = new URLSearchParams(new FormData(form));
+                        const url = '{{ path("app_ao_list") }}?' + params;
+
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json',
+                            },
+                        });
+
                         const data = await response.json();
 
                         // Mise à jour des résultats
                         document.getElementById('result-list').innerHTML = data.html;
 
-                        // Mise à jour de la carte
+                        // Mise à jour de la carte (Leaflet)
                         markersCluster.clearLayers();
-                        data.markers.forEach(ao => {
-                            const marker = createMarker(ao);
-                            markerLookup[ao.id] = marker;
+                        data.markers.forEach(markerData => {
+                            const marker = L.marker([markerData.lat, markerData.lng])
+                                .bindPopup(markerData.popup);
                             markersCluster.addLayer(marker);
                         });
+
+                        // todo : a reprendre pour de meilleures perfs avec un test de monté en charge
+                        // Mise à jour de la carte
+                        // markersCluster.clearLayers();
+                        // data.markers.forEach(ao => {
+                        //     const item = this.parent.find('').dataset.dataAoId;
+                        //     console.log('item: ' + item)
+                        //     if (!item) return;
+                        //
+                        //     const marker = createMarker(ao);
+                        //     markerLookup[ao.id] = marker;
+                        //     markersCluster.addLayer(marker);
+                        // });
                     } catch (error) {
                         console.error('Erreur:', error);
                     } finally {
                         spinner.classList.add('hidden');
                     }
                 });
+
+                // const searchInput = document.getElementById('search-input');
+                // const clearSearch = document.getElementById('clear-search');
+
+                // searchInput.addEventListener('input', function() {
+                //     clearSearch.classList.toggle('hidden', this.value === '');
+                // });
+                //
+                // clearSearch.addEventListener('click', function() {
+                //     searchInput.value = '';
+                //     this.classList.add('hidden');
+                //     document.getElementById('filter-btn').click(); // Déclenche le filtrage
+                // });
             });
         </script>
     {% endblock %}
