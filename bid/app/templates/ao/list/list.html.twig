@@ -43,14 +43,12 @@
                 </svg>
             </div>
             <div id="result-list" class="space-y-4 overflow-auto max-h-96 order-3 md:order-1 md:w-1/2">
-                {# Résultats d'abord server-side, pour le SEO et le premier chargement #}
                 {% for ao in aos %}
-                    <div class="p-4 bg-white shadow rounded border cursor-pointer">
+                    <div class="p-4 bg-white shadow rounded border cursor-pointer hover:bg-gray-50 transition-colors"
+                         data-ao-id="{{ ao.id }}">
                         <h3 class="font-semibold">{{ ao.titre }}</h3>
                         <p class="text-sm text-gray-600">{{ ao.entreprise.nom }} - {{ ao.budget|number_format(0,'',' ') }} FCFA</p>
                     </div>
-                {% else %}
-                    <p class="text-gray-500">Aucun résultat.</p>
                 {% endfor %}
             </div>
             <div id="map" class="h-96 rounded border order-2 md:order-2 md:w-1/2"></div>
@@ -59,246 +57,149 @@
     {% block javascripts %}
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Initialisation de la carte
                 const map = L.map('map').setView([12.2383, -1.5616], 7);
                 L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    attribution: '&copy; OpenStreetMap'
                 }).addTo(map);
 
-                // Configuration avancée du cluster
+                // Configuration du cluster
                 const markersCluster = L.markerClusterGroup({
-                    maxClusterRadius: 45,
+                    maxClusterRadius: 60,
                     spiderfyOnMaxZoom: true,
                     showCoverageOnHover: false,
                     zoomToBoundsOnClick: true,
-                    // spiderfyOnMaxZoom: false, // Désactive l'éclatement auto
-                    // showCoverageOnHover: false,
                     iconCreateFunction: function (cluster) {
                         const count = cluster.getChildCount();
-                        let size = 'small';
-
-                        if (count > 50) size = 'large';
-                        else if (count > 10) size = 'medium';
-
-                        // Icône SVG personnalisée avec votre palette
-                        const svgIcon = `
-                        <svg width="44" height="44" viewBox="0 0 44 44">
-                            <circle cx="22" cy="22" r="18" fill="${size === 'large' ? '#E63946' : size === 'medium' ? '#E9C46A' : '#529D58'}" opacity="0.7"/>
-                            <circle cx="22" cy="22" r="14" fill="${size === 'large' ? '#E63946' : size === 'medium' ? '#E9C46A' : '#529D58'}"/>
-                            <text x="22" y="26" font-size="14" fill="white" text-anchor="middle" font-weight="bold" font-family="Inter">
-                                ${count}
-                            </text>
-                        </svg>`;
+                        const size = count > 50 ? 'large' : count > 10 ? 'medium' : 'small';
+                        const colors = { large: '#E63946', medium: '#E9C46A', small: '#529D58' };
 
                         return L.divIcon({
-                            html: svgIcon,
+                            html: `
+                            <svg width="44" height="44" viewBox="0 0 44 44">
+                                <circle cx="22" cy="22" r="18" fill="${colors[size]}" opacity="0.7"/>
+                                <circle cx="22" cy="22" r="14" fill="${colors[size]}"/>
+                                <text x="22" y="26" font-size="14" fill="white" text-anchor="middle" font-weight="bold">
+                                    ${count}
+                                </text>
+                            </svg>`,
                             className: 'marker-cluster-custom',
                             iconSize: L.point(44, 44)
                         });
-                    },
-                    zoomToCluster(bounds) {
-                        map.fitBounds([
-                            [bounds._southWest.lat, bounds._southWest.lng],
-                            [bounds._northEast.lat, bounds._northEast.lng]
-                        ], { padding: [50, 50] });
-                    },
-                    onClusterClick: function (cluster) {
-                        const markers = cluster.getAllChildMarkers();
-                        const sample = markers.slice(0, 5).map(m => m.projetData);
-                        cluster.bindPopup(`
-                        <h3>${markers.length} projets</h3>
-                        <ul>
-                            ${sample.map(ao => `
-                                <li><a href="/ao/${ao.id}">${ao.titre}</a></li>
-                            `).join('')}
-                        </ul>
-                    `).openPopup();
                     }
                 });
 
-                // Données des projets
-                const projets = [
-                    {% for ao in aos %}
-                    {
-                        id: {{ ao.id }},
-                        lat: {{ ao.location['lat'] }},
-                        lng: {{ ao.location['lng'] }},
-                        secteurCode: "{{ ao.entreprise.sectorCodeData.code }}",
-                        budget: {{ ao.budget }},
-                        popup: `<div class="popup-content">
-                        <h3 class="font-bold">{{ ao.titre }}</h3>
-                        <p><span class="font-semibold">Secteur:</span> {{ ao.entreprise.sectorCodeData.label }}</p>
-                        <p><span class="font-semibold">Budget:</span> {{ ao.budget|number_format(0, ',', ' ') }} XOF</p>
-                        <div class="mt-2">
-                            <a href="{{ path('app_ao_detail', {id: ao.id}) }}" class="inline-block px-3 py-1 bg-primary text-white text-sm rounded hover:bg-green-600 transition-colors">
-                                Voir détails
-                            </a>
-                        </div>
-                    </div>`
-                    }{% if not loop.last %},{% endif %}
-                    {% endfor %}
-                ];
-
-                // Création des marqueurs
-                // Configuration des icônes par type de secteur (à placer avant la boucle forEach)
+                // Dictionnaire des marqueurs
+                const markerLookup = {};
                 const secteurIcons = {
-                    'BTP': '🏗️',    // Bâtiment/Travaux Publics
-                    'INF': '💻',     // Informatique
-                    'ENV': '🌳',     // Environnement
-                    'SANT': '🏥',    // Santé
-                    'AGR': '🚜',     // Agriculture
-                    'EDU': '🏫',     // Éducation
-                    'ENE': '💡',     // Énergie
-                    'EAU': '💧'      // Eau
+                    'BTP': '🏗️', 'INF': '💻', 'ENV': '🌳', 'SANT': '🏥',
+                    'AGR': '🚜', 'EDU': '🏫', 'ENE': '💡', 'EAU': '💧'
                 };
 
-                // Stockage des marqueurs dans un tableau
-                const markers = [];
+                // Fonction de création de marqueur optimisée
+                // Fonction de création de marqueur optimisée
+                function createMarker(ao) {
+                    const secteurKey = ao.secteurCode?.substring(0, 3) || '';
+                    const icon = secteurIcons[secteurKey] || '📍';
 
-                // Création des marqueurs
-                projets.forEach(projet => {
-                    const secteurKey = projet.secteurCode.substring(0, 3);
-                    const customIcon = L.divIcon({
-                        html: `
-                            <div class="relative">
-                                <svg width="36" height="36" viewBox="0 0 36 36">
-                                    <circle cx="18" cy="18" r="16" fill="#529D58" stroke="#FFF" stroke-width="2"/>
-                                </svg>
-                                <div class="absolute inset-0 flex items-center justify-center text-white text-xl">
-                                    ${secteurIcons[secteurKey] || '📍'}
+                    // Création du marqueur avec ID
+                    const marker = L.marker([ao.lat, ao.lng], {
+                        icon: L.divIcon({
+                            html: `
+                            <div class="relative" style="width: 36px; height: 36px;">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div style="
+                                        font-size: 24px;
+                                        text-shadow: 0 0 8px rgba(0,0,0,0.3);
+                                        transform: translateY(-2px);
+                                    ">
+                                        ${icon}
+                                    </div>
                                 </div>
-                            </div>
-                        `,
-                        className: '',
-                        iconSize: [36, 36],
-                        popupAnchor: [0, -18]
+                            </div>`,
+                            className: '',
+                            iconSize: [36, 36],
+                            iconAnchor: [18, 18],
+                            popupAnchor: [0, -18]
+                        })
                     });
 
-                    const marker = L.marker([projet.lat, projet.lng], {
-                        icon: customIcon
-                    });
+                    // Ajout de l'ID au marqueur
+                    marker.id = ao.id;
 
-                    // 1. On bind un popup de chargement par défaut
-                    marker.bindPopup(`
-                        <div class="p-4 text-center">
-                            <div class="animate-spin inline-block w-6 h-6 border-2 border-blue-500 rounded-full"></div>
-                            <p class="mt-2">Chargement des détails...</p>
-                        </div>
-                    `);
-
-                    // 2. On stocke les données du projet pour les réutiliser au clic
-                    marker.projetData = projet;
-
-                    // 3. Gestion du clic dynamique
+                    // Gestion du clic sur le marqueur
                     marker.on('click', async function() {
                         try {
-                            const response = await fetch(`/api/popup/${this.projetData.id}`);
+                            const response = await fetch(`/api/popup/${this.id}`);
                             if (!response.ok) throw new Error('Erreur de chargement');
 
                             const popupContent = await response.text();
-                            this.setPopupContent(popupContent);
+                            this.bindPopup(popupContent).openPopup();
+
                         } catch (error) {
-                            this.setPopupContent(`
-                                <div class="p-4 text-red-500">
-                                    Impossible de charger les détails<br>
+                            this.bindPopup(`
+                                <div class="p-4 text-red-500 text-sm">
+                                    Erreur de chargement des données<br>
                                     <button onclick="this.closest('.leaflet-popup')._source.openPopup()">
                                         Réessayer
                                     </button>
                                 </div>
-                            `);
+                            `).openPopup();
                         }
                     });
 
+                    return marker;
+                }
+
+
+                // Initialisation des marqueurs
+                const initialData = {{ aos|map(ao => {
+                    id: ao.id,
+                    lat: ao.location.lat,
+                    lng: ao.location.lng,
+                    secteurCode: ao.entreprise.sectorCodeData.code
+                })|json_encode|raw }};
+
+                initialData.forEach(ao => {
+                    const marker = createMarker(ao);
+                    markerLookup[ao.id] = marker;
                     markersCluster.addLayer(marker);
                 });
 
-                // Fonction de filtrage corrigée
-                function updateMapFilters() {
-                    const secteur = document.getElementById('secteur-filter').value;
-                    const budget = parseInt(document.getElementById('budget-filter').value) || 0;
-
-                    markersCluster.clearLayers();
-
-                    let visibleCount = 0;
-
-                    markers.forEach(marker => {
-                        const projet = marker.projetData;
-                        const secteurMatch = secteur === "" || projet.secteurCode === secteur;
-                        const budgetMatch = budget === 0 || projet.budget <= budget;
-
-                        if (secteurMatch && budgetMatch) {
-                            markersCluster.addLayer(marker);
-                            visibleCount++;
-                        }
-                    });
-
-                    document.getElementById('budget-value').innerText = formatXOF(budget);
-                }
-
                 map.addLayer(markersCluster);
 
-                map.on('moveend', async function() {
-                    const visibleBounds = map.getBounds();
-                    const visibleMarkers = markers.filter(m => visibleBounds.contains(m.getLatLng()));
+                // Gestion du clic sur les résultats
+                document.getElementById('result-list').addEventListener('click', (e) => {
+                    const item = e.target.closest('[data-ao-id]');
+                    if (!item) return;
 
-                    await Promise.all(visibleMarkers.map(marker =>
-                        fetch(`/api/popup/${marker.projetData.id}`)
-                            .then(r => r.text())
-                            .then(html => {
-                                // Stocke le contenu pour usage ultérieur
-                                marker._popupContentCache = html;
-                                // Met à jour directement si le popup est ouvert
-                                if (marker.isPopupOpen()) marker.setPopupContent(html);
-                            })
-                            .catch(console.error)
-                    ));
+                    const marker = markerLookup[item.dataset.aoId];
+                    if (marker) {
+                        map.flyTo(marker.getLatLng(), 15, { duration: 0.5 });
+                        marker.openPopup();
+                    }
                 });
-                // Format XOF
-                function formatXOF(val) {
-                    return val === 0 ? "Tous budgets" : val.toLocaleString('fr-FR') + ' XOF';
-                }
 
-                // Événements de mise à jour des filtres
-                if (document.getElementById('secteur-filter')) {
-                    document.getElementById('secteur-filter').addEventListener('change', updateMapFilters);
-                }
-                if (document.getElementById('budget-filter')) {
-                    document.getElementById('budget-filter').addEventListener('input', function () {
-                        updateMapFilters();
-                    });
-                }
-                if (document.getElementById('budget-filter')) {
-                    document.getElementById('budget-filter').addEventListener('input', function () {
-                        updateMapFilters();
-                    });
-                }
-
+                // Gestion des filtres
                 document.getElementById('filter-btn').addEventListener('click', async function() {
-                    const form = document.getElementById('filter-form');
-                    const formData = new URLSearchParams(new FormData(form));
-                    const url = '{{ path("app_ao_list") }}?' + formData.toString();
                     const spinner = document.getElementById('spinner');
                     spinner.classList.remove('hidden');
+
                     try {
-                        const response = await fetch(url, {
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        });
+                        const response = await fetch('{{ path("app_ao_list") }}?' + new URLSearchParams(new FormData(document.getElementById('filter-form'))));
                         const data = await response.json();
 
-                        // Mise à jour de la liste des résultats
+                        // Mise à jour des résultats
                         document.getElementById('result-list').innerHTML = data.html;
 
-                        // Mise à jour de la carte (Leaflet)
+                        // Mise à jour de la carte
                         markersCluster.clearLayers();
-                        data.markers.forEach(markerData => {
-                            const marker = L.marker([markerData.lat, markerData.lng])
-                                .bindPopup(markerData.popup);
+                        data.markers.forEach(ao => {
+                            const marker = createMarker(ao);
+                            markerLookup[ao.id] = marker;
                             markersCluster.addLayer(marker);
                         });
-
                     } catch (error) {
-                        document.getElementById('result-list').innerHTML = '<div class="max-w-md mx-auto mb-8"> <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">Erreur lors du chargement des données</div> </div>';
-                        console.error('Erreur AJAX :', error);
+                        console.error('Erreur:', error);
                     } finally {
                         spinner.classList.add('hidden');
                     }
