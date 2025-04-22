@@ -367,7 +367,7 @@ class AOController extends AbstractController
             return [
                 'lat' => $ao->getLocation()['lat'],
                 'lng' => $ao->getLocation()['lng'],
-                'popup' => $this->renderView('ao/component/_popup.html.twig', ['ao' => $ao]),
+                'popup' => $this->renderView('ao/component/_popup.html.twig', ['ao' => $ao, 'city' => $ao->getEntreprise()->getSectorCode()->getLabel()]),
                 'city' => $label,
             ];
         }, $aos);

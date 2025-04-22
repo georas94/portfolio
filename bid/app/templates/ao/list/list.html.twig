@@ -181,7 +181,7 @@
                 });
 
                 // Gestion des filtres
-                document.getElementById('filter-btn').addEventListener('click', async function(e) {
+                document.getElementById('filter-btn').addEventListener('click', async function() {
                     const spinner = document.getElementById('spinner');
                     spinner.classList.remove('hidden');
 
@@ -229,19 +229,6 @@
                         spinner.classList.add('hidden');
                     }
                 });
-
-                // const searchInput = document.getElementById('search-input');
-                // const clearSearch = document.getElementById('clear-search');
-
-                // searchInput.addEventListener('input', function() {
-                //     clearSearch.classList.toggle('hidden', this.value === '');
-                // });
-                //
-                // clearSearch.addEventListener('click', function() {
-                //     searchInput.value = '';
-                //     this.classList.add('hidden');
-                //     document.getElementById('filter-btn').click(); // Déclenche le filtrage
-                // });
             });
         </script>
     {% endblock %}
