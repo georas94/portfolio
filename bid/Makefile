@@ -25,7 +25,7 @@ stop:
 restart:
 	docker compose down && docker compose up -d --remove-orphans --build
 
-clean-all:
+docker-clean:
 	docker system prune --all --force && docker system prune --all --force --volumes
 
 ps:

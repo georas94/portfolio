@@ -24,6 +24,9 @@ cache-clean-all:
 docker-clean:
 	docker system prune --all --force && docker system prune --all --force --volumes
 
+start-bid:
+		cd bid && make start
+
 ## PHP bash
 bash-resume:
 	cd resume && make bash
