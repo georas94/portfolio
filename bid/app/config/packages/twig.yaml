@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        dynamsoft_license_key: '%env(DYNAMSOFT_LICENSE_KEY)%'
 
 when@test:
     twig:
