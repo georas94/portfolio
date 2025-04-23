@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dynamsoft PDF417 Scanner - Debug Mode</title>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-javascript-barcode@9.6.20/dist/dbr.js"></script>
+    <script>
+        Dynamsoft.DBR.BarcodeScanner.license = "YOUR_MOBILE_LICENSE_KEY";
+        let scanner;
+        let cameraEnabled = false;
+
+        function log(message) {
+            const logContainer = document.getElementById('log-container');
+            const p = document.createElement('p');
+            p.textContent = message;
+            logContainer.appendChild(p);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        window.onload = async () => {
+            log('Initialisation...');
+            try {
+                scanner = await Dynamsoft.DBR.BarcodeScanner.createInstance();
+                log('Instance du scanner créée.');
+                const settings = await scanner.getRuntimeSettings();
+                settings.barcodeFormatIds = Dynamsoft.DBR.EnumBarcodeFormat.BF_PDF417;
+                await scanner.updateRuntimeSettings(settings);
+                log('Paramètres runtime configurés pour PDF417.');
+            } catch (e) {
+                log('Erreur init: ' + e.message);
+            }
+        };
+
+        async function toggleScanner() {
+            if (!scanner) {
+                log('Erreur: Scanner non initialisé.');
+                return;
+            }
+            if (cameraEnabled) {
+                await scanner.stopScanning();
+                log('Scanner arrêté.');
+                cameraEnabled = false;
+                document.getElementById('toggle-scanner').textContent = '📷 Démarrer le scan PDF417';
+            } else {
+                await scanner.setUIElement(document.getElementById('scanner-container'));
+                log('UI attachée au container.');
+                scanner.onFrameRead = (results) => {
+                    log('Frame scannée. Résultats: ' + results.length);
+                    if (results.length > 0) {
+                        const text = results[0].barcodeText;
+                        log('✅ Code trouvé: ' + text);
+                        window.ReactNativeWebView?.postMessage(text);
+                    }
+                };
+                await scanner.show();
+                log('Scanner démarré.');
+                cameraEnabled = true;
+                document.getElementById('toggle-scanner').textContent = '🔁 Arrêter le scan';
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #202020;
+            color: #fff;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+        #scanner-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;  /* Plein écran */
+            background: #000;
+            z-index: 1;
+        }
+        #controls {
+            position: fixed;
+            bottom: 20px;   /* à 20px du bas */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            gap: 10px;
+        }
+        #toggle-scanner {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            background-color: #ffffff;
+            color: #000000;
+            cursor: pointer;
+        }
+        #toggle-scanner:hover {
+            background-color: #dddddd;
+        }
+        #log-container {
+            position: fixed;
+            bottom: 300px;  /* au-dessus des boutons */
+            left: 0;
+            width: 100%;
+            max-height: calc(30% - 80px);
+            background: rgba(0, 0, 0, 0.8);
+            overflow-y: auto;
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            z-index: 2;
+        }
+        #log-container p {
+            margin: 4px 0;
+            color: #0f0;
+        }
+    </style>
+</head>
+<body>
+<div id="scanner-container" class="dce-video-container"></div>
+<div id="log-container"></div>
+<div id="controls" style="margin-bottom: 15em">
+    <button id="toggle-scanner" onclick="toggleScanner()">📷 Démarrer le scan PDF417</button>
+</div>
+</body>
+</html>

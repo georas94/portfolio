@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+{% block title %}Scan de documents{% endblock %}
+
+{% block body %}
+    <div class="md:max-w-4xl mx-auto p-6 space-y-6" data-controller="barcode">
+        <h1 class="text-2xl font-bold mb-6">Scan de pièces d'identité</h1>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Sélectionnez une image
+                </label>
+                <label class="cursor-pointer inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+                    <i class="fas fa-camera mr-2"></i>Choisir un fichier
+                    <input data-barcode-target="input"
+                            id="barcode-input" type="file" accept="image/*" capture="environment" class="hidden"/>
+                </label>
+            </div>
+            <div data-barcode-target="loading"
+                    id="loading" class="mt-4 hidden">
+                <div class="flex items-center space-x-2 text-gray-600">
+                    <div class="animate-spin inline-block w-4 h-4 border-2 border-current rounded-full"></div>
+                    <span>Analyse en cours...</span>
+                </div>
+            </div>
+            <div data-barcode-target="results"
+                    id="scan-results" class="mt-6 space-y-4 hidden">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-2">Résultats du scan :</h3>
+                    <div id="results-content" class="space-y-2"></div>
+                </div>
+            </div>
+            <div data-barcode-target="error"
+                id="scan-error" class="mt-4 text-red-600 hidden"></div>
+
+        </div>
+    </div>
+{% endblock %}
+

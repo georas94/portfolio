@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}AO Burkina - Plateforme des marchés publics{% endblock %}</title>
     <meta name="description" content="Plateforme centralisée des appels d'offres publics au Burkina Faso">
-
+    <meta name="dynamsoft-license" content="{{ dynamsoft_license_key }}">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -32,6 +32,11 @@
 
     <!-- Alpine.js -->
     <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- dynamsoft -->
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-barcode-reader-bundle@10.4.3100/dist/dbr.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dynamsoft-code-parser@2.4.32/dist/dcp.js"></script>
+    <meta name="dynamsoft-license" content="{{ dynamsoft_license_key }}">
 
     <!-- leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
