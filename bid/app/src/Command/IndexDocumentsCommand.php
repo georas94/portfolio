@@ -34,9 +34,6 @@ class IndexDocumentsCommand extends Command
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws ServerResponseException
-     * @throws MissingParameterException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

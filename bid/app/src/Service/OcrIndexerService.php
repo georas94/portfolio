@@ -166,9 +166,9 @@ class OcrIndexerService
     public function recreateIndex(): void
     {
         try {
-            if ($this->elasticClient->indices()->exists(['index' => 'articles'])) {
-                $this->elasticClient->indices()->delete(['index' => 'articles']);
-            }
+//            if ($this->elasticClient->indices()->exists(['index' => 'articles'])) {
+//                $this->elasticClient->indices()->delete(['index' => 'articles']);
+//            }
             $this->elasticClient->indices()->create([
                 'index' => 'articles',
                 'body'  => [
