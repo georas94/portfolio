@@ -67,7 +67,7 @@ class AO
     #[ORM\OneToMany(targetEntity: Soumission::class, mappedBy: 'ao')]
     private Collection $soumissions;
 
-    #[ORM\Column(length: 255, options: ['nullable' => true])]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['ao:list', 'ao:edit', 'ao:detail'])]
     private ?string $pdfPath = null;
 

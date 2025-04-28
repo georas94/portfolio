@@ -29,6 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[Route('/ao', name: 'app_ao_')]
 class AOController extends AbstractController
@@ -54,7 +55,6 @@ class AOController extends AbstractController
     {
     }
 
-    // 3. Liste des AO
     #[Route('/', name: 'list', methods: ['GET'])]
     public function list(SerializerInterface $serializer, Request $request): Response
     {
@@ -90,6 +90,7 @@ class AOController extends AbstractController
 
         $aos = $qb->orderBy('ao.dateLimite', 'ASC')->getQuery()->getResult();
 
+        $geoJsonData = json_decode(file_get_contents($this->getParameter('kernel.project_dir') . '/public/assets/geo_data/burkina-faso.geojson'), true);
         // Si requête AJAX, on renvoie JSON
         if ($request->isXmlHttpRequest()) {
             // Formatage des données pour AJAX
@@ -115,7 +116,8 @@ class AOController extends AbstractController
             'publishedStatus' => StatutAOUtils::STATUS_ACTIVE,
             'draftStatus' => StatutAOUtils::STATUS_DRAFT,
             'assignedStatus' => StatutAOUtils::STATUS_IN_PROGRESS,
-            'SectorEnumCategories' => SectorEnum::getByCategory()
+            'SectorEnumCategories' => SectorEnum::getByCategory(),
+            'geoJsonData' => $geoJsonData,
         ]);
     }
 
@@ -152,7 +154,10 @@ class AOController extends AbstractController
                 $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+                $namespace = Uuid::fromString(Uuid::NAMESPACE_OID);
+                $uuid = Uuid::v3($namespace, $safeFilename . '-' . uniqid());
+
+                $newFilename = $uuid->toString() . '.' . $uploadedFile->guessExtension();
                 try {
 
                     $document = new AODocument();
@@ -174,10 +179,9 @@ class AOController extends AbstractController
                 }
             }
 
-            $ao = $this->docManager->generateDossier($ao, $this->getUser());
+            $ao->setPdfPath($this->docManager->generateDossier($ao, $this->getUser(), 'PDF_CREATE'));
             $this->entityManager->persist($ao);
             $this->entityManager->flush();
-            $this->AOUtils->logChanges($ao, $this->getUser(), 'CREATE');
 
             $this->addFlash('create_ao_success', 'AO créé avec succès');
             return $this->redirectToRoute('app_ao_detail', ['id' => $ao->getId()]);
@@ -205,8 +209,7 @@ class AOController extends AbstractController
 
             // Re-générer le PDF si nécessaire
             if ($form->get('regenerate_pdf')->getData()) {
-                $ao = $this->docManager->generateDossier($ao, $this->getUser());
-                $this->AOUtils->logChanges($ao, $this->getUser(), 'PDF_REGENERATE');
+                $ao->setPdfPath($this->docManager->generateDossier($ao, $this->getUser(), 'PDF_REGENERATE'));
             }
 
             $this->entityManager->flush();
@@ -237,7 +240,7 @@ class AOController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // Génération du PDF
-            $ao = $this->docManager->generateDossier($ao, $this->getUser());
+            $ao->setPdfPath($this->docManager->generateDossier($ao, $this->getUser(), 'PDF_CREATE'));
             $this->entityManager->persist($ao);
             $this->entityManager->flush();
 
@@ -331,10 +334,9 @@ class AOController extends AbstractController
             // 1. Préparer les données avant suppression
             $ao = $document->getAo();
             $documentData = [
-                'id' => $document->getId(),
-                'fileName' => $document->getFileName(),
-                'originalName' => $document->getOriginalName(),
-                'ao' => $ao->getId()
+                'document_id' => $document->getId(),
+                'file_name' => $document->getFileName(),
+                'original_name' => $document->getOriginalName(),
             ];
 
             // 2. Supprimer le document

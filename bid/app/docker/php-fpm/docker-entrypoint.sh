@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Attente des dépendances (optionnel)
 if [ -n "$DATABASE_HOST" ]; then
   echo "En attente de MySQL..."
   while ! mysqladmin ping -h"$DATABASE_HOST" -P"${DATABASE_PORT:-3306}" --silent; do

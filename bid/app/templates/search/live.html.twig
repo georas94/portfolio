@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche juridique{% endblock %}
+
+{% block body %}
+    <div data-controller="livesearch"
+         class="max-w-4xl mx-auto mt-10 p-8 rounded-2xl shadow-[0_25px_50px_-12px_rgb(234_220_37)] backdrop-blur-sm"
+         style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(209, 213, 219, 0.3)"
+         data-livesearch-url-value="{{ path('app_api_search') }}"
+         data-livesearch-references-url-value="{{ path('app_api_references') }}"
+    >
+
+        <!-- En-tête avec effet de verre -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                🔍 Recherche Juridique Intelligente
+            </h1>
+            <p class="mt-2 text-gray-500">Recherchez parmi les documents officiels en temps réel</p>
+        </div>
+
+        <!-- Conteneur Filtres -->
+        <div class="mb-6 space-y-4">
+            <!-- Input de recherche avec bouton clear -->
+            <div class="relative">
+                <input type="text"
+                       data-livesearch-target="input"
+                       class="w-full pl-12 pr-16 py-4 border-0 rounded-xl bg-gray-50/90 focus:ring-4 focus:ring-primary/20 placeholder-gray-400 transition-all"
+                       placeholder="Saisissez votre requête juridique...">
+
+                <!-- Icône recherche -->
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+
+                <!-- Bouton Clear -->
+                <button data-action="click->livesearch#clearSearch"
+                        class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary transition-colors opacity-0"
+                        data-livesearch-target="clearButton">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Filtre avec loader intégré -->
+            <div class="relative">
+                <select data-livesearch-target="referenceFilter"
+                        class="w-full pl-12 pr-4 py-3 bg-gray-50/90 rounded-xl border-0 appearance-none focus:ring-4 focus:ring-primary/20 transition-all">
+                    <option value="">Chargement des documents...</option>
+                </select>
+
+                <!-- Icône document -->
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+
+                <!-- Loader intégré -->
+                <div data-livesearch-target="referenceLoader"
+                     class="absolute right-4 top-1/2 -translate-y-1/2 hidden">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Résultats -->
+        <div data-livesearch-target="results" class="space-y-4"></div>
+    </div>
+{% endblock %}

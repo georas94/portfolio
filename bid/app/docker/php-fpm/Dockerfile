@@ -1,18 +1,10 @@
-# Étape 1 : installer les libs front
-FROM node:18 as frontend
-
-WORKDIR /app
-
-COPY package.json ./
-RUN yarn install --frozen-lockfile || yarn install
-
-RUN mkdir -p public/vendor/leaflet && \
-    cp node_modules/leaflet/dist/* public/vendor/leaflet/
-
-COPY assets/ ./assets
-
-# Étape 2 : PHP-FPM
 FROM php:8.2-fpm
+
+# Ajout de Node.js et npm
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get update && apt-get install -y \
+    nodejs \
+
 
 RUN apt-get update && apt-get install -y \
     git unzip libzip-dev libicu-dev \
@@ -26,6 +18,12 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     gd mysqli pdo pdo_mysql zip intl opcache
 
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+
+# Construction des assets frontend
+COPY package.json package-lock.json /app/
+RUN npm ci --no-audit --progress=false
+COPY . /app
+RUN npm run build
 
 WORKDIR /app
 

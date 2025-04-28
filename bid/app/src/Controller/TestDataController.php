@@ -6,7 +6,6 @@ use App\Entity\AO;
 use App\Entity\AODocument;
 use App\Entity\Entreprise;
 use App\Enum\SectorEnum;
-use App\Repository\AORepository;
 use App\Service\AO\StatutAOUtils;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -82,19 +81,19 @@ class TestDataController extends AbstractController
             foreach ($nomsEntreprises as $nom) {
                 $entreprise = new Entreprise();
                 $entreprise->setNom($nom);
-                $entreprise->setSectorCode(SectorEnum::getSector(SectorEnum::getRandomCodes(rand(1, 6))[0])); // codes des secteurs
+                $entreprise->setSectorCode(SectorEnum::getSector(SectorEnum::getRandomCodes(rand(1, 6))[0]));
                 $em->persist($entreprise);
                 $entreprises[] = $entreprise;
             }
 
-            $em->flush(); // On flush pour que les entreprises aient un ID avant de les utiliser
+            $em->flush();
 
             for ($i = 1; $i <= 15; $i++) {
                 $ville = array_rand($villes);
                 $secteur = $secteurs[array_rand($secteurs)];
 
                 $ao = new AO();
-                $ao->setReference('AO-2023-' . str_pad($i, 3, '0', STR_PAD_LEFT));
+                $ao->setReference('AO-2025-' . str_pad($i, 3, '0', STR_PAD_LEFT));
                 $ao->setTitre('Appel d\'offres pour ' . $typesProjet[array_rand($typesProjet)]);
                 $ao->setDescription($descriptions[array_rand($descriptions)]);
                 $ao->setEntreprise($entreprises[array_rand($entreprises)]);
@@ -106,7 +105,7 @@ class TestDataController extends AbstractController
                     'rayon' => rand(10, 100),
                     'secteurs' => $secteur
                 ]);
-                $ao->setPdfPath(__DIR__.'/../public/uploads/ao_documents/soumission-68031af7dcaf7.pdf');
+                $ao->setPdfPath($this->getParameter('kernel.project_dir') . '/public/uploads/ao_documents/test_pdf.pdf');
 
                 $docCount = rand(1, 3);
                 for ($d = 1; $d <= $docCount; $d++) {

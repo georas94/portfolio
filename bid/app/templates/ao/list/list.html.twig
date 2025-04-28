@@ -44,7 +44,7 @@
                     </path>
                 </svg>
             </div>
-            <div id="result-list" class="space-y-4 overflow-auto max-h-96 order-3 md:order-1 md:w-1/2">
+            <div id="result-list" class="space-y-4 overflow-auto max-h-96 order-3 md:order-1 flex-1 md:flex-[1_0_0%]">
                 {% for ao in aos %}
                     <div class="p-4 bg-white shadow rounded border cursor-pointer hover:bg-gray-50 transition-colors"
                          data-ao-id="{{ ao.id }}">
@@ -53,183 +53,21 @@
                     </div>
                 {% endfor %}
             </div>
-            <div id="map" class="h-96 rounded border order-2 md:order-2 md:w-1/2"></div>
+            <div id="map"
+                 class="h-96 rounded border order-2 md:order-2 md:flex-1 md:flex-[2_0_0%]"
+                 data-geojson="{{ geoJsonData|json_encode|e('html_attr') }}"
+                 data-ao-list-url="{{ path('app_ao_list')|escape('html_attr') }}"
+                 data-aos="{{ aos|map(ao => {
+                     'id': ao.id,
+                     'lat': ao.location.lat,
+                     'lng': ao.location.lng,
+                     'secteurCode': ao.entreprise.sectorCodeData.code
+                 })|json_encode|e('html_attr') }}">
+            </div>
         </div>
     </div>
     {% block javascripts %}
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const map = L.map('map').setView([12.2383, -1.5616], 7);
-                L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap'
-                }).addTo(map);
-
-                // Configuration du cluster
-                const markersCluster = L.markerClusterGroup({
-                    maxClusterRadius: 60,
-                    spiderfyOnMaxZoom: true,
-                    showCoverageOnHover: false,
-                    zoomToBoundsOnClick: true,
-                    iconCreateFunction: function (cluster) {
-                        const count = cluster.getChildCount();
-                        const size = count > 50 ? 'large' : count > 10 ? 'medium' : 'small';
-                        const colors = { large: '#E63946', medium: '#E9C46A', small: '#529D58' };
-
-                        return L.divIcon({
-                            html: `
-                            <svg width="44" height="44" viewBox="0 0 44 44">
-                                <circle cx="22" cy="22" r="18" fill="${colors[size]}" opacity="0.7"/>
-                                <circle cx="22" cy="22" r="14" fill="${colors[size]}"/>
-                                <text x="22" y="26" font-size="14" fill="white" text-anchor="middle" font-weight="bold">
-                                    ${count}
-                                </text>
-                            </svg>`,
-                            className: 'marker-cluster-custom',
-                            iconSize: L.point(44, 44)
-                        });
-                    }
-                });
-
-                // Dictionnaire des marqueurs
-                const markerLookup = {};
-                const secteurIcons = {
-                    'BTP': '🏗️', 'INF': '💻', 'ENV': '🌳', 'SANT': '🏥',
-                    'AGR': '🚜', 'EDU': '🏫', 'ENE': '💡', 'EAU': '💧'
-                };
-
-                // Fonction de création de marqueur optimisée
-                // Fonction de création de marqueur optimisée
-                function createMarker(ao) {
-                    const secteurKey = ao.secteurCode?.substring(0, 3) || '';
-                    const icon = secteurIcons[secteurKey] || '📍';
-
-                    // Création du marqueur avec ID
-                    const marker = L.marker([ao.lat, ao.lng], {
-                        icon: L.divIcon({
-                            html: `
-                            <div class="relative" style="width: 36px; height: 36px;">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div style="
-                                        font-size: 24px;
-                                        text-shadow: 0 0 8px rgba(0,0,0,0.3);
-                                        transform: translateY(-2px);
-                                    ">
-                                        ${icon}
-                                    </div>
-                                </div>
-                            </div>`,
-                            className: '',
-                            iconSize: [36, 36],
-                            iconAnchor: [18, 18],
-                            popupAnchor: [0, -18]
-                        })
-                    });
-
-                    // Ajout de l'ID au marqueur
-                    marker.id = ao.id;
-
-                    // Gestion du clic sur le marqueur
-                    marker.on('click', async function() {
-                        try {
-                            const response = await fetch(`/api/popup/${this.id}`);
-                            if (!response.ok) throw new Error('Erreur de chargement');
-
-                            const popupContent = await response.text();
-                            this.bindPopup(popupContent).openPopup();
-
-                        } catch (error) {
-                            this.bindPopup(`
-                                <div class="p-4 text-red-500 text-sm">
-                                    Erreur de chargement des données<br>
-                                    <button onclick="this.closest('.leaflet-popup')._source.openPopup()">
-                                        Réessayer
-                                    </button>
-                                </div>
-                            `).openPopup();
-                        }
-                    });
-
-                    return marker;
-                }
-
-                // Initialisation des marqueurs
-                const initialData = {{ aos|map(ao => {
-                    id: ao.id,
-                    lat: ao.location.lat,
-                    lng: ao.location.lng,
-                    secteurCode: ao.entreprise.sectorCodeData.code
-                })|json_encode|raw }};
-
-                initialData.forEach(ao => {
-                    const marker = createMarker(ao);
-                    markerLookup[ao.id] = marker;
-                    markersCluster.addLayer(marker);
-                });
-
-                map.addLayer(markersCluster);
-
-                // Gestion du clic sur les résultats
-                document.getElementById('result-list').addEventListener('click', (e) => {
-                    const item = e.target.closest('[data-ao-id]');
-                    if (!item) return;
-
-                    const marker = markerLookup[item.dataset.aoId];
-                    if (marker) {
-                        map.flyTo(marker.getLatLng(), 15, { duration: 0.5 });
-                        marker.openPopup();
-                    }
-                });
-
-                // Gestion des filtres
-                document.getElementById('filter-btn').addEventListener('click', async function() {
-                    const spinner = document.getElementById('spinner');
-                    spinner.classList.remove('hidden');
-
-                    try {
-                        const form = document.getElementById('filter-form');
-                        const params = new URLSearchParams(new FormData(form));
-                        const url = '{{ path("app_ao_list") }}?' + params;
-
-                        const response = await fetch(url, {
-                            method: 'GET',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'Accept': 'application/json',
-                            },
-                        });
-
-                        const data = await response.json();
-
-                        // Mise à jour des résultats
-                        document.getElementById('result-list').innerHTML = data.html;
-
-                        // Mise à jour de la carte (Leaflet)
-                        markersCluster.clearLayers();
-                        data.markers.forEach(markerData => {
-                            const marker = L.marker([markerData.lat, markerData.lng])
-                                .bindPopup(markerData.popup);
-                            markersCluster.addLayer(marker);
-                        });
-
-                        // todo : a reprendre pour de meilleures perfs avec un test de monté en charge
-                        // Mise à jour de la carte
-                        // markersCluster.clearLayers();
-                        // data.markers.forEach(ao => {
-                        //     const item = this.parent.find('').dataset.dataAoId;
-                        //     console.log('item: ' + item)
-                        //     if (!item) return;
-                        //
-                        //     const marker = createMarker(ao);
-                        //     markerLookup[ao.id] = marker;
-                        //     markersCluster.addLayer(marker);
-                        // });
-                    } catch (error) {
-                        console.error('Erreur:', error);
-                    } finally {
-                        spinner.classList.add('hidden');
-                    }
-                });
-            });
-        </script>
+        {{ parent() }}
+        {{ encore_entry_script_tags('map') }}
     {% endblock %}
 {% endblock %}

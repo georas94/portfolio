@@ -33,9 +33,9 @@ class AOUtils
         $log->setUser($user);
         $log->setAction($action);
         $log->setChanges([
-            'document_id' => $documentData['id'] ?? 0,
-            'file_name' => $documentData['fileName'],
-            'original_name' => $documentData['originalName']
+            'document_id' => $documentData['document_id'] ?? 0,
+            'file_name' => $documentData['file_name'],
+            'original_name' => $documentData['original_name']
         ]);
         $log->setChangedAt(new DateTimeImmutable());
 

@@ -11,7 +11,7 @@ class AOLog
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: AO::class)]
+    #[ORM\ManyToOne(targetEntity: AO::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private AO $ao;
 

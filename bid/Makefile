@@ -65,7 +65,7 @@ migrations-apply:
 migrations-make:
 	$(php_console) make:migration
 
-dev-fixtures: db-drop db-create db-schema
+dev-fixtures:
 	$(php_console) doctrine:fixtures:load -n
 
 prod-fixtures: db-drop db-create db-schema

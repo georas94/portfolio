@@ -9,11 +9,12 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Uid\Uuid;
 use TCPDF;
 
 class DocumentManager
 {
-
+    private const PDF_EXTENSION = '.pdf';
     public function __construct(
         readonly ParameterBagInterface $params,
         readonly Filesystem            $filesystem,
@@ -22,11 +23,13 @@ class DocumentManager
     {
     }
 
-    public function generateDossier(AO $ao, User $user): AO
+    public function generateDossier(AO $ao, User $user, string $action): string
     {
+        $namespace = Uuid::fromString(Uuid::NAMESPACE_OID);
+        $uuid = Uuid::v3($namespace, $ao->getReference());
         $projectDir = $this->params->get('kernel.project_dir');
         $outputDir = $projectDir . '/public/uploads/pdf/';
-        $outputPath = $outputDir . 'soumission_' . $ao->getId() . '.pdf';
+        $outputPath = $outputDir . $uuid->toString() . self::PDF_EXTENSION;
 
         $this->filesystem->mkdir($outputDir);
 
@@ -41,7 +44,7 @@ class DocumentManager
 
         $pdf->SetCreator('AO Burkina');
         $pdf->SetAuthor($user->getEmail());
-        $pdf->SetTitle('Soumission ' . $ao->getReference());
+        $pdf->SetTitle($ao->getReference());
         $pdf->SetAutoPageBreak(true, 25);
 
         // Police moderne (Helvetica est la plus propre dans TCPDF)
@@ -69,14 +72,13 @@ class DocumentManager
         $pdf->Output($outputPath, 'F');
 
         $documentData = [
-            'id' => null,
-            'Nom Fichier' => 'soumission_' . $ao->getId() . '.pdf',
-            'ao' => $ao->getId()
+            'document_id' => null,
+            'file_name' => $uuid->toString() . self::PDF_EXTENSION,
+            'original_name' => $uuid->toString()
         ];
-        $ao->setPdfPath('/uploads/pdf/soumission_' . $ao->getId() . '.pdf');
-        $this->AOUtils->logDocument($ao, $user, $documentData, 'DOCUMENT_DELETE');
+        $this->AOUtils->logDocument($ao, $user, $documentData, $action);
 
-        return $ao;
+        return '/uploads/pdf/' . $uuid->toString() . '.pdf';
     }
 
     private function addModernHeader(TCPDF $pdf, AO $ao): void
@@ -95,7 +97,7 @@ class DocumentManager
         $pdf->SetFont('helvetica', 'B', 16);
         $pdf->SetTextColor(29, 78, 216); // Bleu professionnel
         $pdf->SetXY(60, 12);
-        $pdf->Cell(0, 0, 'SOUMISSION POUR APPEL D\'OFFRES', 0, 1);
+        $pdf->Cell(0, 0, 'DETAIL APPEL D\'OFFRES', 0, 1);
 
         // Référence
         $pdf->SetFont('helvetica', 'B', 12);
@@ -163,7 +165,7 @@ class DocumentManager
         ]);
 
         // Section 2 : Informations sur le soumissionnaire (version compacte)
-        $this->addCompactContentSection($pdf, 'INFORMATIONS SUR LE SOUMISSIONNAIRE', [
+        $this->addCompactContentSection($pdf, 'INFORMATIONS SUR L\'ENTREPRISE SOLLICITANTE', [
             ['Entreprise', strtoupper($ao->getEntreprise()->getNom())],
             ['Représentant', $user->getFirstname()],
             ['Email', $user->getEmail()],

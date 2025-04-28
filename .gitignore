@@ -4,6 +4,7 @@
 **/node_modules/
 **/.idea/
 **/public/uploads/
+**/public/build/
 **/public/bundles/
 infra-services/data/*
 infra-services/docker/shared

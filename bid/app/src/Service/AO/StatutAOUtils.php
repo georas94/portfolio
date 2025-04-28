@@ -15,7 +15,7 @@ class StatutAOUtils
         self::STATUS_ACTIVE => 'Actif',
         self::STATUS_CANCELLED => 'Clôturé',
         self::STATUS_IN_PROGRESS => 'En cours de traitement',
-        self::STATUS_ATTRIBUTED => "STATUS_ATTRIBUTED",
+        self::STATUS_ATTRIBUTED => "Attribué",
     ];
 
     public static function getChoices(bool $isCreation): array
