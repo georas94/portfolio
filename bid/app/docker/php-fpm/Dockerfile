@@ -35,8 +35,9 @@ RUN if [ -f package-lock.json ]; then npm ci --no-audit --progress=false; else n
 COPY . .
 
 # Étape 7: Build des assets et installation des dépendances PHP
-RUN npm run build && \
-    composer install --no-dev --optimize-autoloader --no-interaction
+RUN npm run build
+CMD ["sh", "-c", "composer install --optimize-autoloader && php bin/console doctrine:schema:update --force"]
+
 
 # Étape 8: Configuration finale
 COPY docker/php-fpm/docker-entrypoint.sh /usr/local/bin/
