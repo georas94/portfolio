@@ -29,7 +29,7 @@ WORKDIR /app
 
 # Étape 5: Installation des dépendances frontend
 COPY package.json package-lock.json ./
-RUN if [ -f package-lock.json ]; then npm ci --no-audit --progress=false; else npm install --no-audit --progress=false; fi
+RUN if [ -f package-lock.json ]; then npm ci --no-audit --progress=false; else npm install --no-audit --legacy-peer-deps --progress=false; fi
 
 # Étape 6: Copie du code source
 COPY . .
