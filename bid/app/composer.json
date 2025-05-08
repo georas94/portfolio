@@ -12,7 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.4.1",
         "doctrine/orm": "^3.3.2",
         "dsiddharth2/php-zxing": "^1.0.3",
-        "elasticsearch/elasticsearch": "^8.9",
+        "elasticsearch/elasticsearch": "*",
         "endroid/qr-code": ">=6.0.7",
         "khanamiryan/qrcode-detector-decoder": "^2.0.2",
         "knplabs/knp-snappy-bundle": "^1.10.4",

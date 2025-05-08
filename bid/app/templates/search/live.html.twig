@@ -4,7 +4,7 @@
 
 {% block body %}
     <div data-controller="livesearch"
-         class="max-w-4xl mx-auto mt-10 p-8 rounded-2xl shadow-[0_25px_50px_-12px_rgb(234_220_37)] backdrop-blur-sm"
+         class="max-w-4xl mx-auto mt-10 p-8 rounded-2xl backdrop-blur-sm"
          style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(209, 213, 219, 0.3)"
          data-livesearch-url-value="{{ path('app_api_search') }}"
          data-livesearch-references-url-value="{{ path('app_api_references') }}"
@@ -44,29 +44,19 @@
                 </button>
             </div>
 
-            <!-- Filtre avec loader intégré -->
-            <div class="relative">
-                <select data-livesearch-target="referenceFilter"
-                        class="w-full pl-12 pr-4 py-3 bg-gray-50/90 rounded-xl border-0 appearance-none focus:ring-4 focus:ring-primary/20 transition-all">
-                    <option value="">Chargement des documents...</option>
-                </select>
+        <!-- Filtre par référence -->
+        <div class="relative mb-6">
+            <select data-livesearch-target="referenceFilter"
+                    class="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                <!-- Options dynamiques -->
+            </select>
 
-                <!-- Icône document -->
-                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                </div>
-
-                <!-- Loader intégré -->
-                <div data-livesearch-target="referenceLoader"
-                     class="absolute right-4 top-1/2 -translate-y-1/2 hidden">
-                    <div class="spinner"></div>
-                </div>
+            <!-- Loader -->
+            <div data-livesearch-target="referenceLoader" class="absolute right-4 top-1/2 -translate-y-1/2 hidden">
+                <div class="spinner"></div>
             </div>
         </div>
-
-        <!-- Résultats -->
-        <div data-livesearch-target="results" class="space-y-4"></div>
+        <div data-livesearch-target="results" class="space-y-4">
+        </div>
     </div>
 {% endblock %}

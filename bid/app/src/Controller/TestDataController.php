@@ -130,4 +130,11 @@ class TestDataController extends AbstractController
 
         return new Response('15 appels d\'offres de test + entreprises générés avec succès!');
     }
+
+    #[Route('/test', name: 'app_test')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function test(EntityManagerInterface $em): Response
+    {
+        return new Response('OK');
+    }
 }

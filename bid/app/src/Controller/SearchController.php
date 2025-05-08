@@ -5,8 +5,7 @@ namespace App\Controller;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
 use Elastic\Elasticsearch\Exception\AuthenticationException;
-use Elastic\Elasticsearch\Exception\ClientResponseException;
-use Elastic\Elasticsearch\Exception\ServerResponseException;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,112 +43,137 @@ class SearchController extends AbstractController
         try {
             $query = trim($request->query->get('q', ''));
             $reference = trim($request->query->get('reference', ''));
-            $results = [];
 
             if (empty($query)) {
                 return new JsonResponse(['error' => 'Le paramètre "q" est requis'], 400);
             }
 
             $searchParams = [
-                'index' => 'articles',
-                'body' => [
-                    'size' => 20,
-                    '_source' => ['article', 'content', 'structure', 'metadata'], // Optimisation du retour
-                    'query' => [
-                        'bool' => [
-                            'must' => [
-                                'multi_match' => [
-                                    'query' => $query,
-                                    'fields' => ['content^3', 'metadata.source.filename'],
-                                    'operator' => 'and',
-                                    'fuzziness' => 'AUTO',
-                                ]
+                'index' => 'articles', // Utilise l'index 'articles'
+                'body'  => [
+                    'size'    => 20,
+                    '_source' => true, // On ne récupère pas tout le document source
+                    'query'   => [
+                        'multi_match' => [
+                            'query'     => $query,
+                            'fields'    => [
+                                'decree_title^3', // Le titre du décret est plus important
+                                'chapter_title^2', // Le titre du chapitre
+                                'section_title^2', // Le titre de la section
+                                'article_text', // Le texte de l'article
                             ],
-                            'filter' => []
-                        ]
+                            'operator'  => 'and',
+                            'fuzziness' => 'AUTO',
+                        ],
                     ],
                     'highlight' => [
-                        'pre_tags' => ['<mark>'],
+                        'pre_tags'  => ['<mark>'],
                         'post_tags' => ['</mark>'],
-                        'fields' => [
-                            'content' => [
-                                'type' => 'fvh',
-                                'fragment_size' => 200,
-                                'number_of_fragments' => 3
-                            ]
-                        ]
-                    ]
-                ]
+                        'fields'    => [
+                            'article_text' => [ // Corrige le nom du champ ici
+                                'type'               => 'fvh',
+                                'fragment_size'      => 200,
+                                'number_of_fragments'=> 3,
+                            ],
+                        ],
+                    ],
+                    'sort' => [
+                        [
+                            'decree_id' => [ // Utilise le keyword pour l'ordre
+                                'order'  => 'desc',
+                            ],
+                        ],
+                    ],
+                ],
             ];
 
-            // Ajout du filtre référence si spécifié
+            // Filtre sur 'reference' si nécessaire
             if (!empty($reference)) {
-                $searchParams['body']['query']['bool']['filter'][] = [
-                    'term' => ['metadata.reference' => $reference]
+                $searchParams['body']['query'] = [
+                    'bool' => [
+                        'must'   => $searchParams['body']['query'],
+                        'filter' => [
+                            ['term' => ['decree_id' => $reference]],
+                        ],
+                    ],
                 ];
             }
 
             $response = $this->elasticClient->search($searchParams);
+            $results  = [];
 
             foreach ($response['hits']['hits'] as $hit) {
-                $source = $hit['_source'];
-                $metadata = $source['metadata'] ?? [];
-                $structure = $source['structure'] ?? [];
+                $article = $hit['_source'];
+                $highlights = $hit['highlight']['article_text'] ?? [];
+
+                // On récupère les autres informations à partir des champs plats
+                $decreeId    = $article['decree_id'] ?? null;
+                $decreeTitle = $article['decree_title'] ?? null;
+                $chapterTitle = $article['chapter_title'] ?? null;
+                $sectionTitle = $article['section_title'] ?? null;
+                $articleNumber = $article['article_number'] ?? null;
+                $articlePage = $article['article_page'] ?? null;
 
                 $results[] = [
-                    'id' => $hit['_id'],
-                    'score' => $hit['_score'],
-                    'source' => $metadata['source']['filename'] ?? null,
-                    'reference' => $metadata['reference'] ?? null,
-                    'article' => $source['article'] ?? null, // Champ racine pas metadata
-                    'pages' => [
-                        'start' => $structure['pages']['start'] ?? null,
-                        'end' => $structure['pages']['end'] ?? null
-                    ],
-                    'highlight' => $hit['highlight']['content'] ?? [],
-                    'excerpt' => implode('... ', $hit['highlight']['content'] ?? [])
+                    'decree_id'     => $decreeId,
+                    'decree_title'  => $decreeTitle,
+                    'chapter_title' => $chapterTitle,
+                    'section_title' => $sectionTitle,
+                    'article_number'=> $articleNumber,
+                    'article_page'  => $articlePage,
+                    'highlight'     => $highlights,
+                    'excerpt'       => implode('…', $highlights),
                 ];
             }
 
-            return new JsonResponse($results);
+            return new JsonResponse([
+                'results' => $results,
+                'total_hits' => $response['hits']['total']['value'] ?? 0,
+            ]);
 
         } catch (Throwable $e) {
-            // Loguer l'erreur
-            return new JsonResponse(
-                ['error' => 'Erreur de recherche', 'details' => $e->getMessage()],
-                500
-            );
+            dd($e);
+            // Gérer l'exception proprement
         }
     }
 
     /**
-     * @throws ClientResponseException
-     * @throws ServerResponseException
+     * @throws Exception
      */
     #[Route('/api/references', name: 'app_api_references', methods: ['GET'])]
     public function apiReferences(): JsonResponse
     {
-        $response = $this->elasticClient->search([
-            'index' => 'articles',
-            'body' => [
-                'size' => 0,
-                'aggs' => [
-                    'references' => [
-                        'terms' => [
-                            'field' => 'metadata.reference',
-                            'size' => 100,
-                            'order' => ['_key' => 'desc'] // ordre décroissant des années
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+        try {
+            $response = $this->elasticClient->search([
+                'index' => 'articles', // Index des articles
+                'body'  => [
+                    'size' => 0, // Pas besoin de récupérer les hits, seulement les agrégations
+                    'aggs' => [
+                        'decree_ids' => [
+                            'terms' => [
+                                'field' => 'decree_id', // Utilise 'decrees.id.keyword' pour éviter l'analyse du champ
+                                'size'  => 100, // Limite à 100 références (ajuste si nécessaire)
+                                'order' => ['_key' => 'desc'], // Trie par ID décroissant
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
 
-        $references = [];
-        foreach ($response['aggregations']['references']['buckets'] as $bucket) {
-            $references[] = $bucket['key'];
+            $buckets = $response['aggregations']['decree_ids']['buckets'] ?? [];
+            $references = array_column($buckets, 'key'); // On récupère les IDs des décrets
+
+            return new JsonResponse([
+                'decree_ids' => $references, // Renvoie les références
+                'status'     => 'success',
+            ]);
+
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'error'   => 'Erreur de chargement',
+                'details' => $e->getMessage(),
+                'status'  => 'error',
+            ], 500);
         }
-
-        return new JsonResponse($references);
     }
 }

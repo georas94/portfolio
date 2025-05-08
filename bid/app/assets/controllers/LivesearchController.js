@@ -2,30 +2,46 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = ['input', 'results', 'referenceFilter', 'referenceLoader', 'clearButton'];
-    static values = { url: String, delay: { type: Number, default: 200 }, referencesUrl: String };
+    static values = {
+        url: String,
+        delay: { type: Number, default: 200 },
+        referencesUrl: String
+    };
 
     connect() {
         this.timeout = null;
-        this.loadReferences();
         this.inputTarget.addEventListener('input', () => this.onInput());
+        this.loadReferences();
     }
 
     async loadReferences() {
         try {
-            this.referenceLoaderTarget.classList.remove('hidden'); // montrer le spinner
+            this.referenceLoaderTarget.classList.remove('hidden');
             const response = await fetch(this.referencesUrlValue);
-            const references = await response.json();
-            // Ajouter dynamiquement les options
+
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+            const data = await response.json();
+
+            // Vérification de la structure de réponse
+            if (!Array.isArray(data?.decree_ids)) {
+                throw new Error('Format de réponse inattendu');
+            }
+
             this.referenceFilterTarget.innerHTML = `
-        <option value="">Tous les documents</option>
-        ${references.map(ref => `<option value="${ref}">Décret ${ref}</option>`).join('')}
-      `;
+            <option value="">Tous les documents</option>
+            ${data.decree_ids.map(ref => `
+                <option value="${ref}">Décret ${ref}</option>
+            `).join('')}
+        `;
+
         } catch (e) {
-            console.log(e);
             console.error('Erreur de chargement des références', e);
-            this.referenceFilterTarget.innerHTML = `<option value="">Erreur de chargement</option>`;
+            this.referenceFilterTarget.innerHTML = `
+            <option value="">Erreur de chargement</option>
+        `;
         } finally {
-            this.referenceLoaderTarget.classList.add('hidden'); // cacher le spinner
+            this.referenceLoaderTarget.classList.add('hidden');
         }
     }
 
@@ -33,50 +49,19 @@ export default class extends Controller {
         clearTimeout(this.timeout);
         const q = this.inputTarget.value.trim();
 
-        // Gestion visuelle du bouton clear
-        if (q) {
-            this.clearButtonTarget.classList.remove('opacity-0');
-            this.clearButtonTarget.classList.add('opacity-100');
-        } else {
-            this.clearButtonTarget.classList.remove('opacity-100');
-            this.clearButtonTarget.classList.add('opacity-0');
-        }
+        // Gestion du bouton clear
+        this.clearButtonTarget.classList.toggle('opacity-0', !q);
 
-        if (q === '') {
-            this.resultsTarget.innerHTML =
-                `<p class="text-center text-gray-500 mt-6">Commencez à taper pour lancer la recherche.</p>`;
-            return;
-        }
-        this.showSkeletonLoading();
-        this.timeout = setTimeout(() => this.search(q), this.delayValue);
+        // Recherche avec délai
+        this.timeout = setTimeout(() => {
+            if (q) this.search(q);
+        }, this.delayValue);
     }
 
     clearSearch() {
         this.inputTarget.value = '';
-        this.clearButtonTarget.classList.remove('opacity-100');
         this.clearButtonTarget.classList.add('opacity-0');
-        this.resultsTarget.innerHTML = `
-        <div class="text-center py-12">
-            <div class="text-gray-400 mb-4">✨ Saisissez une requête pour commencer</div>
-        </div>
-    `;
-    }
-
-    showSkeletonLoading() {
-        this.resultsTarget.innerHTML = `
-    <div class="space-y-4 mt-6">
-      ${Array(3).fill('').map(() => `
-        <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-md animate-pulse-slow">
-          <div class="h-4 bg-gray-300 rounded w-1/2 mb-4"></div>
-          <div class="space-y-2">
-            <div class="h-3 bg-gray-300 rounded"></div>
-            <div class="h-3 bg-gray-300 rounded w-5/6"></div>
-            <div class="h-3 bg-gray-300 rounded w-2/3"></div>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
+        this.resultsTarget.innerHTML = '';
     }
 
     async search(query) {
@@ -86,99 +71,58 @@ export default class extends Controller {
             if (reference) url += `&reference=${encodeURIComponent(reference)}`;
 
             const response = await fetch(url);
-            const hits = await response.json();
+            const data = await response.json();
 
-            if (!response.ok) throw new Error('Erreur réseau');
+            // Extraction des résultats hiérarchiques
+            const hits = data.results || [];
             this.renderResults(hits, query);
         } catch (e) {
-            this.resultsTarget.innerHTML =
-                `<div class="bg-red-100 text-red-700 p-4 rounded-lg mt-4">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>Erreur lors de la recherche
-                </div>`;
+            this.resultsTarget.innerHTML = `
+        <div class="bg-red-100 text-red-700 p-4 rounded-lg mt-4">
+          <i class="fas fa-exclamation-triangle mr-2"></i>Erreur lors de la recherche
+        </div>
+      `;
         }
     }
 
-    renderResults(hits, query) {
-        if (!hits || hits.length === 0) {
-            this.resultsTarget.innerHTML =
-                `<div class="bg-blue-100 text-blue-700 p-4 rounded-xl mt-4">
-                    <i class="fas fa-search-minus mr-2"></i>Aucun résultat pour « ${query} »
-                </div>`;
+    renderResults(results, query) {
+        if (!results.length) {
+            this.resultsTarget.innerHTML = `
+            <div class="bg-blue-100 text-blue-700 p-4 rounded-xl mt-4">
+                <i class="fas fa-search-minus mr-2"></i>Aucun résultat pour « ${query} »
+            </div>`;
             return;
         }
-
-        const countHeader = `
-            <div class="flex justify-between items-center mb-4 text-gray-600">
-                <span>${hits.length} résultat${hits.length > 1 ? 's' : ''}</span>
-                <span class="text-sm">Score de pertinence</span>
-            </div>`;
-
-        this.resultsTarget.innerHTML = `
-            ${countHeader}
-            <div class="space-y-4">
-                ${hits.map((hit, index) => this.createResultCard(hit, index)).join('')}
-            </div>`;
-    }
-
-    createResultCard(hit, index) {
-        const {
-            reference,
-            article,
-            pages: { start: pageStart, end: pageEnd } = {},
-            highlight = [],
-            excerpt,
-            source,
-            score
-        } = hit;
-
-        return `
-            <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm 
-                        hover:shadow-md transition-shadow duration-200 
-                        animate-fade-in-up" 
-                 style="animation-delay: ${index * 50}ms">
-                
-                <div class="flex justify-between items-center mb-3">
-                    <div class="flex items-center space-x-4">
-                        <div>
-                            <h3 class="text-lg font-semibold text-primary">
-                                ${reference || 'N/A'}
-                            </h3>
-                            ${article ? `
-                                <span class="text-sm text-gray-500 mt-1 block">
-                                    Article ${article}
-                                </span>
-                            ` : ''}
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center space-x-2">
-                        ${pageStart ? `
-                            <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
-                                Page${pageEnd && pageEnd !== pageStart ? `s ${pageStart}-${pageEnd}` : ` ${pageStart}`}
-                            </span>
-                        ` : ''}
-                        
-                        <span class="bg-secondary text-white px-2 py-1 rounded-full text-xs">
-                            Score ${score.toFixed(2)}
+        const resultsHTML = results.map(result => `
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow mb-4">
+            <div class="flex justify-between items-start mb-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full">
+                            ${result.decree_id}
+                        </span>
+                        <span class="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">
+                            Article ${result.article_number}
+                        </span>
+                        <span class="inline-block bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                            Section : ${result.section_title}
                         </span>
                     </div>
                 </div>
+            </div>
+            <div class="prose prose-sm max-w-none">
+                ${result.highlight.map(fragment => `
+                    <p class="bg-yellow-50 p-3 rounded-lg my-2">${fragment}</p>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
 
-                <div class="text-gray-700 space-y-2">
-                    ${excerpt ? `<p class="text-sm leading-relaxed">${excerpt}</p>` : ''}
-                    
-                    ${highlight.length > 0 ? `
-                        <div class="mt-2 space-y-1">
-                            ${highlight.map(fragment =>
-            `<div class="bg-yellow-100 p-2 rounded-lg text-sm">
-                                    ${fragment.replace(/<mark>/g, '<span class="bg-yellow-300">')
-                .replace(/<\/mark>/g, '</span>')}
-                                </div>`
-        ).join('')}
-                        </div>
-                    </div>
-                    ` : ''}
-             </div>
-        `;
+        this.resultsTarget.innerHTML = `
+        <div class="mb-6 text-gray-600">
+            ${results.length} résultat${results.length > 1 ? 's' : ''} pour « ${query} »
+        </div>
+        ${resultsHTML}
+    `;
     }
 }

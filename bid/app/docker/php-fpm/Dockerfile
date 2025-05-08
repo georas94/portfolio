@@ -31,11 +31,13 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN if [ -f package-lock.json ]; then npm ci --no-audit --progress=false; else npm install --no-audit --legacy-peer-deps --progress=false; fi
 
+# Étape 7: Build des assets et installation des dépendances PHP
+RUN npm run build
+RUN chmod -R 755 public/build
+
 # Étape 6: Copie du code source
 COPY . .
 
-# Étape 7: Build des assets et installation des dépendances PHP
-RUN npm run build
 CMD ["sh", "-c", "composer install --optimize-autoloader && php bin/console doctrine:schema:update --force"]
 
 
