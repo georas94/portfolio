@@ -3,7 +3,6 @@
 {% block body %}
     <div class="max-w-7xl mx-auto p-6">
         <h1 class="text-2xl font-bold mb-4">Recherche d'appels d'offres publiques</h1>
-
         <!-- Formulaire de recherche -->
         <form method="GET" action="{{ path('app_ao_public_search') }}"
               class="mb-6 flex flex-col sm:flex-row sm:items-center sm:space-x-4">
@@ -24,52 +23,55 @@
 
 
         <!-- Résultats de la recherche -->
+        <!-- Résultats de la recherche -->
         {% if results is not empty %}
-            <table class="w-full table-auto border-collapse shadow-sm">
-                <thead class="bg-gray-100 text-left text-sm font-semibold text-gray-700">
-                <tr>
-                    <th class="p-3 border-b">Référence</th>
-                    <th class="p-3 border-b">Ministère</th>
-                    <th class="p-3 border-b">Objet</th>
-                    <th class="p-3 border-b text-center">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for result in results %}
-                    <tr class="hover:bg-gray-50 border-b">
-                        <td class="p-3 text-sm font-medium text-gray-800">{{ result.reference|default('-') }}</td>
-                        <td class="p-3 text-sm text-gray-600">{{ result.entity|default('-') }}</td>
-                        <td class="p-3 text-sm text-gray-600">
-                            <div class="mb-1 font-medium">{{ result.objet|default('-')|slice(0, 80) ~ '…' }}</div>
-
-                            {% if result.highlight is defined and result.highlight is not empty %}
-                                <div class="text-xs text-gray-500 italic space-y-1">
-                                    {% for fragment in result.highlight %}
-                                        <div>{{ fragment|raw }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </td>
-                        <td class="p-3 text-sm text-center">
-                            <a href="{{ path('app_ao_public_detail', { id: result.hash_id }) }}"
-                               class="inline-flex items-center px-3 py-1.5 bg-primary text-white rounded-md text-xs hover:bg-green-700 transition">
-                                <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                Voir
-                            </a>
-                        </td>
-                    </tr>
-                {% else %}
+            <div class="overflow-x-auto rounded-md">
+                <table class="w-full min-w-[600px] table-auto border-collapse shadow-sm">
+                    <thead class="bg-gray-100 text-left text-sm font-semibold text-gray-700">
                     <tr>
-                        <td colspan="4" class="p-4 text-center text-gray-400">Aucun résultat trouvé.</td>
+                        <th class="p-3 border-b">Référence</th>
+                        <th class="p-3 border-b">Ministère</th>
+                        <th class="p-3 border-b">Objet</th>
+                        <th class="p-3 border-b text-center">Actions</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for result in results %}
+                        <tr class="hover:bg-gray-50 border-b">
+                            <td class="p-3 text-sm font-medium text-gray-800">{{ result.reference|default('-') }}</td>
+                            <td class="p-3 text-sm text-gray-600">{{ result.entity|default('-') }}</td>
+                            <td class="p-3 text-sm text-gray-600">
+                                <div class="mb-1 font-medium">{{ result.objet|default('-')|slice(0, 80) ~ '…' }}</div>
+
+                                {% if result.highlight is defined and result.highlight is not empty %}
+                                    <div class="text-xs text-gray-500 italic space-y-1">
+                                        {% for fragment in result.highlight %}
+                                            <div>{{ fragment|raw }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="p-3 text-sm text-center">
+                                <a href="{{ path('app_ao_public_detail', { id: result.hash_id }) }}"
+                                   class="inline-flex items-center px-3 py-1.5 bg-primary text-white rounded-md text-xs hover:bg-green-700 transition">
+                                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    Voir
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="p-4 text-center text-gray-400">Aucun résultat trouvé.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <div class="text-gray-400 text-center py-4">
                 <p>Aucun résultat trouvé pour votre recherche.</p>
