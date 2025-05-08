@@ -451,7 +451,7 @@ class AOController extends AbstractController
      * @throws MissingParameterException
      */
     #[Route('/public/ao/{id}', name: 'public_detail')]
-    public function showAO(string $id): Response
+    public function showAO(string $id, Request $request): Response
     {
         $result = $this->elasticClient->get([
             'index' => self::ELASTIC_SEARCH_INDEX_NAME,
@@ -459,7 +459,8 @@ class AOController extends AbstractController
         ]);
 
         return $this->render('ao/public/public_detail.html.twig', [
-            'ao' => $result['_source']
+            'ao' => $result['_source'],
+            'query' => $request->query->get('q')
         ]);
     }
 

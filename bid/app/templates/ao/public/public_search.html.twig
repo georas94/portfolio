@@ -52,7 +52,7 @@
                                 {% endif %}
                             </td>
                             <td class="p-3 text-sm text-center">
-                                <a href="{{ path('app_ao_public_detail', { id: result.hash_id }) }}"
+                                <a href="{{ path('app_ao_public_detail', { id: result.hash_id, q: query }) }}"
                                    class="inline-flex items-center px-3 py-1.5 bg-primary text-white rounded-md text-xs hover:bg-green-700 transition">
                                     <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
