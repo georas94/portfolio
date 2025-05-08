@@ -13,7 +13,8 @@ export default class extends Controller {
     }
 
     open() {
-        this.iframe.src = `${this.urlValue}#page=${this.pageValue}`
+        const cleanUrl = this.urlValue.split('#')[0]; // supprime tout ce qui est après #
+        this.iframe.src = `${cleanUrl}#page=${this.pageValue}`;
         this.modal.classList.remove('hidden')
     }
 
