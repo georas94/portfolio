@@ -54,7 +54,7 @@
                 {% endfor %}
             </div>
             <div id="map"
-                 class="h-96 rounded border order-2 md:order-2 md:flex-1 md:flex-[2_0_0%]"
+                 class="h-96 rounded border order-2 md:order-2 md:flex-1 md:flex-[2_0_0%] z-10"
                  data-geojson="{{ geoJsonData|json_encode|e('html_attr') }}"
                  data-ao-list-url="{{ path('app_ao_list')|escape('html_attr') }}"
                  data-aos="{{ aos|map(ao => {

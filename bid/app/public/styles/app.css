@@ -66,3 +66,11 @@ details summary {
 .animate-pulse-slow {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+#map {
+    z-index: 0 !important;
+}
+
+#div-admin-nav {
+    z-index: 1;
+}
