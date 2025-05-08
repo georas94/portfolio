@@ -16,6 +16,12 @@ use App\Service\MapHelper;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Elastic\Elasticsearch\Client;
+use Elastic\Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\Exception\AuthenticationException;
+use Elastic\Elasticsearch\Exception\ClientResponseException;
+use Elastic\Elasticsearch\Exception\MissingParameterException;
+use Elastic\Elasticsearch\Exception\ServerResponseException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,10 +36,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Uid\Uuid;
+use Throwable;
 
 #[Route('/ao', name: 'app_ao_')]
 class AOController extends AbstractController
 {
+    private Client $elasticClient;
+    private const ELASTIC_SEARCH_INDEX_NAME = 'ao';
     //Par défaut 700 000 000 millions Xof
     private const FILTER_MAX_VALUE = 700000000;
     private const ALLOWED_DOCUMENT_TYPES = [
@@ -46,13 +55,20 @@ class AOController extends AbstractController
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ];
 
+    /**
+     * @throws AuthenticationException
+     */
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly DocumentManager        $docManager,
         private readonly AOUtils                $AOUtils,
-        private readonly geoService                $geoService
+        private readonly geoService             $geoService,
     )
     {
+        $this->elasticClient = ClientBuilder::create()
+            ->setHosts(['elasticsearch:9200'])
+//            ->setBasicAuthentication('elastic', 'votre_mot_de_passe') // Si sécurité activée
+            ->build();
     }
 
     #[Route('/', name: 'list', methods: ['GET'])]
@@ -69,7 +85,7 @@ class AOController extends AbstractController
         }
 
         $q = $request->query->get('q', '');
-        $min = $request->query->get('min' , '');
+        $min = $request->query->get('min', '');
         $max = $request->query->get('max', '');
 
         $qb = $this->entityManager->createQueryBuilder()
@@ -361,9 +377,95 @@ class AOController extends AbstractController
         }
     }
 
+    /**
+     * @throws ClientResponseException
+     * @throws ServerResponseException
+     */
+    #[Route('/public/recherche', name: 'public_search', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function publicAOSearch(Request $request): Response
+    {
+        $query = trim($request->query->get('q', ''));
+
+        $results = [];
+        if (!empty($query)) {
+            $searchParams = [
+                'index' => 'ao',
+                'body' => [
+                    'size' => 20,
+                    '_source' => [
+                        'reference', 'entity', 'objet', 'hash_id', 'full_text', 'referenceNumber'
+                    ],
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $query,
+                            'fields' => [
+                                'reference^4',
+                                'entity^3',
+                                'objet^2',
+                                'full_text'
+                            ],
+                            'operator' => 'and',
+                            'fuzziness' => 'AUTO'
+                        ]
+                    ],
+                    'highlight' => [
+                        'pre_tags' => ['<mark>'],
+                        'post_tags' => ['</mark>'],
+                        'fields' => [
+                            'full_text' => [
+                                'type' => 'fvh',
+                                'fragment_size' => 200,
+                                'number_of_fragments' => 2
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+
+            $response = $this->elasticClient->search($searchParams);
+            foreach ($response['hits']['hits'] as $hit) {
+                $source = $hit['_source'];
+                $highlight = $hit['highlight']['full_text'] ?? [];
+
+                $results[] = [
+                    'reference' => $source['reference'] ?? null,
+                    'referenceNumber' => $source['referenceNumber'] ?? null,
+                    'entity' => $source['entity'] ?? null,
+                    'objet' => $source['objet'] ?? null,
+                    'hash_id' => $source['hash_id'] ?? null,
+                    'highlight' => $highlight,
+                ];
+            }
+        }
+
+        return $this->render('ao/public/public_search.html.twig', [
+            'query' => $query,
+            'results' => $results
+        ]);
+    }
+
+    /**
+     * @throws ClientResponseException
+     * @throws ServerResponseException
+     * @throws MissingParameterException
+     */
+    #[Route('/public/ao/{id}', name: 'public_detail')]
+    public function showAO(string $id): Response
+    {
+        $result = $this->elasticClient->get([
+            'index' => self::ELASTIC_SEARCH_INDEX_NAME,
+            'id' => $id
+        ]);
+
+        return $this->render('ao/public/public_detail.html.twig', [
+            'ao' => $result['_source']
+        ]);
+    }
+
     private function formatMarkers(array $aos): array
     {
-        return array_map(function(AO $ao) {
+        return array_map(function (AO $ao) {
             $address = $this->geoService->getLocation($ao->getLocation()['lat'], $ao->getLocation()['lng']);
             $label = $this->geoService->getCityLabel($address);
             return [

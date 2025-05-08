@@ -6,6 +6,7 @@
         "@hotwired/turbo": "^7.1.1 || ^8.0",
         "@symfony/stimulus-bridge": "^3.2.0 || ^4.0.0",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
+        "@symfony/webpack-encore": "^5.1.0",
         "autoprefixer": "^10.4.21",
         "core-js": "^3.38.0",
         "css-loader": "^7.1.2",
@@ -14,10 +15,9 @@
         "postcss-import": "^16.1.0",
         "postcss-loader": "^8.1.1",
         "regenerator-runtime": "^0.13.9",
+        "sass-loader": "^16.0.5",
         "style-loader": "^4.0.0",
         "tailwindcss": "^4.1.4",
-        "@symfony/webpack-encore": "^5.1.0",
-        "sass-loader": "^16.0.5",
         "webpack": "^5.89.0",
         "webpack-cli": "^5.1.4",
         "webpack-notifier": "^1.15.0"
@@ -31,6 +31,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@hotwired/turbo-rails": "^8.0.13",
         "leaflet": "^1.9.4",
         "leaflet.markercluster": "^1.5.3"
     }

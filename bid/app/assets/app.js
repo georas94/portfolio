@@ -11,6 +11,9 @@ import './styles/app.css';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { Turbo } from '@hotwired/turbo-rails';
+
+Turbo.session.drive = false; // Solution soumission ajax au survol des liens
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({

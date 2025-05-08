@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail AO publique{% endblock %}
+
+{% block body %}
+    <div class="max-w-5xl mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6">Détail de l'appel d'offre publique</h1>
+
+        <div class="bg-white p-6 rounded-lg shadow space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h2 class="font-semibold text-gray-600">Référence</h2>
+                    <p class="text-lg font-medium">{{ ao.reference }}</p>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-gray-600">Ministère / Institution</h2>
+                    <p class="text-lg">{{ ao.entity }}</p>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-gray-600">Objet</h2>
+                    <p>{{ ao.objet }}</p>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-gray-600">Financement</h2>
+                    <p>{{ ao.financement|default('N/A') }}</p>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-gray-600">Délai d'exécution</h2>
+                    <p>{{ ao.delaiExecution|default('N/A') }}</p>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-gray-600">Page source</h2>
+                    <p>Page {{ ao.source_page }}</p>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div>
+                <h2 class="font-semibold text-gray-700 mb-2">Texte complet</h2>
+                <div class="bg-gray-50 p-4 rounded text-sm leading-relaxed whitespace-pre-wrap">
+                    {{ ao.full_text }}
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 mt-6">
+                <a href="{{ asset('public_aos/pdf/' ~ ao.referenceNumber ~ '.pdf') }}" target="_blank"
+                   class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                    📄 Télécharger le PDF
+                </a>
+
+                <button data-controller="pdfviewer"
+                        data-action="click->pdfviewer#open"
+                        data-pdfviewer-url-value="{{ asset('public_aos/pdf/' ~ ao.referenceNumber ~ '.pdf') }}"
+                        data-pdfviewer-page-value="{{ ao.source_page }}"
+                        class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    📃 Voir à la page {{ ao.source_page }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal viewer -->
+    <div id="pdfModal"
+         data-controller="pdfviewer"
+         class="fixed inset-0 z-50 hidden bg-black bg-opacity-70 flex items-center justify-center p-4">
+        <div class="relative w-full max-w-5xl bg-white rounded-lg overflow-hidden shadow-lg">
+            <button
+                    type="button"
+                    data-action="pdfviewer#close"
+                    class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl font-bold z-50"
+            >
+                &times;
+            </button>
+            <iframe
+                    id="pdfIframe"
+                    class="w-full h-[80vh] sm:h-[90vh] rounded-b-lg"
+                    frameborder="0"
+            ></iframe>
+        </div>
+    </div>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+{% endblock %}

@@ -31,7 +31,7 @@ class SearchController extends AbstractController
             ->build();
     }
 
-    #[Route('/search', name: 'app_search_live', methods: ['GET'])]
+    #[Route('/recherche-juridique', name: 'app_search_live', methods: ['GET'])]
     public function live(): Response
     {
         return $this->render('search/live.html.twig');

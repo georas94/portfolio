@@ -104,7 +104,7 @@ export default class extends Controller {
                         <span class="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">
                             Article ${result.article_number}
                         </span>
-                        <span class="inline-block bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                        <span class="hidden md:inline-block bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
                             Section : ${result.section_title}
                         </span>
                     </div>
