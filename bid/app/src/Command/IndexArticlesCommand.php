@@ -20,7 +20,7 @@ use Throwable;
     name: 'app:index-articles',
     description: 'index articles',
 )]
-class FlattenArticlesCommand extends Command
+class IndexArticlesCommand extends Command
 {
     private const INDEX_NAME = 'articles';
     private Client $es;
