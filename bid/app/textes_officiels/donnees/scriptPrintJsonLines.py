@@ -2,7 +2,7 @@ import json
 from trp import Document
 import sys
 
-with open('test.json', 'r', encoding='utf-8') as f:
+with open('textract4120bis.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 doc = Document(data)
 

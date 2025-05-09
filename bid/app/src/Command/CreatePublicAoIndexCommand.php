@@ -71,6 +71,7 @@ class CreatePublicAoIndexCommand extends Command
                     'mappings' => [
                         'properties' => [
                             'reference' => ['type' => 'keyword'],
+                            'reference_number' => ['type' => 'keyword'],
                             'hash_id' => ['type' => 'keyword'],
                             'entity' => ['type' => 'text', 'analyzer' => 'french_custom'],
                             'type' => ['type' => 'text', 'analyzer' => 'french_custom'],

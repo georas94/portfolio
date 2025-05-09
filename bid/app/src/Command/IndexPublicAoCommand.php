@@ -14,7 +14,7 @@ use Throwable;
 
 #[AsCommand(
     name: 'app:index-public-ao',
-    description: 'Add a short description for your command',
+    description: 'Indexe tous les appels d\'offres publics depuis les JSON',
 )]
 class IndexPublicAoCommand extends Command
 {
@@ -37,35 +37,50 @@ class IndexPublicAoCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $jsonPath = 'public_aos/json/appels_offres_extraits.json';
-        if (!file_exists($jsonPath)) {
-            $io->error("Fichier '$jsonPath' non trouvé.");
-            return Command::FAILURE;
-        }
+        // Chemin du projet
+        $projectDir = $this->getApplication()?->getKernel()?->getProjectDir();
 
-        $data = json_decode(file_get_contents($jsonPath), true);
-        if (!is_array($data)) {
-            $io->error("Impossible de lire le contenu de '$jsonPath'. Format JSON invalide.");
+        // 1) on récupère tous les JSON du dossier
+        $jsonFiles = glob($projectDir . '/public_aos/json/*.json');
+
+        if (empty($jsonFiles)) {
+            $io->error("Aucun fichier JSON trouvé dans public_aos/json/");
             return Command::FAILURE;
         }
 
         $indexed = 0;
 
-        foreach ($data as $doc) {
-            if (!isset($doc['hash_id'])) {
-                $io->warning("Document ignoré : pas de hash_id.");
+        foreach ($jsonFiles as $jsonPath) {
+            $io->text("Lecture de $jsonPath …");
+
+            $content = @file_get_contents($jsonPath);
+            if (false === $content) {
+                $io->warning("Impossible de lire $jsonPath, fichier ignoré.");
                 continue;
             }
 
-            try {
-                $this->client->index([
-                    'index' => self::INDEX,
-                    'id'    => $doc['hash_id'],
-                    'body'  => $doc,
-                ]);
-                $indexed++;
-            } catch (Throwable $e) {
-                $io->warning("Erreur indexation : " . $e->getMessage());
+            $data = json_decode($content, true);
+            if (!is_array($data)) {
+                $io->warning("JSON invalide dans $jsonPath, document ignoré.");
+                continue;
+            }
+
+            foreach ($data as $doc) {
+                if (empty($doc['hash_id'])) {
+                    $io->warning("Document ignoré dans $jsonPath : pas de hash_id.");
+                    continue;
+                }
+
+                try {
+                    $this->client->index([
+                        'index' => self::INDEX,
+                        'id'    => $doc['hash_id'],
+                        'body'  => $doc,
+                    ]);
+                    $indexed++;
+                } catch (Throwable $e) {
+                    $io->warning("Erreur indexation de {$doc['hash_id']}: " . $e->getMessage());
+                }
             }
         }
 

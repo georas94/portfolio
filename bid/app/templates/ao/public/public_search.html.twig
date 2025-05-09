@@ -1,9 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="max-w-7xl mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-4">Recherche d'appels d'offres publiques</h1>
-        <!-- Formulaire de recherche -->
+    <div class="max-w-7xl mx-auto p-6 min-h-[60vh] flex flex-col">
+        <h1 class="text-2xl font-bold text-gray-700 mb-4">Recherche d'appels d'offres publiques</h1>
         <form method="GET" action="{{ path('app_ao_public_search') }}"
               class="mb-6 flex flex-col sm:flex-row sm:items-center sm:space-x-4">
             <input
@@ -11,7 +10,7 @@
                     name="q"
                     id="query"
                     value="{{ query }}"
-                    class="w-full sm:w-1/2 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="sm:w-[600px] lg:w-[800px] max-w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     placeholder="Entrez votre recherche..."
             />
             <button
@@ -20,61 +19,109 @@
                 Rechercher
             </button>
         </form>
-
-
-        <!-- Résultats de la recherche -->
-        <!-- Résultats de la recherche -->
-        {% if results is not empty %}
-            <div class="overflow-x-auto rounded-md">
-                <table class="w-full min-w-[600px] table-auto border-collapse shadow-sm">
-                    <thead class="bg-gray-100 text-left text-sm font-semibold text-gray-700">
-                    <tr>
-                        <th class="p-3 border-b">Référence</th>
-                        <th class="p-3 border-b">Ministère</th>
-                        <th class="p-3 border-b">Objet</th>
-                        <th class="p-3 border-b text-center">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for result in results %}
-                        <tr class="hover:bg-gray-50 border-b">
-                            <td class="p-3 text-sm font-medium text-gray-800">{{ result.reference|default('-') }}</td>
-                            <td class="p-3 text-sm text-gray-600">{{ result.entity|default('-') }}</td>
-                            <td class="p-3 text-sm text-gray-600">
-                                <div class="mb-1 font-medium">{{ result.objet|default('-')|slice(0, 80) ~ '…' }}</div>
-
-                                {% if result.highlight is defined and result.highlight is not empty %}
-                                    <div class="text-xs text-gray-500 italic space-y-1">
-                                        {% for fragment in result.highlight %}
-                                            <div>{{ fragment|raw }}</div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </td>
-                            <td class="p-3 text-sm text-center">
-                                <a href="{{ path('app_ao_public_detail', { id: result.hash_id, q: query }) }}"
-                                   class="inline-flex items-center px-3 py-1.5 bg-primary text-white rounded-md text-xs hover:bg-green-700 transition">
-                                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    Voir
-                                </a>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="4" class="p-4 text-center text-gray-400">Aucun résultat trouvé.</td>
-                        </tr>
+        {% if query is empty %}
+            <div class="flex-1 flex flex-col items-center justify-center text-gray-500">
+                <!-- Illustration SVG légère -->
+                <svg class="w-32 h-32 mb-6 opacity-50 animate-pulse" id="Layer_1"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="#000000">
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <path style="fill:#D5DCED;"
+                              d="M70.621,88.276c0-9.751,7.904-17.655,17.655-17.655h229.517l88.276,88.276v335.448
+             c0,9.751-7.904,17.655-17.655,17.655H88.276c-9.751,0-17.655-7.904-17.655-17.655V88.276z"/>
+                        <path style="fill:#E4EAF8;"
+                              d="M105.931,52.966c0-9.751,7.904-17.655,17.655-17.655h229.517l88.276,88.276v335.448
+             c0,9.751-7.904,17.655-17.655,17.655H123.586c-9.751,0-17.655-7.904-17.655-17.655V52.966z"/>
+                        <g>
+                            <path style="fill:#D5DCED;"
+                                  d="M172.138,220.69c26.772,0,48.552-21.78,48.552-48.552V70.621
+               c0-14.603-11.88-26.483-26.483-26.483c-6.776,0-12.967,2.558-17.655,6.76v-2.346
+               c0-7.302,5.94-13.241,13.241-13.241H124.92c-0.872,4.28-1.334,8.707-1.334,13.241v123.586
+               C123.586,198.91,145.366,220.69,172.138,220.69z"/>
+                            <path style="fill:#D5DCED;"
+                                  d="M353.103,35.31v70.621c0,9.75,7.905,17.655,17.655,17.655h70.621L353.103,35.31z"/>
+                        </g>
+                        <path style="fill:#16A34A;" d="M361.931,361.931c4.877,0,8.828,3.951,8.828,8.828s-3.951,8.828-8.828,8.828
+         s-8.828-3.951-8.828-8.828S357.054,361.931,361.931,361.931z"/>
+                        <path style="fill:#16A34A;" d="M189.793,17.655c12.278,0,22.818,7.255,27.797,17.655h18.871
+         C230.677,14.965,211.966,0,189.793,0c-26.767,0-48.552,21.784-48.552,48.552v123.586
+         c0,17.035,13.863,30.897,30.897,30.897s30.897-13.863,30.897-30.897V70.621
+         c0-4.879-3.948-8.828-8.828-8.828s-8.828,3.948-8.828,8.828v101.517c0,7.302-5.94,13.241-13.241,13.241
+         c-7.302,0-13.241-5.94-13.241-13.241V48.552C158.897,31.518,172.759,17.655,189.793,17.655z"/>
+                        <path style="fill:#16A34A;" d="M194.207,17.655v0.324c10.355,1.503,19.012,8.202,23.383,17.331h18.871
+         c-1.874-6.59-5.216-12.52-9.481-17.655H194.207z"/>
+                    </g>
+                </svg>
+                <p class="text-lg font-medium mb-2">Bienvenue sur AO Burkina</p>
+                <p class="text-sm mb-6">Entrez un terme pour rechercher un appel d’offres</p>
+                <!-- Boutons de catégories -->
+                <div class="flex flex-wrap gap-3">
+                    {% set categories = ['Santé', 'Éducation', 'Infrastructure', 'Services', 'Informatique'] %}
+                    {% for cat in categories %}
+                        <a href="{{ path('app_ao_public_search', { q: cat }) }}"
+                           class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium hover:bg-green-200 transition">
+                            {{ cat }}
+                        </a>
                     {% endfor %}
-                    </tbody>
-                </table>
+                </div>
             </div>
         {% else %}
-            <div class="text-gray-400 text-center py-4">
-                <p>Aucun résultat trouvé pour votre recherche.</p>
+            <div class="overflow-x-auto rounded-md">
+                {% if results is not empty %}
+                    <div class="overflow-x-auto rounded-md">
+                        <table class="w-full min-w-[600px] table-auto border-collapse shadow-sm">
+                            <thead class="bg-gray-100 text-left text-sm font-semibold text-gray-700">
+                            <tr>
+                                <th class="p-3 border-b">Référence</th>
+                                <th class="p-3 border-b">Ministère</th>
+                                <th class="p-3 border-b">Objet</th>
+                                <th class="p-3 border-b text-center">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for result in results %}
+                                <tr class="hover:bg-gray-50 border-b">
+                                    <td class="p-3 text-sm font-medium text-gray-800">{{ result.reference|default('-') }}</td>
+                                    <td class="p-3 text-sm text-gray-600">{{ result.entity|default('-') }}</td>
+                                    <td class="p-3 text-sm text-gray-600">
+                                        <div class="mb-1 font-medium">{{ result.objet|default('-')|slice(0, 80) ~ '…' }}</div>
+
+                                        {% if result.highlight is defined and result.highlight is not empty %}
+                                            <div class="text-xs text-gray-500 italic space-y-1">
+                                                {% for fragment in result.highlight %}
+                                                    <div>{{ fragment|raw }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="p-3 text-sm text-center">
+                                        <a href="{{ path('app_ao_public_detail', { id: result.hash_id, q: query }) }}"
+                                           class="inline-flex items-center px-3 py-1.5 bg-primary text-white rounded-md text-xs hover:bg-green-700 transition">
+                                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                            </svg>
+                                            Voir
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="p-4 text-center text-gray-400">Aucun résultat trouvé.</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-gray-400 text-center py-4">
+                        <p>Aucun résultat trouvé pour votre recherche.</p>
+                    </div>
+                {% endif %}
             </div>
         {% endif %}
     </div>

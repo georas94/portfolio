@@ -394,7 +394,7 @@ class AOController extends AbstractController
                 'body' => [
                     'size' => 20,
                     '_source' => [
-                        'reference', 'entity', 'objet', 'hash_id', 'full_text', 'referenceNumber'
+                        'reference', 'entity', 'objet', 'hash_id', 'full_text', 'reference_number'
                     ],
                     'query' => [
                         'multi_match' => [
@@ -430,7 +430,7 @@ class AOController extends AbstractController
 
                 $results[] = [
                     'reference' => $source['reference'] ?? null,
-                    'referenceNumber' => $source['referenceNumber'] ?? null,
+                    'referenceNumber' => $source['reference_number'] ?? null,
                     'entity' => $source['entity'] ?? null,
                     'objet' => $source['objet'] ?? null,
                     'hash_id' => $source['hash_id'] ?? null,

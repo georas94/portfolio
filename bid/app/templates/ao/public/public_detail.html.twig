@@ -51,14 +51,14 @@
             </div>
 
             <div class="flex items-center gap-4 mt-6">
-                <a href="{{ asset('public_aos/pdf/' ~ ao.referenceNumber ~ '.pdf') }}" target="_blank"
+                <a href="{{ asset('public_aos/pdf/' ~ ao.reference_number ~ '.pdf') }}" target="_blank"
                    class="inline-flex items-center px-4 py-2 bg-green-800 text-white rounded hover:bg-indigo-700">
                     Télécharger le PDF
                 </a>
 
                 <button data-controller="pdfviewer"
                         data-action="click->pdfviewer#open"
-                        data-pdfviewer-url-value="{{ asset('pdfjs/web/viewer.html?file=' ~ asset('public_aos/pdf/' ~ ao.referenceNumber ~ '.pdf')) }}#page={{ ao.source_page }}"
+                        data-pdfviewer-url-value="{{ asset('pdfjs/web/viewer.html?file=' ~ asset('public_aos/pdf/' ~ ao.reference_number ~ '.pdf')) }}#page={{ ao.source_page }}"
                         data-pdfviewer-page-value="{{ ao.source_page }}"
                         class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
                     Voir à la page {{ ao.source_page }}
