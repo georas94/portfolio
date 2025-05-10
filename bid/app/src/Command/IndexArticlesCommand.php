@@ -62,14 +62,14 @@ class IndexArticlesCommand extends Command
             return Command::FAILURE;
         }
         // 1) Supprimer et recréer l'index
-        try {
-            $io->section('1) Création de l\'index Elasticsearch "articles"');
-            $this->recreateIndex();
-            $io->success('Index articles créé avec succès.');
-        } catch (Throwable $e) {
-            $io->error('Erreur création index : ' . $e->getMessage());
-            return Command::FAILURE;
-        }
+//        try {
+//            $io->section('1) Création de l\'index Elasticsearch "articles"');
+//            $this->recreateIndex();
+//            $io->success('Index articles créé avec succès.');
+//        } catch (Throwable $e) {
+//            $io->error('Erreur création index : ' . $e->getMessage());
+//            return Command::FAILURE;
+//        }
 
         // 2) Indexation des JSON page par page
         $io->section('2) Indexation des JSONs fichier par fichier');
