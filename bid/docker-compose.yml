@@ -6,8 +6,8 @@ services:
       dockerfile: docker/php-fpm/Dockerfile
     volumes:
       - ./app:/app:rw,cached
-      - /app/node_modules
-      - /app/public/build
+      - ./app/node_modules
+      - ./app/public/build
     ports:
       - "9007:9000"
     networks:
@@ -20,9 +20,11 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - network.host=0.0.0.0
       - xpack.security.enabled=false # Désactive l'authentification
       - xpack.security.http.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.key=certs/key.pem
+      - xpack.security.transport.ssl.certificate=certs/cert.pem
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.enrollment.enabled=true
     ports:
@@ -30,6 +32,7 @@ services:
       - "9300:9300" # Port de communication cluster
     volumes:
     - ./app/docker/esdata:/usr/share/elasticsearch/data
+    - ./app/docker/certs:/usr/share/elasticsearch/config/certs
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -qE '\"status\":\"(green|yellow)\"'"]
       interval: 30s
@@ -59,6 +62,7 @@ services:
 
 volumes:
   db-data-bid: {}
+  esdata:
 
 networks:
   tools:
